@@ -53,6 +53,9 @@ import (
 	"github.com/yourorg/boilerplate/pkg/scope"
 	"github.com/yourorg/boilerplate/pkg/vernon"
 	"github.com/yourorg/boilerplate/pkg/vernonsync"
+
+	"github.com/yourorg/boilerplate/internal/domain/product"
+	"github.com/yourorg/boilerplate/internal/domain/product_category"
 )
 
 func main() {
@@ -252,21 +255,35 @@ func provideVernonSyncEngine(
 }
 
 // registerVernonDomains mendaftarkan semua domain Vernon ke Registry.
-// Contoh penambahan domain:
 //
-//	desc := &orders.Descriptor{}
-//	repo := vernon.NewBaseRepository(db, desc.TableName())
-//	svc  := vernon.NewBaseService(db, repo, desc, eb, logger)
-//	hdlr := vernon.NewBaseHandler(svc, logger)
-//	registry.Register(desc.TableName(), &vernon.RegisteredDomain{Descriptor:desc, Handler:hdlr, Service:svc})
+// Urutan pendaftaran penting: domain sumber (product_categories) harus didaftarkan
+// sebelum consumer (products) agar reverse dependency map terbangun dengan benar.
 func registerVernonDomains(
-	_ *sqlx.DB,
-	_ *vernon.Registry,
-	_ eventbus.EventBus,
-	_ zerolog.Logger,
+	db *sqlx.DB,
+	registry *vernon.Registry,
+	eb eventbus.EventBus,
+	logger zerolog.Logger,
 ) {
-	// TODO: daftarkan domain Vernon di sini.
-	// Cocok untuk domain dengan banyak JOIN/relasi dan read-heavy.
+	registerVernonDomain(db, registry, eb, logger, &product_category.Descriptor{})
+	registerVernonDomain(db, registry, eb, logger, &product.Descriptor{})
+}
+
+// registerVernonDomain adalah helper DRY untuk mendaftarkan satu domain Vernon.
+func registerVernonDomain(
+	db *sqlx.DB,
+	registry *vernon.Registry,
+	eb eventbus.EventBus,
+	logger zerolog.Logger,
+	desc vernon.DomainDescriptor,
+) {
+	repo := vernon.NewBaseRepository(db, desc.TableName())
+	svc := vernon.NewBaseService(db, repo, desc, eb, logger)
+	hdlr := vernon.NewBaseHandler(svc, logger)
+	registry.Register(desc.TableName(), &vernon.RegisteredDomain{
+		Descriptor: desc,
+		Handler:    hdlr,
+		Service:    svc,
+	})
 }
 
 func startVernonSync(lc fx.Lifecycle, engine *vernonsync.SyncEngine) {
