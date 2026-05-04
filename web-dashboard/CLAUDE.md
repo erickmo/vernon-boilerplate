@@ -131,6 +131,15 @@ src/
     └── UserFormPage.tsx         ← useForm hook
 ```
 
+`useDataSource` and `createEntityService` serialise list params as structured tuples:
+
+```ts
+sort: [['name', 1], ['updatedAt', -1]]
+filters: [['status', '=', 'active'], ['priority', '>=', 2]]
+```
+
+The query-string layer JSON-encodes those arrays under the `sort` and `filters` keys.
+
 ## Environment Variables
 
 ```env

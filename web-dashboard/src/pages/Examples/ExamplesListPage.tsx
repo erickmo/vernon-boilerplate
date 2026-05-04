@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { FileText, Plus } from 'lucide-react'
+import { FileText, LayoutGrid, Plus } from 'lucide-react'
 import { ListPageTemplate } from '@/widgets/ListPageTemplate/ListPageTemplate'
 import type { ColumnDef } from '@/widgets/DataTable/DataTable'
 import { exampleProjects, fetchExampleProjects, type ExampleProject } from './exampleData'
@@ -33,10 +33,16 @@ export default function ExamplesListPage() {
       helpText="This page demonstrates the reusable list template with header actions, status pills, search, export, responsive table scrolling, and row navigation."
       readonly={false}
       actions={
-        <button type="button" onClick={() => navigate(exampleProjects[0].id)}>
-          <FileText size={16} />
-          Open sample
-        </button>
+        <>
+          <button type="button" onClick={() => navigate('widgets')}>
+            <LayoutGrid size={16} />
+            Widget gallery
+          </button>
+          <button type="button" onClick={() => navigate(exampleProjects[0].id)}>
+            <FileText size={16} />
+            Open sample
+          </button>
+        </>
       }
       filterDefs={[
         {

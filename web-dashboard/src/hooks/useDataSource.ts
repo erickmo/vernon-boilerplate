@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { useDebounce } from './useDebounce'
 import type { PaginatedResponse } from '@/types/api.types'
-import type { ListParams } from '@/services/createEntityService'
+import type { ListParams, SortTuple } from '@/services/createEntityService'
 
 interface SortState {
   key: string
@@ -33,7 +33,11 @@ export function useDataSource<T>({
   const params: ListParams = {
     limit: pageSize,
     offset: page * pageSize,
-    ...(sort ? { sort: sort.key, order: sort.order } : {}),
+    ...(sort
+      ? {
+          sort: [[sort.key, sort.order === 'asc' ? 1 : -1] as SortTuple],
+        }
+      : {}),
     ...(debouncedSearch ? { search: debouncedSearch } : {}),
     ...filters,
   }

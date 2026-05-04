@@ -13,6 +13,17 @@ Object.defineProperty(window, 'localStorage', {
   },
 })
 
+class MockResizeObserver {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+if (!('ResizeObserver' in window)) {
+  ;(window as typeof window & { ResizeObserver: typeof MockResizeObserver }).ResizeObserver = MockResizeObserver
+  ;(globalThis as typeof globalThis & { ResizeObserver: typeof MockResizeObserver }).ResizeObserver = MockResizeObserver
+}
+
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }))
 afterEach(() => {
   server.resetHandlers()

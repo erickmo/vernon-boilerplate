@@ -39,7 +39,7 @@ Update DetailPageTemplate: sidebar menu harus jadi section navigation, dan tab d
 | Komponen | Fungsi | Kapan dipakai |
 |----------|--------|---------------|
 | `ListPageTemplate` | Template halaman daftar / table | Saat halaman berisi tabel, filter, search, add button, dan aksi baris |
-| `DetailPageTemplate` | Template halaman detail | Saat halaman berisi header identitas, progress, menu kiri, submenu/tab kanan, dan action overflow |
+| `DetailPageTemplate` | Template halaman detail | Saat halaman berisi header identitas, progress, menu kiri, submenu/tab kanan, action overflow, dan sidebar koneksi |
 | `FormPageTemplate` | Template halaman create/edit form | Saat halaman berisi tabs form, submit bar, validasi, dan help modal |
 | `DomainPageTemplate` | Template detail domain yang lebih kaya | Saat butuh status flow, summary strip, related docs, dan activity log |
 
@@ -52,6 +52,7 @@ Pola sekarang:
 | Header card | Breadcrumb, title, code, badge, action button, help icon |
 | Progress card | Progress stepper di bawah header |
 | Sidebar menu card | Section navigation di kiri |
+| Koneksi section | Section navigation khusus untuk relasi data / DataConnectionWidget |
 | Main content card | Submenu tabs di kanan dan isi tab aktif |
 
 Kalimat prompt yang baik:
@@ -78,7 +79,7 @@ Pola sekarang:
 
 | Komponen | Fungsi | Kapan dipakai |
 |----------|--------|---------------|
-| `DataTable` | Tabel data dengan sort, search, filter, pagination, row action | Saat perlu mengubah header/footer table, toolbar, row action, atau pagination |
+| `DataTable` | Tabel data dengan sort, search, filter, pagination, row action | Saat perlu mengubah header/footer table, toolbar, row action, atau pagination. Sort dan filter query params memakai tuple array: `sort=[['field', 1], ['field2', -1]]`, `filters=[['field', 'operator', value]]` |
 | `ProgressWidget` | Stepper/status progression | Saat perlu menampilkan alur status atau tahapan kerja |
 | `DataConnectionWidget` | Tampilan koneksi / relasi data | Saat detail page butuh daftar koneksi atau relasi |
 
@@ -146,6 +147,7 @@ Pola sekarang:
 |---------|--------|
 | `DashboardPage` | Contoh halaman utama yang full width dan responsif |
 | `ExamplesListPage` | Contoh `ListPageTemplate` |
+| `WidgetGalleryPage` | Contoh halaman galeri widget satu halaman |
 | `ExampleDetailPage` | Contoh `DetailPageTemplate` |
 | `ExampleFormPage` | Contoh `FormPageTemplate` |
 

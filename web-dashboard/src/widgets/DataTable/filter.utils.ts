@@ -84,8 +84,8 @@ export function serializeFiltersLegacy(filters: ActiveFilter[]): Record<string, 
 }
 
 /**
- * Format baru: JSON array [["field","operator","value"], ...]
- * Dikirim sebagai ?filters=JSON.stringify(array)
+ * Format baru: tuple array [["field","operator","value"], ...]
+ * Disimpan sebagai value `filters` lalu diserialisasi oleh layer query-string.
  *
  * Contoh: [["status","=","active"],["name","like","John"]]
  */
@@ -103,9 +103,8 @@ export function serializeFilters(filters: ActiveFilter[]): Record<string, unknow
     return [f.key, f.operator, value]
   })
 
-  // Kirim hanya format baru (legacy params dihapus)
   return {
-    filters: JSON.stringify(arr),
+    filters: arr,
   }
 }
 

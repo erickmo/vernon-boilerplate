@@ -38,6 +38,7 @@ describe('example template pages', () => {
     const menu = screen.getByRole('complementary', { name: /detail menu/i })
     expect(within(menu).getByRole('button', { name: /overview/i })).toBeInTheDocument()
     expect(within(menu).getByRole('button', { name: /notes/i })).toBeInTheDocument()
+    expect(within(menu).getByRole('button', { name: /koneksi/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /summary/i })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /activity/i })).toBeInTheDocument()
 
@@ -47,6 +48,10 @@ describe('example template pages', () => {
 
     await user.click(within(menu).getByRole('button', { name: /notes/i }))
     expect(screen.getByRole('button', { name: /checklist/i })).toBeInTheDocument()
+
+    await user.click(within(menu).getByRole('button', { name: /koneksi/i }))
+    expect(screen.getByRole('heading', { name: /koneksi terkait/i })).toBeInTheDocument()
+    expect(screen.getByText(/audit log/i)).toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /tutup bantuan/i }))
     await user.click(screen.getByRole('button', { name: /aksi lainnya/i }))

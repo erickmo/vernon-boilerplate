@@ -22,6 +22,7 @@ const ChangePasswordPage = lazy(() => import('@/pages/ChangePassword/ChangePassw
 const ExamplesListPage   = lazy(() => import('@/pages/Examples/ExamplesListPage'))
 const ExampleDetailPage  = lazy(() => import('@/pages/Examples/ExampleDetailPage'))
 const ExampleFormPage    = lazy(() => import('@/pages/Examples/ExampleFormPage'))
+const WidgetGalleryPage  = lazy(() => import('@/pages/Examples/WidgetGalleryPage'))
 const ChooseCompanyPage  = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
 const NotFoundPage       = lazy(() => import('@/pages/errors/NotFoundPage'))
 const ForbiddenPage      = lazy(() => import('@/pages/errors/ForbiddenPage'))
@@ -43,6 +44,7 @@ const singleTenantRoutes = [
       { path: 'profile', element: <S><ProfilePage /></S> },
       { path: 'change-password', element: <S><ChangePasswordPage /></S> },
       { path: 'examples', element: <S><ExamplesListPage /></S> },
+      { path: 'examples/widgets', element: <S><WidgetGalleryPage /></S> },
       { path: 'examples/new', element: <S><ExampleFormPage /></S> },
       { path: 'examples/:id', element: <S><ExampleDetailPage /></S> },
       // Add your pages here:
@@ -74,6 +76,7 @@ const multiTenantRoutes = [
       { path: 'profile', element: <S><ProfilePage /></S> },
       { path: 'change-password', element: <S><ChangePasswordPage /></S> },
       { path: 'examples', element: <S><ExamplesListPage /></S> },
+      { path: 'examples/widgets', element: <S><WidgetGalleryPage /></S> },
       { path: 'examples/new', element: <S><ExampleFormPage /></S> },
       { path: 'examples/:id', element: <S><ExampleDetailPage /></S> },
       // { path: 'tenants',   element: <S><TenantsListPage /></S> },
@@ -91,6 +94,7 @@ const multiTenantRoutes = [
       { path: 'profile', element: <S><ProfilePage /></S> },
       { path: 'change-password', element: <S><ChangePasswordPage /></S> },
       { path: 'examples', element: <S><ExamplesListPage /></S> },
+      { path: 'examples/widgets', element: <S><WidgetGalleryPage /></S> },
       { path: 'examples/new', element: <S><ExampleFormPage /></S> },
       { path: 'examples/:id', element: <S><ExampleDetailPage /></S> },
       // { path: 'reports',  element: <S><HQReportsPage /></S> },
@@ -107,6 +111,7 @@ const multiTenantRoutes = [
       { path: 'profile', element: <S><ProfilePage /></S> },
       { path: 'change-password', element: <S><ChangePasswordPage /></S> },
       { path: 'examples', element: <S><ExamplesListPage /></S> },
+      { path: 'examples/widgets', element: <S><WidgetGalleryPage /></S> },
       { path: 'examples/new', element: <S><ExampleFormPage /></S> },
       { path: 'examples/:id', element: <S><ExampleDetailPage /></S> },
       // { path: 'users',     element: <S><UsersListPage /></S> },

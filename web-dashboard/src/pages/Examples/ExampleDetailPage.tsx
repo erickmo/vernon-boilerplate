@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom'
-import { FileText, Pencil } from 'lucide-react'
+import { FileText, Link2, Pencil } from 'lucide-react'
 import { DetailPageTemplate } from '@/widgets/DetailPageTemplate/DetailPageTemplate'
 import { getExampleProject } from './exampleData'
 import styles from './ExamplesPage.module.css'
@@ -24,13 +24,34 @@ export default function ExampleDetailPage() {
         },
       ]}
       helpTitle="DetailPageTemplate example"
-      helpText="This page demonstrates breadcrumbs, title metadata, action buttons, section navigation, submenu tabs, progress, and responsive two-column layout."
+      helpText="This page demonstrates breadcrumbs, title metadata, action buttons, section navigation, submenu tabs, progress, sidebar connections, and responsive two-column layout."
       progress={{
         currentStatus: project.status,
         steps: [
           { id: 'Draft', label: 'Draft', status: 'complete' },
           { id: 'Review', label: 'Review', status: project.status === 'Draft' ? 'pending' : 'complete' },
           { id: 'Active', label: 'Active', status: project.status === 'Active' ? 'complete' : 'pending' },
+        ],
+      }}
+      connections={{
+        title: 'Koneksi terkait',
+        items: [
+          {
+            icon: <Link2 size={16} />,
+            title: 'Audit log',
+            subtitle: 'Lihat jejak perubahan untuk project ini',
+            path: '/examples',
+            filters: [
+              ['status', '=', 'Review'],
+              ['priority', '>=', 2],
+            ],
+          },
+          {
+            icon: <Link2 size={16} />,
+            title: 'Daftar example',
+            subtitle: 'Kembali ke kumpulan contoh',
+            path: '/examples',
+          },
         ],
       }}
       sections={[

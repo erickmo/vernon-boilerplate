@@ -78,7 +78,7 @@ interface DetailPageTemplateProps {
     terminalStatus?: TerminalStatus
   }
 
-  /** When provided, appends a built-in "Koneksi" tab using DataConnectionWidget */
+  /** When provided, adds a built-in "Koneksi" sidebar section using DataConnectionWidget */
   connections?: {
     title?: string
     items: DataConnectionItem[]
@@ -133,9 +133,20 @@ export function DetailPageTemplate({
     ? sections
     : [{ id: '__default__', label: 'Menu', tabs }]
 
-  const [activeSectionId, setActiveSectionId] = useState(sectionItems[0]?.id ?? '__default__')
-  const activeSection = sectionItems.find((section) => section.id === activeSectionId) ?? sectionItems[0]
-  const activeSectionTabs = activeSection ? [...activeSection.tabs, koneksiTab] : [koneksiTab]
+  const connectionSection = connections
+    ? {
+        id: '__connections__',
+        label: 'Koneksi',
+        icon: <Link2 size={14} />,
+        tabs: [koneksiTab],
+      }
+    : null
+
+  const sectionList = connectionSection ? [...sectionItems, connectionSection] : sectionItems
+
+  const [activeSectionId, setActiveSectionId] = useState(sectionList[0]?.id ?? '__default__')
+  const activeSection = sectionList.find((section) => section.id === activeSectionId) ?? sectionList[0]
+  const activeSectionTabs = activeSection?.tabs ?? []
 
   const [activeTab, setActiveTab] = useState(activeSectionTabs[0]?.id ?? '__log__')
   const [overflowOpen, setOverflowOpen] = useState(false)
@@ -282,10 +293,10 @@ export function DetailPageTemplate({
         <aside className={styles.menuCard} aria-label="Detail menu">
           <div className={styles.menuHeader}>
             <span className={styles.menuTitle}>Menu</span>
-            <span className={styles.menuCount}>{sectionItems.length} items</span>
+            <span className={styles.menuCount}>{sectionList.length} items</span>
           </div>
           <div className={styles.menuList}>
-            {sectionItems.map((section) => {
+            {sectionList.map((section) => {
               const isActive = activeSection?.id === section.id
               return (
                 <button
