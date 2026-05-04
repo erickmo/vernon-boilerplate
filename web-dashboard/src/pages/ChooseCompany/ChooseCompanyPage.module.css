@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-6);
+  padding: clamp(var(--space-3), 4vw, var(--space-6));
   background: var(--color-surface);
 }
 
@@ -16,6 +16,21 @@
   width: 100%;
   max-width: 480px;
   animation: scaleIn 0.3s var(--ease-spring) both;
+}
+
+@media (max-width: 520px) {
+  .card {
+    padding: var(--space-5);
+    border-radius: var(--radius-md);
+  }
+
+  .header {
+    flex-direction: column;
+  }
+
+  .companyBtn {
+    padding: var(--space-3);
+  }
 }
 
 @keyframes scaleIn {

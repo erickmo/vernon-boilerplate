@@ -2,7 +2,9 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  padding: var(--space-4) var(--space-6);
+  width: 100%;
+  min-width: 0;
+  padding: 0;
 }
 
 /* ─── Header card (breadcrumbs + identity) ───────────────────────────────────── */
@@ -21,6 +23,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  min-width: 0;
 }
 
 .breadcrumbs {
@@ -67,6 +70,7 @@
   align-items: center;
   gap: var(--space-3);
   min-width: 0;
+  flex: 1 1 320px;
 }
 
 .headerRight {
@@ -130,6 +134,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
+  min-width: 0;
 }
 
 .itemCode {
@@ -143,11 +148,13 @@
   font-weight: 700;
   color: var(--color-text-primary);
   line-height: 1.2;
+  overflow-wrap: anywhere;
 }
 
 .badges {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-1);
 }
@@ -166,7 +173,11 @@
   padding: 0 var(--space-5);
   background: var(--color-surface-raised);
   border-bottom: 1px solid var(--color-border-subtle);
+  overflow-x: auto;
+  scrollbar-width: none;
 }
+
+.tabList::-webkit-scrollbar { display: none; }
 
 .tab {
   display: inline-flex;
@@ -215,6 +226,7 @@
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-3);
   padding: var(--space-4) 0;
   border-top: 1px solid var(--color-border-subtle);
@@ -223,8 +235,68 @@
 .extraActions {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: var(--space-2);
   margin-right: auto;
+}
+
+@media (max-width: 640px) {
+  .header,
+  .tabContent,
+  .card {
+    padding: var(--space-4);
+  }
+
+  .breadcrumbRow,
+  .headerContent,
+  .headerLeft,
+  .headerRight,
+  .submitBar,
+  .extraActions {
+    width: 100%;
+  }
+
+  .breadcrumbRow {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .headerLeft {
+    align-items: flex-start;
+  }
+
+  .tabList {
+    padding: 0 var(--space-3);
+  }
+
+  .submitBar,
+  .extraActions {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .btnPrimary,
+  .btnSecondary,
+  .btnWarning,
+  .btnSuccess {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .radioGroup {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .helpModal {
+    width: 100%;
+    max-width: 100%;
+    border-radius: var(--radius-md);
+  }
+
+  .helpModalBody {
+    padding-left: 0;
+  }
 }
 
 /* ─── Buttons ────────────────────────────────────────────────────────────────── */

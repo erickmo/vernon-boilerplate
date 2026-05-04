@@ -14,7 +14,7 @@ const STRENGTH_LABELS = ['', 'Lemah', 'Sedang', 'Kuat'] as const
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-interface ChangePasswordFormValues {
+interface ChangePasswordFormValues extends Record<string, unknown> {
   currentPassword: string
   newPassword: string
   confirmPassword: string

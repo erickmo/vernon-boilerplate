@@ -89,6 +89,7 @@
   font-size: var(--font-sm);
   font-weight: 600;
   transition: all var(--duration-fast);
+  white-space: nowrap;
 }
 .addBtn:hover {
   background: var(--color-primary-hover);
@@ -104,8 +105,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: var(--z-modal);
   backdrop-filter: blur(2px);
+  padding: var(--space-4);
 }
 
 .dialog {
@@ -113,7 +115,7 @@
   border-radius: var(--radius-xl);
   padding: var(--space-6);
   width: 400px;
-  max-width: 90vw;
+  max-width: min(90vw, 400px);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -151,6 +153,38 @@
   margin-top: var(--space-2);
   width: 100%;
   justify-content: center;
+}
+
+@media (max-width: 640px) {
+  .helpBtn {
+    width: var(--input-height);
+    height: var(--input-height);
+  }
+
+  .addBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .dialog,
+  .helpModal {
+    width: 100%;
+    max-width: 100%;
+    border-radius: var(--radius-md);
+  }
+
+  .dialogActions {
+    flex-direction: column-reverse;
+  }
+
+  .dialogActions > button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .helpModalBody {
+    padding-left: 0;
+  }
 }
 
 /* ─── Buttons ────────────────────────────────────────────────────────────────── */

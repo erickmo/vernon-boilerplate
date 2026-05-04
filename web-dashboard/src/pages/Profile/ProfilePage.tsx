@@ -30,7 +30,7 @@ function getInitials(name: string): string {
 
 // ─── Profile form types ───────────────────────────────────────────────────────
 
-interface ProfileFormValues {
+interface ProfileFormValues extends Record<string, unknown> {
   name: string
   phone: string
 }

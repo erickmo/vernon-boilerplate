@@ -4,13 +4,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-6);
+  padding: clamp(var(--space-4), 4vw, var(--space-6));
   text-align: center;
   background: var(--color-surface);
 }
 
 .code {
-  font-size: 7rem;
+  font-size: clamp(4rem, 18vw, 7rem);
   font-weight: 800;
   color: var(--color-primary);
   opacity: 0.15;
@@ -29,7 +29,7 @@
 .message {
   font-size: var(--font-base);
   color: var(--color-text-secondary);
-  max-width: 400px;
+  width: min(100%, 400px);
   line-height: 1.6;
   margin-bottom: var(--space-6);
 }
@@ -47,6 +47,12 @@
   border-radius: var(--radius-md);
   text-decoration: none;
   transition: background var(--duration-fast), transform var(--duration-fast);
+}
+
+@media (max-width: 480px) {
+  .backBtn {
+    width: 100%;
+  }
 }
 
 .backBtn:hover {

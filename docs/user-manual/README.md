@@ -16,6 +16,7 @@ operasional sistem, serta end-user yang menggunakan web dashboard.
 | 04 | [API Usage Guide](./04-api-usage-guide.md) | Panduan penggunaan API: autentikasi, pagination, filter, contoh curl |
 | 05 | [Monitoring & Observability](./05-monitoring-observability.md) | Prometheus, Jaeger, health check, logging, dan rekomendasi alerting |
 | 06 | [Web Dashboard Guide](./06-web-dashboard-guide.md) | Panduan pengguna web dashboard: login, navigasi, role, UI patterns |
+| 07 | [Web Dashboard Component Map](./07-web-dashboard-component-map.md) | Daftar nama komponen dashboard untuk instruksi AI yang lebih spesifik |
 
 ---
 
