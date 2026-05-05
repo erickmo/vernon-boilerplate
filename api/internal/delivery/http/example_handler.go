@@ -26,6 +26,12 @@ var exampleSortConfig = SortConfig{
 		"name":       "name",
 		"created_at": "created_at",
 	},
+	AllowedFilters: map[string]string{
+		"name":        "name",
+		"description": "description",
+		"is_active":   "is_active",
+		"created_at":  "created_at",
+	},
 	DefaultField: "created_at",
 	DefaultOrder: "desc",
 }
@@ -53,7 +59,11 @@ func (h *ExampleHandler) RegisterRoutes(r chi.Router) {
 // @Success      200  {object}  listexamples.Result
 // @Router       /api/v1/examples [get]
 func (h *ExampleHandler) List(w http.ResponseWriter, r *http.Request) {
-	params := h.ParsePagination(r, exampleSortConfig)
+	params, err := h.ParsePagination(r, exampleSortConfig)
+	if err != nil {
+		h.RespondError(w, http.StatusBadRequest, "query tidak valid")
+		return
+	}
 	result, err := querybus.Dispatch[*listexamples.Result](r.Context(), h.queryBus, listexamples.Query{
 		Params: params,
 	})

@@ -13,6 +13,7 @@ import (
 
 	"github.com/google/uuid"
 
+	"github.com/yourorg/boilerplate/pkg/pagination"
 	"github.com/yourorg/boilerplate/pkg/scope"
 )
 
@@ -40,5 +41,5 @@ type WriteRepository interface {
 // scope.Scope diteruskan sebagai parameter eksplisit oleh application layer.
 type ReadRepository interface {
 	GetByID(ctx context.Context, s scope.Scope, id uuid.UUID) (*Example, error)
-	List(ctx context.Context, s scope.Scope, limit, offset int, sortBy, order string) ([]*Example, int, error)
+	List(ctx context.Context, s scope.Scope, params pagination.ListParams) ([]*Example, int, error)
 }

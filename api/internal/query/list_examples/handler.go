@@ -55,7 +55,7 @@ func (h *Handler) Handle(ctx context.Context, qry Query) (*Result, error) {
 	}
 
 	p := qry.Params
-	entities, total, err := h.repo.List(ctx, s, p.Limit, p.Offset, p.SortBy, p.Order)
+	entities, total, err := h.repo.List(ctx, s, p)
 	if err != nil {
 		return nil, fmt.Errorf("list examples: %w", err)
 	}

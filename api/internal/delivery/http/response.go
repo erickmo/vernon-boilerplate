@@ -11,9 +11,10 @@ import (
 
 // SortConfig mendefinisikan konfigurasi sorting yang diizinkan per domain handler.
 type SortConfig struct {
-	AllowedFields map[string]string
-	DefaultField  string
-	DefaultOrder  string
+	AllowedFields  map[string]string
+	AllowedFilters map[string]string
+	DefaultField   string
+	DefaultOrder   string
 }
 
 // BaseHandler adalah struct yang di-embed oleh semua domain handler.
@@ -27,21 +28,56 @@ func NewBaseHandler(cb *commandbus.CommandBus, qb *querybus.QueryBus) BaseHandle
 	return BaseHandler{commandBus: cb, queryBus: qb}
 }
 
-// ParsePagination membaca parameter pagination dan memvalidasi sort field terhadap whitelist.
-func (h *BaseHandler) ParsePagination(r *http.Request, cfg SortConfig) pagination.ListParams {
-	p := pagination.ParseFromRequest(r)
-
-	if col, ok := cfg.AllowedFields[p.SortBy]; ok {
-		p.SortBy = col
-	} else {
-		p.SortBy = cfg.DefaultField
+// ParsePagination membaca parameter pagination dan memvalidasi tuple sort/filter terhadap whitelist.
+func (h *BaseHandler) ParsePagination(r *http.Request, cfg SortConfig) (pagination.ListParams, error) {
+	p, err := pagination.ParseFromRequest(r)
+	if err != nil {
+		return pagination.ListParams{}, err
 	}
 
-	if r.URL.Query().Get("order") == "" && cfg.DefaultOrder != "" {
-		p.Order = cfg.DefaultOrder
+	p.Sort = normalizeSortTuples(p.Sort, cfg)
+	if len(p.Sort) == 0 && cfg.DefaultField != "" {
+		p.Sort = []pagination.SortTuple{{Field: cfg.DefaultField, Direction: sortDirection(cfg.DefaultOrder)}}
 	}
 
-	return p
+	p.Filters = normalizeFilterTuples(p.Filters, cfg)
+	return p, nil
+}
+
+func normalizeSortTuples(sortTuples []pagination.SortTuple, cfg SortConfig) []pagination.SortTuple {
+	normalized := make([]pagination.SortTuple, 0, len(sortTuples))
+	for _, tuple := range sortTuples {
+		if col, ok := cfg.AllowedFields[tuple.Field]; ok {
+			normalized = append(normalized, pagination.SortTuple{Field: col, Direction: tuple.Direction})
+		}
+	}
+	return normalized
+}
+
+func normalizeFilterTuples(filterTuples []pagination.FilterTuple, cfg SortConfig) []pagination.FilterTuple {
+	if len(cfg.AllowedFilters) == 0 {
+		return filterTuples
+	}
+
+	normalized := make([]pagination.FilterTuple, 0, len(filterTuples))
+	for _, tuple := range filterTuples {
+		if col, ok := cfg.AllowedFilters[tuple.Field]; ok {
+			tuple.Field = col
+			normalized = append(normalized, tuple)
+		}
+	}
+	return normalized
+}
+
+func sortDirection(order string) int {
+	switch order {
+	case "asc":
+		return 1
+	case "desc":
+		return -1
+	default:
+		return -1
+	}
 }
 
 // RespondJSON menulis response JSON dengan status code yang diberikan.

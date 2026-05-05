@@ -42,8 +42,8 @@ export default function ExampleDetailPage() {
             subtitle: 'Lihat jejak perubahan untuk project ini',
             path: '/examples',
             filters: [
-              ['status', '=', 'Review'],
-              ['priority', '>=', 2],
+              ['name', 'like', 'Example'],
+              ['is_active', '=', true],
             ],
           },
           {

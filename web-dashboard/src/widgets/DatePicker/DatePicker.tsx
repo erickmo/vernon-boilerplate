@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import styles from './DatePicker.module.css'
 
@@ -96,11 +97,14 @@ export function DatePicker({
   const todayISO = toISO(today.getFullYear(), today.getMonth(), today.getDate())
 
   const [open, setOpen] = useState(false)
+  const [popoverStyle, setPopoverStyle] = useState<React.CSSProperties>({})
   const [view, setView] = useState<{ year: number; month: number }>(() => {
     const d = parseISO(value) ?? today
     return { year: d.getFullYear(), month: d.getMonth() }
   })
   const wrapperRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const popoverRef = useRef<HTMLDivElement>(null)
 
   // Sync calendar view when controlled value changes
   useEffect(() => {
@@ -112,12 +116,39 @@ export function DatePicker({
   useEffect(() => {
     if (!open) return
     function handle(e: MouseEvent) {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+      const target = e.target as Node
+      const inWrapper = wrapperRef.current?.contains(target) ?? false
+      const inPopover = popoverRef.current?.contains(target) ?? false
+      if (!inWrapper && !inPopover) {
         setOpen(false)
       }
     }
     document.addEventListener('mousedown', handle)
     return () => document.removeEventListener('mousedown', handle)
+  }, [open])
+
+  useEffect(() => {
+    if (!open || !triggerRef.current) return
+
+    function updatePosition() {
+      if (!triggerRef.current) return
+      const rect = triggerRef.current.getBoundingClientRect()
+      setPopoverStyle({
+        position: 'fixed',
+        top: rect.bottom + 4,
+        left: rect.left,
+        width: rect.width,
+        zIndex: 9999,
+      })
+    }
+
+    updatePosition()
+    window.addEventListener('scroll', updatePosition, true)
+    window.addEventListener('resize', updatePosition)
+    return () => {
+      window.removeEventListener('scroll', updatePosition, true)
+      window.removeEventListener('resize', updatePosition)
+    }
   }, [open])
 
   const minDate = parseISO(min ?? '')
@@ -153,6 +184,7 @@ export function DatePicker({
   return (
     <div className={styles.wrapper} ref={wrapperRef}>
       <button
+        ref={triggerRef}
         id={id}
         type="button"
         className={`${styles.trigger} ${className ?? ''}`}
@@ -165,9 +197,8 @@ export function DatePicker({
         <Calendar size={14} className={styles.calIcon} />
       </button>
 
-      {open && (
-        <div className={styles.popover}>
-          {/* Month navigation */}
+      {open && createPortal(
+        <div ref={popoverRef} className={styles.popover} style={popoverStyle}>
           <div className={styles.header}>
             <button type="button" className={styles.navBtn} onClick={prevMonth}>
               <ChevronLeft size={14} />
@@ -180,14 +211,12 @@ export function DatePicker({
             </button>
           </div>
 
-          {/* Day-of-week headers */}
           <div className={styles.weekRow}>
             {DAYS_SHORT.map(d => (
               <span key={d} className={styles.weekDay}>{d}</span>
             ))}
           </div>
 
-          {/* Day grid */}
           <div className={styles.dayGrid}>
             {cells.map((cell, i) => {
               const iso = toISO(cell.year, cell.month, cell.day)
@@ -214,7 +243,8 @@ export function DatePicker({
               )
             })}
           </div>
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   )

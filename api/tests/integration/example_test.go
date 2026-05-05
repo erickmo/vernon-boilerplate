@@ -20,6 +20,7 @@ import (
 
 	"github.com/yourorg/boilerplate/infrastructure/database"
 	"github.com/yourorg/boilerplate/internal/domain/example"
+	"github.com/yourorg/boilerplate/pkg/pagination"
 	"github.com/yourorg/boilerplate/pkg/scope"
 )
 
@@ -194,7 +195,13 @@ func TestExampleRepository_List(t *testing.T) {
 		}
 	}
 
-	items, total, err := repo.List(ctx, testScope, 100, 0, "created_at", "desc")
+	items, total, err := repo.List(ctx, testScope, pagination.ListParams{
+		Limit:  100,
+		Offset: 0,
+		Sort: []pagination.SortTuple{
+			{Field: "created_at", Direction: -1},
+		},
+	})
 	if err != nil {
 		t.Fatalf("List gagal: %v", err)
 	}
@@ -203,6 +210,70 @@ func TestExampleRepository_List(t *testing.T) {
 	}
 	if len(items) < 3 {
 		t.Errorf("len(items) mismatch: got %d, want >= 3", len(items))
+	}
+}
+
+func TestExampleRepository_List_WithTuples(t *testing.T) {
+	repo := database.NewExampleRepository(testDB)
+	ctx := context.Background()
+
+	baseTime := time.Date(2026, 5, 1, 10, 0, 0, 0, time.UTC)
+	rows := []*example.Example{
+		{
+			ID: uuid.New(), Name: "Widget Alpha", Description: "Alpha", IsActive: true,
+			CreatedAt: baseTime, UpdatedAt: baseTime,
+		},
+		{
+			ID: uuid.New(), Name: "Widget Beta", Description: "Beta", IsActive: true,
+			CreatedAt: baseTime.Add(1 * time.Hour), UpdatedAt: baseTime.Add(1 * time.Hour),
+		},
+		{
+			ID: uuid.New(), Name: "Widget Gamma", Description: "Gamma", IsActive: false,
+			CreatedAt: baseTime.Add(2 * time.Hour), UpdatedAt: baseTime.Add(2 * time.Hour),
+		},
+	}
+	for _, e := range rows {
+		if err := repo.Save(ctx, testScope, e); err != nil {
+			t.Fatalf("Save gagal: %v", err)
+		}
+	}
+
+	items, total, err := repo.List(ctx, testScope, pagination.ListParams{
+		Limit:  20,
+		Offset: 0,
+		Sort: []pagination.SortTuple{
+			{Field: "name", Direction: 1},
+			{Field: "created_at", Direction: -1},
+		},
+		Filters: []pagination.FilterTuple{
+			{Field: "name", Operator: "in", Value: []any{"Widget Alpha", "Widget Beta"}},
+			{Field: "created_at", Operator: "between", Value: []any{
+				baseTime.Add(-1 * time.Hour).Format(time.RFC3339),
+				baseTime.Add(90 * time.Minute).Format(time.RFC3339),
+			}},
+			{Field: "is_active", Operator: "is", Value: true},
+		},
+	})
+	if err != nil {
+		t.Fatalf("List gagal: %v", err)
+	}
+
+	if total != 2 {
+		t.Fatalf("total mismatch: got %d, want 2", total)
+	}
+	if len(items) != 2 {
+		t.Fatalf("len(items) mismatch: got %d, want 2", len(items))
+	}
+	if items[0].Name != "Widget Alpha" || items[1].Name != "Widget Beta" {
+		t.Fatalf("sort mismatch: got %q, %q", items[0].Name, items[1].Name)
+	}
+	for _, item := range items {
+		if item.IsActive != true {
+			t.Fatalf("filter mismatch: got inactive item %#v", item)
+		}
+		if item.Name == "Widget Gamma" {
+			t.Fatalf("filter mismatch: got excluded item %#v", item)
+		}
 	}
 }
 
