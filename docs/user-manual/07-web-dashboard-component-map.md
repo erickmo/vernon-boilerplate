@@ -113,6 +113,7 @@ Pola sekarang:
 | `DateRangePicker` | Pilih rentang tanggal | Saat perlu filter tanggal dari-sampai |
 | `NumberInput` | Input angka terformat | Saat nilai numerik perlu kontrol lebih ketat |
 | `RangeInput` | Slider/range | Saat butuh nilai min-max atau pengaturan rentang |
+| `Toggle` | Boolean setting di form cards | Saat field hanya punya on/off dan harus tampil sebagai toggle |
 | `MultiSelect` | Pilih banyak opsi | Saat satu field bisa punya banyak item |
 | `CheckboxGroup` | Grup checkbox | Saat perlu opsi multi-pilih sederhana |
 | `RadioGroup` | Grup radio | Saat hanya satu opsi boleh dipilih |
