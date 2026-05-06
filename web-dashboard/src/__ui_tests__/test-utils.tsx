@@ -6,7 +6,7 @@ import type { ReactNode } from 'react'
 function createTestQueryClient() {
   return new QueryClient({
     defaultOptions: {
-      queries: { retry: false, staleTime: 0 },
+      queries: { retry: false, staleTime: 0, refetchOnWindowFocus: true },
       mutations: { retry: false },
     },
   })
