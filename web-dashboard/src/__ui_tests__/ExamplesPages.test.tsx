@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { render } from '@/__ui_tests__/test-utils'
 import ExamplesListPage from '@/pages/Examples/ExamplesListPage'
+import ExamplesVisualListPage from '@/pages/Examples/ExamplesVisualListPage'
 import ExampleFormPage from '@/pages/Examples/ExampleFormPage'
 import ExampleDetailPage from '@/pages/Examples/ExampleDetailPage'
 
@@ -13,6 +14,22 @@ describe('example template pages', () => {
 
     expect(screen.getByRole('heading', { name: /example projects/i })).toBeInTheDocument()
     expect(await screen.findByText('Customer onboarding refresh')).toBeInTheDocument()
+  })
+
+  it('renders the visual list page and switches modes', async () => {
+    const user = userEvent.setup()
+
+    render(<ExamplesVisualListPage />)
+
+    expect(screen.getByRole('heading', { name: /list page template/i })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /^tree$/i })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByText(/visual showcase/i)).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /tree/i })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('tab', { name: /^kanban$/i }))
+    expect(screen.getByRole('tab', { name: /^kanban$/i })).toHaveAttribute('aria-selected', 'true')
+    expect(screen.getByRole('heading', { name: /kanban/i })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /^draft$/i })).toBeInTheDocument()
   })
 
   it('renders the FormPageTemplate example', () => {

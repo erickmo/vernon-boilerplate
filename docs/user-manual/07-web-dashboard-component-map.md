@@ -79,7 +79,7 @@ Pola sekarang:
 
 | Komponen | Fungsi | Kapan dipakai |
 |----------|--------|---------------|
-| `DataTable` | Tabel data dengan sort, search, filter, pagination, row action | Saat perlu mengubah header/footer table, toolbar, row action, atau pagination. Sort dan filter query params memakai tuple array: `sort=[['field', 1], ['field2', -1]]`, `filters=[['field', 'operator', value]]` |
+| `DataTable` | Tabel data dengan sort, search, filter, pagination, row action | Saat perlu mengubah header/footer table, toolbar, row action, atau pagination. Sort dan filter query params memakai tuple array: `sort=[['field', 1], ['field2', -1]]`, `filters=[['field', 'operator', 'value']]` |
 | `ProgressWidget` | Stepper/status progression | Saat perlu menampilkan alur status atau tahapan kerja |
 | `DataConnectionWidget` | Tampilan koneksi / relasi data | Saat detail page butuh daftar koneksi atau relasi |
 

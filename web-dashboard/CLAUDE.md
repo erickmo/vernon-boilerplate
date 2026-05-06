@@ -139,7 +139,14 @@ filters: [['status', '=', 'active'], ['priority', '>=', 2]]
 ```
 
 The shared `buildQS()` helper JSON-encodes those arrays under the `sort` and `filters` keys.
-Do not use legacy `sort=name` examples for new code.
+Use the tuple-array contract consistently in docs and code:
+
+```text
+?sort=[['field', 1], ['field2', -1]]
+?filters=[['field1', 'operator1', 'value1'], ['field2', 'operator2', 'value2']]
+```
+
+Do not use legacy `sort=name` or `filter[field]=value` examples for new code.
 
 ## API Response Contract
 

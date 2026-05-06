@@ -34,6 +34,10 @@ export default function ExamplesListPage() {
       readonly={false}
       actions={
         <>
+          <button type="button" onClick={() => navigate('visual-list')}>
+            <LayoutGrid size={16} />
+            Visual list
+          </button>
           <button type="button" onClick={() => navigate('widgets')}>
             <LayoutGrid size={16} />
             Widget gallery

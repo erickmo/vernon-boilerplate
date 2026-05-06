@@ -273,19 +273,19 @@ Endpoint domain Vernon mendukung filter dan sort melalui query parameter.
 
 ### Filter
 
-**Format:** `filter[nama_field]=nilai`
+**Format:** `filters=[['nama_field', 'operator', 'nilai']]`
 
 Filter bekerja pada field yang ada di dalam kolom `_data` (JSON).
 
 ```bash
 # Filter produk berdasarkan kategori
-GET /api/v1/products/?filter[category]=electronics
+GET /api/v1/products/?filters=%5B%5B%22category%22%2C%22=%22%2C%22electronics%22%5D%5D
 
 # Filter berdasarkan status
-GET /api/v1/orders/?filter[status]=pending
+GET /api/v1/orders/?filters=%5B%5B%22status%22%2C%22=%22%2C%22pending%22%5D%5D
 
 # Kombinasi filter (AND logic)
-GET /api/v1/products/?filter[category]=electronics&filter[status]=active
+GET /api/v1/products/?filters=%5B%5B%22category%22%2C%22=%22%2C%22electronics%22%5D%2C%5B%22status%22%2C%22=%22%2C%22active%22%5D%5D
 ```
 
 > **Catatan:** Filter menggunakan pencocokan exact (sama persis). Untuk pencarian
@@ -293,7 +293,7 @@ GET /api/v1/products/?filter[category]=electronics&filter[status]=active
 
 ### Sort
 
-**Format:** `sort=[["nama_field",1]]` untuk ascending atau `sort=[["nama_field",-1]]` untuk descending.
+**Format:** `sort=[['nama_field', 1]]` untuk ascending atau `sort=[['nama_field', -1]]` untuk descending.
 Nilai `sort` di URL adalah JSON-encoded array tuple.
 
 ```bash
@@ -310,7 +310,7 @@ GET /api/v1/products/?sort=%5B%5B%22price%22%2C-1%5D%5D
 ### Kombinasi Filter, Sort, dan Pagination
 
 ```bash
-GET /api/v1/products/?filter[category]=electronics&sort=%5B%5B%22price%22%2C-1%5D%5D&page=1&limit=10
+GET /api/v1/products/?filters=%5B%5B%22category%22%2C%22=%22%2C%22electronics%22%5D%5D&sort=%5B%5B%22price%22%2C-1%5D%5D&page=1&limit=10
 ```
 
 ### Contract Response untuk Frontend
@@ -579,7 +579,7 @@ curl -s -X DELETE "$BASE/products/550e8400-e29b-41d4-a716-446655440001" \
 
 ```bash
 # Filter + sort + pagination + expand relasi
-curl -s "$BASE/products/?filter[status]=active&sort=%5B%5B%22price%22%2C-1%5D%5D&page=1&limit=5&expand=category" \
+curl -s "$BASE/products/?filters=%5B%5B%22status%22%2C%22=%22%2C%22active%22%5D%5D&sort=%5B%5B%22price%22%2C-1%5D%5D&page=1&limit=5&expand=category" \
   -H "Authorization: Bearer $TOKEN" \
   | python3 -m json.tool
 ```
