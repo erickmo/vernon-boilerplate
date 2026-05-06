@@ -148,6 +148,17 @@ Use the tuple-array contract consistently in docs and code:
 
 Do not use legacy `sort=name` or `filter[field]=value` examples for new code.
 
+React Query UI defaults:
+
+```ts
+queries: {
+  staleTime: 0,
+  refetchOnWindowFocus: true,
+}
+```
+
+Override those only when a page has a clear caching reason.
+
 ## API Response Contract
 
 - `apiClient.get<T>()` returns the decoded JSON body only. It does not unwrap a

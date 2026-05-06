@@ -237,7 +237,7 @@ src/
 ├── app/
 │   ├── App.tsx          # Root component
 │   ├── routes.tsx       # Route definitions (single + multi tenant)
-│   ├── providers.tsx    # QueryClient, ToastProvider
+│   ├── providers.tsx    # QueryClient (UI defaults: staleTime 0, refetchOnWindowFocus true), ToastProvider
 │   └── ProtectedRoute.tsx  # Auth guard + role-based routing
 ├── hooks/               # Custom React hooks (useForm, useDataSource, dll)
 ├── layouts/

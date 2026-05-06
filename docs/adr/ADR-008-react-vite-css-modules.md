@@ -232,7 +232,8 @@ export function useProducts(filters: ProductFilters) {
     return useQuery({
         queryKey: ['products', scope.tenantID, scope.warehouseID, filters],
         queryFn: () => productApi.list({ ...filters, ...scope }),
-        staleTime: 30_000,  // 30 detik — tidak refetch terus-menerus
+        staleTime: 0,        // selalu dianggap stale di UI
+        refetchOnWindowFocus: true,
         enabled: !!scope.tenantID,  // hanya fetch jika ada scope
     });
 }
