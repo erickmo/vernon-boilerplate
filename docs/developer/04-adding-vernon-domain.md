@@ -315,7 +315,7 @@ DELETE /{domain}/{id}     Soft delete
 Untuk domain `warehouses`:
 
 ```
-GET    /warehouses?limit=20&offset=0&sort=-created_at
+GET    /warehouses?limit=20&offset=0&sort=%5B%5B%22created_at%22%2C-1%5D%5D
 POST   /warehouses
 GET    /warehouses/{id}
 PUT    /warehouses/{id}
@@ -329,7 +329,7 @@ DELETE /warehouses/{id}
 |-----------|--------|-----------|
 | `limit` | `?limit=20` | Jumlah item per halaman |
 | `offset` | `?offset=40` | Skip N item pertama |
-| `sort` | `?sort=-created_at` | Prefix `-` = DESC, tanpa prefix = ASC |
+| `sort` | `?sort=%5B%5B%22created_at%22%2C-1%5D%5D` | JSON tuple `[[field, direction]]`, direction `1` = ASC dan `-1` = DESC |
 | `page` | `?page=3` | Alias untuk offset (auto-computed) |
 | `{field}` | `?code=WH-001` | Filter berdasarkan field di `_data` |
 | `{field}_gte` | `?capacity_gte=100` | Greater than or equal |

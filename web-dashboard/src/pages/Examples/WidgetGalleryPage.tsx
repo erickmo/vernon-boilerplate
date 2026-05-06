@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 import { PageHeader } from '@/layouts/PageHeader/PageHeader'
 import { ActionMenu } from '@/widgets/ActionMenu/ActionMenu'
-import { Avatar, AvatarGroup } from '@/widgets/Avatar/Avatar'
+import { AvatarGroup } from '@/widgets/Avatar/Avatar'
 import { Badge, StatusBadge } from '@/widgets/Badge/Badge'
 import { Breadcrumb } from '@/widgets/Breadcrumb/Breadcrumb'
 import { ChartWidget } from '@/widgets/ChartWidget/ChartWidget'

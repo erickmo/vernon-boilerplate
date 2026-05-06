@@ -138,7 +138,21 @@ sort: [['name', 1], ['updatedAt', -1]]
 filters: [['status', '=', 'active'], ['priority', '>=', 2]]
 ```
 
-The query-string layer JSON-encodes those arrays under the `sort` and `filters` keys.
+The shared `buildQS()` helper JSON-encodes those arrays under the `sort` and `filters` keys.
+Do not use legacy `sort=name` examples for new code.
+
+## API Response Contract
+
+- `apiClient.get<T>()` returns the decoded JSON body only. It does not unwrap a
+  nested `data` field for you.
+- `createEntityService().list()` expects list endpoints to return
+  `{"items":[...],"total":number,"limit":number,"offset":number}`.
+- If the backend wraps the list payload, pass `responseWrapper` so the service
+  can unwrap it before mapping items.
+- Special endpoints can use page-based responses like
+  `{"data":[...],"total":number,"page":number,"pageSize":number,"totalPages":number}`.
+- Frontend services must read the API docs first, then implement the response
+  parser to match the documented shape.
 
 ## Environment Variables
 

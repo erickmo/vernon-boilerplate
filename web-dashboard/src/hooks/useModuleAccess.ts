@@ -1,8 +1,5 @@
 import { useLocation } from 'react-router-dom'
 import { useDashboardContext } from './useDashboardContext'
-
-type ModuleAccessLevel = 'full' | 'readonly'
-
 /** HQ: transaksi hanya bisa dilihat */
 const HQ_READONLY_MODULES = new Set(['sales', 'purchasing', 'inventory'])
 

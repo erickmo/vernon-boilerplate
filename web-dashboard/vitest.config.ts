@@ -16,6 +16,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    execArgv: ['--no-warnings'],
     setupFiles: ['./src/__ui_tests__/setup.ts'],
     include: ['src/__ui_tests__/**/*.test.{ts,tsx}'],
     css: { modules: { classNameStrategy: 'non-scoped' } },

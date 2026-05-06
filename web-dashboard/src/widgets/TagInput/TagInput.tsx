@@ -1,4 +1,5 @@
-import { useState, useRef, KeyboardEvent } from 'react'
+import { useState, useRef } from 'react'
+import type { KeyboardEvent } from 'react'
 import { X } from 'lucide-react'
 import styles from './TagInput.module.css'
 

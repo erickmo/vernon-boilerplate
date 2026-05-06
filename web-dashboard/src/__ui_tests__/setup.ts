@@ -20,8 +20,10 @@ class MockResizeObserver {
 }
 
 if (!('ResizeObserver' in window)) {
-  ;(window as typeof window & { ResizeObserver: typeof MockResizeObserver }).ResizeObserver = MockResizeObserver
-  ;(globalThis as typeof globalThis & { ResizeObserver: typeof MockResizeObserver }).ResizeObserver = MockResizeObserver
+  const globalWithResizeObserver = globalThis as typeof globalThis & {
+    ResizeObserver: typeof MockResizeObserver
+  }
+  globalWithResizeObserver.ResizeObserver = MockResizeObserver
 }
 
 beforeAll(() => server.listen({ onUnhandledRequest: 'warn' }))

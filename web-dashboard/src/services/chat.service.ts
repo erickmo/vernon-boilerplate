@@ -1,4 +1,5 @@
 import { apiClient } from './api.client'
+import { buildQS } from '@/utils/buildQS'
 
 // ─── Types ──────────────────────────────────────────────────────────────────────
 
@@ -126,14 +127,10 @@ export const chatService = {
     channelId: string,
     params?: { limit?: number; offset?: number },
   ): Promise<{ items: ChatMessageAPI[]; total: number }> => {
-    const query = new URLSearchParams()
-    if (params?.limit) query.set('limit', String(params.limit))
-    if (params?.offset) query.set('offset', String(params.offset))
-    const qs = query.toString()
     const response = await apiClient.get<{
       data: ChatMessageAPI[]
       total: number
-    }>(`${CHAT_BASE}/channels/${channelId}/messages${qs ? `?${qs}` : ''}`)
+    }>(`${CHAT_BASE}/channels/${channelId}/messages${buildQS(params)}`)
     return { items: response.data ?? [], total: response.total ?? 0 }
   },
 
@@ -157,14 +154,10 @@ export const chatService = {
     messageId: string,
     params?: { limit?: number; offset?: number },
   ): Promise<{ items: ChatMessageAPI[]; total: number }> => {
-    const query = new URLSearchParams()
-    if (params?.limit) query.set('limit', String(params.limit))
-    if (params?.offset) query.set('offset', String(params.offset))
-    const qs = query.toString()
     const response = await apiClient.get<{
       data: ChatMessageAPI[]
       total: number
-    }>(`${CHAT_BASE}/channels/*/messages/${messageId}/thread${qs ? `?${qs}` : ''}`)
+    }>(`${CHAT_BASE}/channels/*/messages/${messageId}/thread${buildQS(params)}`)
     return { items: response.data ?? [], total: response.total ?? 0 }
   },
 
@@ -174,14 +167,10 @@ export const chatService = {
     channelId: string,
     params?: { limit?: number; offset?: number },
   ): Promise<{ items: ChatMemberAPI[]; total: number }> => {
-    const query = new URLSearchParams()
-    if (params?.limit) query.set('limit', String(params.limit))
-    if (params?.offset) query.set('offset', String(params.offset))
-    const qs = query.toString()
     const response = await apiClient.get<{
       data: ChatMemberAPI[]
       total: number
-    }>(`${CHAT_BASE}/channels/${channelId}/members${qs ? `?${qs}` : ''}`)
+    }>(`${CHAT_BASE}/channels/${channelId}/members${buildQS(params)}`)
     return { items: response.data ?? [], total: response.total ?? 0 }
   },
 

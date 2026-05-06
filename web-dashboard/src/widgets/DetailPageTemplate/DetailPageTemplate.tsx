@@ -53,7 +53,7 @@ interface DetailPageTemplateProps {
   badges?: React.ReactNode
 
   /** Tabs. Single tab = no tab bar chrome, just content. */
-  tabs: DetailPageTab[]
+  tabs?: DetailPageTab[]
 
   /** Optional sidebar sections. When set, the sidebar menu controls which submenu tabs show. */
   sections?: DetailPageSection[]
@@ -131,7 +131,7 @@ export function DetailPageTemplate({
 
   const sectionItems = sections?.length
     ? sections
-    : [{ id: '__default__', label: 'Menu', tabs }]
+    : [{ id: '__default__', label: 'Menu', tabs: tabs ?? [] }]
 
   const connectionSection = connections
     ? {

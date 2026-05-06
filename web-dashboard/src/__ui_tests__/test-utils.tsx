@@ -21,7 +21,10 @@ function AllProviders({ children, initialEntries = ['/'] }: WrapperProps) {
   const queryClient = createTestQueryClient()
   return (
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter initialEntries={initialEntries}>
+      <MemoryRouter
+        initialEntries={initialEntries}
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         {children}
       </MemoryRouter>
     </QueryClientProvider>

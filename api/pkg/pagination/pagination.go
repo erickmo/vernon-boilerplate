@@ -36,7 +36,9 @@ type FilterTuple struct {
 	Value    any
 }
 
-// ParseFromRequest membaca parameter limit, offset, sort, order, dan filters dari HTTP request.
+// ParseFromRequest membaca parameter limit, offset, sort, dan filters dari HTTP request.
+// `sort` menerima format JSON tuple [["field", 1], ["field2", -1]] dan tetap
+// mendukung bentuk legacy `sort=field&order=asc|desc` untuk kompatibilitas.
 func ParseFromRequest(r *http.Request) (ListParams, error) {
 	q := r.URL.Query()
 

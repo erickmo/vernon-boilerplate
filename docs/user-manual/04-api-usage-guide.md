@@ -208,10 +208,10 @@ Untuk domain yang menggunakan Vernon Pattern, data dimasukkan ke dalam objek `_d
 }
 ```
 
-**Koleksi dengan pagination:**
+**Koleksi list standar:**
 ```json
 {
-  "data": [
+  "items": [
     {
       "id": "550e8400-e29b-41d4-a716-446655440001",
       "name": "Item Pertama"
@@ -221,12 +221,9 @@ Untuk domain yang menggunakan Vernon Pattern, data dimasukkan ke dalam objek `_d
       "name": "Item Kedua"
     }
   ],
-  "meta": {
-    "page": 1,
-    "limit": 20,
-    "total": 150,
-    "total_pages": 8
-  }
+  "total": 150,
+  "limit": 20,
+  "offset": 0
 }
 ```
 
@@ -256,18 +253,17 @@ GET /api/v1/products/?page=3&limit=10
 ```json
 {
   "data": [ ... ],
-  "meta": {
-    "page": 2,
-    "limit": 10,
-    "total": 150,
-    "total_pages": 15
-  }
+  "total": 150,
+  "page": 2,
+  "pageSize": 10,
+  "totalPages": 15
 }
 ```
 
 - `total` — total semua item (sebelum pagination)
-- `total_pages` — total halaman yang tersedia
-- Jika `page` lebih besar dari `total_pages`, `data` akan berisi array kosong `[]`
+- `pageSize` — jumlah item per halaman
+- `totalPages` — total halaman yang tersedia
+- Jika `page` lebih besar dari `totalPages`, `data` akan berisi array kosong `[]`
 
 ---
 
@@ -297,24 +293,58 @@ GET /api/v1/products/?filter[category]=electronics&filter[status]=active
 
 ### Sort
 
-**Format:** `sort=nama_field` (ascending) atau `sort=-nama_field` (descending dengan prefix `-`)
+**Format:** `sort=[["nama_field",1]]` untuk ascending atau `sort=[["nama_field",-1]]` untuk descending.
+Nilai `sort` di URL adalah JSON-encoded array tuple.
 
 ```bash
 # Sort ascending berdasarkan nama
-GET /api/v1/products/?sort=name
+GET /api/v1/products/?sort=%5B%5B%22name%22%2C1%5D%5D
 
 # Sort descending berdasarkan tanggal dibuat (terbaru duluan)
-GET /api/v1/products/?sort=-created_at
+GET /api/v1/products/?sort=%5B%5B%22created_at%22%2C-1%5D%5D
 
 # Sort berdasarkan field dalam _data
-GET /api/v1/products/?sort=-price
+GET /api/v1/products/?sort=%5B%5B%22price%22%2C-1%5D%5D
 ```
 
 ### Kombinasi Filter, Sort, dan Pagination
 
 ```bash
-GET /api/v1/products/?filter[category]=electronics&sort=-price&page=1&limit=10
+GET /api/v1/products/?filter[category]=electronics&sort=%5B%5B%22price%22%2C-1%5D%5D&page=1&limit=10
 ```
+
+### Contract Response untuk Frontend
+
+Frontend tidak boleh menebak bentuk response. Ikuti contract per service.
+
+- `createEntityService().list()` membaca response koleksi model umum dengan shape:
+  `{"items":[...],"total":123,"limit":25,"offset":0}`
+- Jika endpoint membungkus payload, service harus membuka wrapper itu dulu lewat
+  `responseWrapper` sebelum membaca `items`.
+- Endpoint yang memakai format page-based khusus dapat mengembalikan:
+  `{"data":[...],"total":123,"page":1,"pageSize":25,"totalPages":5}`
+- UI daftar harus memakai field dari service, bukan mengandalkan nama response
+  secara ad hoc di halaman.
+
+Contoh praktis:
+
+```ts
+const resp = await apiClient.get<{ items: User[]; total: number }>('/api/v1/users')
+const rows = resp.items ?? []
+const total = resp.total ?? 0
+```
+
+```ts
+const resp = await apiClient.get<{ data: AuditLog[]; total: number }>('/api/audit-logs')
+const rows = resp.data ?? []
+const total = resp.total ?? 0
+```
+
+### Aturan Sinkronisasi Dokumen
+
+- Jika contract query atau response API berubah, update docs API lebih dulu.
+- Frontend harus membaca docs API terbaru sebelum implementasi service atau page
+  yang mengonsumsi endpoint baru.
 
 ---
 
@@ -473,7 +503,7 @@ curl -s -X POST $BASE/auth/login \
 ### List Resource (GET Collection)
 
 ```bash
-curl -s "$BASE/products/?page=1&limit=10&sort=-created_at" \
+curl -s "$BASE/products/?page=1&limit=10&sort=%5B%5B%22created_at%22%2C-1%5D%5D" \
   -H "Authorization: Bearer $TOKEN" \
   | python3 -m json.tool
 ```
@@ -549,7 +579,7 @@ curl -s -X DELETE "$BASE/products/550e8400-e29b-41d4-a716-446655440001" \
 
 ```bash
 # Filter + sort + pagination + expand relasi
-curl -s "$BASE/products/?filter[status]=active&sort=-price&page=1&limit=5&expand=category" \
+curl -s "$BASE/products/?filter[status]=active&sort=%5B%5B%22price%22%2C-1%5D%5D&page=1&limit=5&expand=category" \
   -H "Authorization: Bearer $TOKEN" \
   | python3 -m json.tool
 ```

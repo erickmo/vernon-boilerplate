@@ -92,6 +92,18 @@ Tambahkan annotations ke handler baru:
 func (h *ExampleHandler) Create(w http.ResponseWriter, r *http.Request) {
 ```
 
+## API Contract Rules
+
+- Kalau query contract atau response contract berubah, update docs API dan
+  Swagger output dulu.
+- Frontend harus membaca docs API terbaru sebelum implementasi service atau
+  page yang mengonsumsi endpoint baru.
+- Vernon list endpoint memakai query tuple JSON:
+  `sort=[["field",1],["field2",-1]]`
+  dan `filters=[["field","operator","value"]]`.
+- Jangan ubah format response tanpa memperbarui docs user-manual dan frontend
+  contract di `web-dashboard/CLAUDE.md`.
+
 ## Tenant & Org Scope Architecture
 
 ### Hierarki 4 Level

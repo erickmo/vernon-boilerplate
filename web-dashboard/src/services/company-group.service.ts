@@ -1,8 +1,6 @@
 import { createEntityService } from './createEntityService'
-import type { CompanyGroup, ApiCompanyGroup } from '@/types/entity.types'
-import { mapApiCompanyGroup } from '@/types/entity.types'
+import type { BaseEntity } from '@/types/entity.types'
 
-export const companyGroupService = createEntityService<CompanyGroup, ApiCompanyGroup>(
+export const companyGroupService = createEntityService<BaseEntity>(
   '/api/v1/company-groups',
-  mapApiCompanyGroup,
 )

@@ -1,4 +1,5 @@
-import { RefObject, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
+import type { RefObject } from 'react'
 
 // Overload 1: window target (element omitted or undefined)
 export function useEventListener<K extends keyof WindowEventMap>(
@@ -23,7 +24,7 @@ export function useEventListener<
 >(
   eventName: K,
   handler: (event: HTMLElementEventMap[K]) => void,
-  element: RefObject<T> | T | null,
+  element: RefObject<T | null> | T | null,
   options?: AddEventListenerOptions,
 ): void
 
@@ -31,7 +32,7 @@ export function useEventListener<
 export function useEventListener(
   eventName: string,
   handler: (event: Event) => void,
-  element?: Document | RefObject<HTMLElement> | HTMLElement | null,
+  element?: Document | RefObject<HTMLElement | null> | HTMLElement | null,
   options?: AddEventListenerOptions,
 ): void {
   const handlerRef = useRef<(event: Event) => void>(handler)

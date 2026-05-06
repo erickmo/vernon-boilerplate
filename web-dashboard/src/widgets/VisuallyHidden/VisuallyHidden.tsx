@@ -1,10 +1,11 @@
 import styles from './VisuallyHidden.module.css'
+import type { ElementType, ReactNode } from 'react'
 
 interface VisuallyHiddenProps {
-  children: React.ReactNode
+  children: ReactNode
   /** When true, becomes visible on focus (useful for skip-nav links) */
   focusable?: boolean
-  as?: keyof JSX.IntrinsicElements
+  as?: ElementType
 }
 
 /**

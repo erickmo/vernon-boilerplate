@@ -26,6 +26,8 @@ Server API yang menangani semua logika bisnis dan akses data.
 
 - Berjalan di port **8080** (default)
 - Mendukung dua pola arsitektur domain: **CQRS** dan **Vernon**
+- Vernon memakai database design denormalized read-cache: data baca disimpan
+  dalam `_rels` dan `_data` JSONB supaya GET cepat dan tidak perlu JOIN
 - Menyediakan endpoint REST, dokumentasi Swagger, dan metrics Prometheus
 - Autentikasi menggunakan **JWT Bearer Token**
 
@@ -140,7 +142,7 @@ Tenant (Level 1)
 | **Branch** | Cabang atau lokasi fisik di dalam sebuah company. Opsional — tidak semua aplikasi membutuhkan level ini. |
 | **Warehouse** | Gudang atau lokasi penyimpanan di dalam branch. Level paling dalam, opsional. |
 | **CQRS** | Command Query Responsibility Segregation — pola arsitektur yang memisahkan operasi tulis (Command) dari operasi baca (Query). Digunakan untuk domain dengan logika bisnis kompleks. |
-| **Vernon Pattern** | Pola arsitektur read-cache denormalized. Data disimpan dalam dua kolom JSON (`_rels` untuk relasi, `_data` untuk payload). Cocok untuk domain CRUD sederhana dengan banyak JOIN dan operasi baca tinggi. |
+| **Vernon Pattern** | Pola arsitektur read-cache denormalized. Data disimpan dalam dua kolom JSONB (`_rels` untuk relasi, `_data` untuk payload/read model) sehingga read path tidak perlu JOIN. Cocok untuk domain CRUD sederhana dengan banyak JOIN dan operasi baca tinggi. |
 | **SyncEngine** | Komponen dalam Vernon Pattern yang mendengarkan event dari NATS/Watermill dan memperbarui cache `_rels`/`_data` secara asinkron setelah ada perubahan data. |
 | **JWT** | JSON Web Token — standar token autentikasi yang digunakan API. Token dikirimkan di header `Authorization: Bearer {token}` setiap request. |
 | **Single-Tenant Mode** | Mode operasi di mana satu instance API melayani satu organisasi. Konfigurasi tenant/company disimpan di environment variable server. |

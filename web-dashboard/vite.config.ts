@@ -7,6 +7,9 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url))
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    chunkSizeWarningLimit: 600,
+  },
   server: {
     proxy: {
       '/api': {
