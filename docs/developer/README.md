@@ -2,6 +2,8 @@
 
 Go + React Boilerplate — CQRS + Vernon Hybrid Architecture
 
+Vernon domains use a denormalized read-cache design: `_rels` stores relation IDs and `_data` stores the denormalized read model so GET requests avoid JOINs.
+
 ## Index
 
 | # | File | Description |
