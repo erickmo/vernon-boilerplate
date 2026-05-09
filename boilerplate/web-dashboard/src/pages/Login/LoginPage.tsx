@@ -24,7 +24,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState('')
   const [rememberMe, setRememberMe] = useState(() => {
-    return localStorage.getItem('rememberMe') === 'true'
+    try { return localStorage.getItem('rememberMe') === 'true' } catch { return false }
   })
   const [showForgotModal, setShowForgotModal] = useState(false)
 
@@ -39,7 +39,7 @@ export default function LoginPage() {
   const getRedirectPath = (): string => {
     const params = new URLSearchParams(location.search)
     const nextParam = params.get('next')
-    if (nextParam) return nextParam
+    if (nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')) return nextParam
     const fromState = (location.state as { from?: { pathname: string } } | null)?.from?.pathname
     return fromState ?? '/dashboard'
   }
@@ -48,7 +48,7 @@ export default function LoginPage() {
     setIsLoading(true)
     setServerError('')
     try {
-      localStorage.setItem('rememberMe', String(rememberMe))
+      try { localStorage.setItem('rememberMe', String(rememberMe)) } catch { /* sandboxed */ }
       const response = await authService.login({ usr: v.usr, pwd: v.pwd, remember: rememberMe })
       login(response)
       navigate(getRedirectPath(), { replace: true })
@@ -202,6 +202,8 @@ export default function LoginPage() {
         <div
           className={styles.modalOverlay}
           onClick={() => setShowForgotModal(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setShowForgotModal(false)}
+          role="presentation"
         >
           <div
             className={styles.modal}
@@ -218,6 +220,7 @@ export default function LoginPage() {
               type="button"
               className={styles.modalClose}
               onClick={() => setShowForgotModal(false)}
+              autoFocus
             >
               Tutup
             </button>
