@@ -40,8 +40,9 @@ export interface CompanyGroup {
 // ─── Auth request/response ────────────────────────────────────────────────────
 
 export interface LoginRequest {
-  email: string
-  password: string
+  usr: string
+  pwd: string
+  remember?: boolean
 }
 
 export interface LoginResponse {
