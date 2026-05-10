@@ -25,9 +25,9 @@ const KelulusanSiswaListPage     = lazy(() => Promise.resolve({ default: stub('K
 const KelulusanSiswaFormPage     = lazy(() => Promise.resolve({ default: stub('KelulusanSiswaFormPage') }))
 
 // Guru
-const GuruListPage               = lazy(() => Promise.resolve({ default: stub('GuruListPage') }))
-const GuruDetailPage             = lazy(() => Promise.resolve({ default: stub('GuruDetailPage') }))
-const GuruFormPage               = lazy(() => Promise.resolve({ default: stub('GuruFormPage') }))
+const GuruListPage               = lazy(() => import('@/pages/sekolah/guru/GuruListPage'))
+const GuruDetailPage             = lazy(() => import('@/pages/sekolah/guru/GuruDetailPage'))
+const GuruFormPage               = lazy(() => import('@/pages/sekolah/guru/GuruFormPage'))
 const PenugasanGuruListPage      = lazy(() => Promise.resolve({ default: stub('PenugasanGuruListPage') }))
 const PenugasanGuruFormPage      = lazy(() => Promise.resolve({ default: stub('PenugasanGuruFormPage') }))
 const BerkasGuruListPage         = lazy(() => Promise.resolve({ default: stub('BerkasGuruListPage') }))
