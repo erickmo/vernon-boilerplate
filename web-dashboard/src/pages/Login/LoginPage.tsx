@@ -10,8 +10,8 @@ import {
   Mail,
   Sparkles,
 } from 'lucide-react'
+import { frappeAuthService } from '@/services/frappe-auth.service'
 import { useAuthStore } from '@/stores/auth.store'
-import { authService } from '@/services/auth.service'
 import { useForm } from '@/hooks/useForm'
 import { AppApiError } from '@/types/api.types'
 import { appConfig } from '@/config/app.config'
@@ -40,14 +40,17 @@ const demoLoginResponse: LoginResponse = {
 }
 
 export default function LoginPage() {
-  const navigate = useNavigate()
-  const login = useAuthStore((s) => s.login)
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState('')
+  const navigate = useNavigate()
+  const login = useAuthStore((s) => s.login)
 
   const { values, errors, field, handleSubmit } = useForm<LoginFormValues>({
-    initialValues: { email: '', password: '' },
+    initialValues: {
+      email: import.meta.env.DEV ? 'administrator' : '',
+      password: import.meta.env.DEV ? '123123123' : '',
+    },
     validate: (v) => ({
       email: !v.email ? 'Email wajib diisi' : undefined,
       password: !v.password ? 'Kata sandi wajib diisi' : undefined,
@@ -58,9 +61,9 @@ export default function LoginPage() {
     setIsLoading(true)
     setServerError('')
     try {
-      const response = await authService.login(v)
-      login(response)
-      navigate('/dashboard', { replace: true })
+      // frappeAuthService sets isAuthenticated=true in the store
+      // GuestRoute detects the change and redirects to / → RootRedirect → /my-work
+      await frappeAuthService.login(String(v.email), String(v.password))
     } catch (err) {
       if (err instanceof AppApiError) {
         setServerError(err.message)

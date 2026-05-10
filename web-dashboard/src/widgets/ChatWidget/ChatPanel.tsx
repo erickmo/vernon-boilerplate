@@ -71,8 +71,8 @@ function CategorySection({ category }: { category: ChannelCategory }) {
 
 function ChannelSidebar() {
   const { categories, isLoadingChannels } = useChatStore()
-  const userRole = useAuthStore((s) => s.user?.role ?? '')
-  const canCreate = CHANNEL_CREATOR_ROLES.includes(userRole)
+  const userRoles = useAuthStore((s) => s.user?.roles ?? [s.user?.role ?? ''])
+  const canCreate = CHANNEL_CREATOR_ROLES.some((r) => userRoles.includes(r))
   const openChannelForm = useChannelFormModal()
 
   return (

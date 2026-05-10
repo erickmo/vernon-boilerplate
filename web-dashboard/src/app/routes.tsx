@@ -16,23 +16,24 @@ import { koperasiRoutes } from './routes.koperasi'
 
 // ─── Lazy-loaded pages ────────────────────────────────────────────────────────
 
-const LoginPage              = lazy(() => import('@/pages/Login/LoginPage'))
-const DashboardPage          = lazy(() => import('@/pages/Dashboard/DashboardPage'))
-const AdminDashboardPage     = lazy(() => import('@/pages/Admin/AdminDashboardPage'))
-const TenantListPage         = lazy(() => import('@/pages/Admin/TenantListPage'))
-const TenantDetailPage       = lazy(() => import('@/pages/Admin/TenantDetailPage'))
-const AuditLogPage           = lazy(() => import('@/pages/AuditLog/AuditLogPage'))
-const ProfilePage            = lazy(() => import('@/pages/Profile/ProfilePage'))
-const ChangePasswordPage     = lazy(() => import('@/pages/ChangePassword/ChangePasswordPage'))
-const ExamplesListPage       = lazy(() => import('@/pages/Examples/ExamplesListPage'))
-const ExamplesVisualListPage = lazy(() => import('@/pages/Examples/ExamplesVisualListPage'))
-const ExampleDetailPage      = lazy(() => import('@/pages/Examples/ExampleDetailPage'))
-const ExampleFormPage        = lazy(() => import('@/pages/Examples/ExampleFormPage'))
-const WidgetGalleryPage      = lazy(() => import('@/pages/Examples/WidgetGalleryPage'))
-const ChooseCompanyPage      = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
-const ChooseDashboardPage    = lazy(() => import('@/pages/ChooseDashboard/ChooseDashboardPage'))
-const NotFoundPage           = lazy(() => import('@/pages/errors/NotFoundPage'))
-const ForbiddenPage          = lazy(() => import('@/pages/errors/ForbiddenPage'))
+const LoginPage          = lazy(() => import('@/pages/Login/LoginPage'))
+const DashboardPage      = lazy(() => import('@/pages/Dashboard/DashboardPage'))
+const AdminDashboardPage = lazy(() => import('@/pages/Admin/AdminDashboardPage'))
+const TenantListPage     = lazy(() => import('@/pages/Admin/TenantListPage'))
+const TenantDetailPage   = lazy(() => import('@/pages/Admin/TenantDetailPage'))
+const AuditLogPage       = lazy(() => import('@/pages/AuditLog/AuditLogPage'))
+const ProfilePage        = lazy(() => import('@/pages/Profile/ProfilePage'))
+const ChangePasswordPage = lazy(() => import('@/pages/ChangePassword/ChangePasswordPage'))
+const ChooseCompanyPage  = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
+const ChooseDashboardPage = lazy(() => import('@/pages/ChooseDashboard/ChooseDashboardPage'))
+const NotFoundPage       = lazy(() => import('@/pages/errors/NotFoundPage'))
+const ForbiddenPage      = lazy(() => import('@/pages/errors/ForbiddenPage'))
+
+// ─── Vernon Tasks pages ───────────────────────────────────────────────────────
+const MyWorkPage           = lazy(() => import('@/pages/MyWork/MyWorkPage'))
+const MyDashboardPage      = lazy(() => import('@/pages/MyDashboard/MyDashboardPage'))
+const LeaderDashboardPage  = lazy(() => import('@/pages/LeaderDashboard/LeaderDashboardPage'))
+const LeaderReviewPage     = lazy(() => import('@/pages/LeaderReview/LeaderReviewPage'))
 
 function S({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<div />}>{children}</Suspense>
@@ -50,16 +51,11 @@ const singleTenantRoutes = [
       { path: 'audit-log', element: <S><AuditLogPage /></S> },
       { path: 'profile', element: <S><ProfilePage /></S> },
       { path: 'change-password', element: <S><ChangePasswordPage /></S> },
-      { path: 'examples', element: <S><ExamplesListPage /></S> },
-      { path: 'examples/visual-list', element: <S><ExamplesVisualListPage /></S> },
-      { path: 'examples/widgets', element: <S><WidgetGalleryPage /></S> },
-      { path: 'examples/new', element: <S><ExampleFormPage /></S> },
-      { path: 'examples/:id', element: <S><ExampleDetailPage /></S> },
-      // Add your pages here:
-      // { path: 'users',        element: <S><UsersListPage /></S> },
-      // { path: 'users/:id',    element: <S><UserDetailPage /></S> },
-      // { path: 'users/new',    element: <S><UserFormPage /></S> },
-      // { path: 'settings',     element: <S><SettingsPage /></S> },
+      // ── Vernon Tasks pages ────────────────────────────────────────────────
+      { path: 'my-work',           element: <S><MyWorkPage /></S> },
+      { path: 'my-dashboard',      element: <S><MyDashboardPage /></S> },
+      { path: 'leader-dashboard',  element: <S><LeaderDashboardPage /></S> },
+      { path: 'leader-review',     element: <S><LeaderReviewPage /></S> },
     ],
   },
 ]
@@ -95,11 +91,6 @@ const multiTenantRoutes = [
       { path: 'audit-log', element: <S><AuditLogPage /></S> },
       { path: 'profile', element: <S><ProfilePage /></S> },
       { path: 'change-password', element: <S><ChangePasswordPage /></S> },
-      { path: 'examples', element: <S><ExamplesListPage /></S> },
-      { path: 'examples/visual-list', element: <S><ExamplesVisualListPage /></S> },
-      { path: 'examples/widgets', element: <S><WidgetGalleryPage /></S> },
-      { path: 'examples/new', element: <S><ExampleFormPage /></S> },
-      { path: 'examples/:id', element: <S><ExampleDetailPage /></S> },
       // { path: 'reports',  element: <S><HQReportsPage /></S> },
     ],
   },
@@ -113,11 +104,6 @@ const multiTenantRoutes = [
       { path: 'audit-log', element: <S><AuditLogPage /></S> },
       { path: 'profile', element: <S><ProfilePage /></S> },
       { path: 'change-password', element: <S><ChangePasswordPage /></S> },
-      { path: 'examples', element: <S><ExamplesListPage /></S> },
-      { path: 'examples/visual-list', element: <S><ExamplesVisualListPage /></S> },
-      { path: 'examples/widgets', element: <S><WidgetGalleryPage /></S> },
-      { path: 'examples/new', element: <S><ExampleFormPage /></S> },
-      { path: 'examples/:id', element: <S><ExampleDetailPage /></S> },
       // { path: 'users',     element: <S><UsersListPage /></S> },
       // { path: 'settings',  element: <S><SettingsPage /></S> },
     ],

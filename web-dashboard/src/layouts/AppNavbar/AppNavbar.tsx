@@ -1,10 +1,10 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
-  LayoutDashboard, Users, Settings, Bell,
+  Briefcase, BarChart2, ClipboardCheck, Bell,
   ChevronDown, LogOut,
   CheckCircle, AlertCircle, AlertTriangle, Info,
-  Building2, Shield, Globe, FileText,
+  Building2, Shield, Globe, FileText, Settings, LayoutDashboard, Users, ScrollText,
   GraduationCap, BookOpen, Library,
   Wallet, CreditCard, Heart, Receipt, BarChart3, BadgeCheck,
 } from 'lucide-react'
@@ -16,35 +16,55 @@ import { cn } from '@/utils/cn'
 import type { AppContext } from '@/layouts/AppShell/AppShell'
 import styles from './AppNavbar.module.css'
 
+// ─── Vernon Tasks role helpers ────────────────────────────────────────────────
+
+const VT_LEADER_ROLES       = new Set(['VT Leader', 'VT Manager'])
+const VT_MANAGER_ROLES      = new Set(['VT Manager'])
+const SUPERUSER_ROLES       = new Set(['Administrator', 'System Manager'])
+
 // ─── Nav item definitions per context ────────────────────────────────────────
+
+const NAV_ITEMS_VT_MEMBER = [
+  { key: 'my-work',      label: 'Kerja Saya',     icon: Briefcase,      path: 'my-work' },
+  { key: 'my-dashboard', label: 'Dashboard Saya', icon: BarChart2,      path: 'my-dashboard' },
+]
+
+const NAV_ITEMS_VT_LEADER_EXTRA = [
+  { key: 'leader-dashboard', label: 'Dashboard Tim', icon: LayoutDashboard, path: 'leader-dashboard' },
+  { key: 'leader-review',    label: 'Review Tugas',  icon: ClipboardCheck,  path: 'leader-review' },
+]
+
+const NAV_ITEMS_VT_MANAGER_EXTRA = [
+  { key: 'audit-log', label: 'Audit Log', icon: ScrollText, path: 'audit-log' },
+]
+
+// Administrator / System Manager — all pages, not classified as VT Member
+const NAV_ITEMS_ADMIN = [
+  { key: 'my-work',           label: 'Kerja Saya',     icon: Briefcase,       path: 'my-work' },
+  { key: 'my-dashboard',      label: 'Dashboard Saya', icon: BarChart2,       path: 'my-dashboard' },
+  { key: 'leader-dashboard',  label: 'Dashboard Tim',  icon: LayoutDashboard, path: 'leader-dashboard' },
+  { key: 'leader-review',     label: 'Review Tugas',   icon: ClipboardCheck,  path: 'leader-review' },
+  { key: 'audit-log',         label: 'Audit Log',      icon: ScrollText,      path: 'audit-log' },
+]
 
 const NAV_ITEMS_DEFAULT = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'examples', label: 'Examples', icon: FileText, path: 'examples' },
-  { key: 'users', label: 'Pengguna', icon: Users, path: 'users' },
-  { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
 ]
 
 const NAV_ITEMS_SUPERUSER = [
-  { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'examples', label: 'Examples', icon: FileText, path: 'examples' },
-  { key: 'tenants', label: 'Tenants', icon: Globe, path: 'tenants' },
-  { key: 'companies', label: 'Perusahaan', icon: Building2, path: 'companies' },
-  { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
+  { key: 'dashboard', label: 'Dashboard',  icon: LayoutDashboard, path: 'dashboard' },
+  { key: 'tenants',   label: 'Tenants',    icon: Globe,           path: 'tenants' },
+  { key: 'companies', label: 'Perusahaan', icon: Building2,       path: 'companies' },
 ]
 
 const NAV_ITEMS_HQ = [
   { key: 'dashboard', label: 'HQ Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'examples', label: 'Examples', icon: FileText, path: 'examples' },
-  { key: 'users', label: 'Pengguna', icon: Users, path: 'users' },
-  { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
+  { key: 'users',     label: 'Pengguna',     icon: Users,           path: 'users' },
 ]
 
 const NAV_ITEMS_COMPANY = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'examples', label: 'Examples', icon: FileText, path: 'examples' },
-  { key: 'users', label: 'Pengguna', icon: Users, path: 'users' },
-  { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
+  { key: 'users',     label: 'Pengguna',  icon: Users,            path: 'users' },
 ]
 
 const NAV_ITEMS_SEKOLAH = [
@@ -121,14 +141,29 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  const navItems = NAV_ITEMS_BY_CONTEXT[context]
+  // In default (single-tenant) context, use Vernon Tasks role-based nav
+  const isVtContext   = context === 'default'
+  const userRoles     = user?.roles ?? []
+  const isSuperuser   = userRoles.some((r) => SUPERUSER_ROLES.has(r))
+  const isVtLeader    = isVtContext && userRoles.some((r) => VT_LEADER_ROLES.has(r))
+  const isVtManager   = isVtContext && userRoles.some((r) => VT_MANAGER_ROLES.has(r))
+  const vtNavItems = isVtContext
+    ? isSuperuser
+      ? NAV_ITEMS_ADMIN
+      : [
+          ...NAV_ITEMS_VT_MEMBER,
+          ...(isVtLeader  ? NAV_ITEMS_VT_LEADER_EXTRA  : []),
+          ...(isVtManager ? NAV_ITEMS_VT_MANAGER_EXTRA : []),
+        ]
+    : null
+
+  const navItems = vtNavItems ?? NAV_ITEMS_BY_CONTEXT[context]
   const basePath = context === 'company'
     ? `/c/${selectedCompany?.code ?? ''}`
     : BASE_PATH_BY_CONTEXT[context]
 
   const isActive = (path: string) => {
-    const full = `${basePath}/${path}`
-    if (path === 'dashboard') return location.pathname === full || location.pathname === basePath
+    const full = basePath ? `${basePath}/${path}` : `/${path}`
     return location.pathname === full || location.pathname.startsWith(`${full}/`)
   }
 
@@ -251,17 +286,27 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
                 <div>
                   <p className={styles.profileName}>{user?.name}</p>
                   <p className={styles.profileEmail}>{user?.email}</p>
-                  <span className={styles.roleBadge}>{user?.role}</span>
+                  {(user?.roles ?? [user?.role]).filter(Boolean).map((r) => (
+                    <span key={r} className={styles.roleBadge}>{r}</span>
+                  ))}
                 </div>
               </div>
               <hr className={styles.divider} />
               <Link
-                to={`${basePath}/settings`}
+                to={`${basePath}/profile`}
                 className={styles.dropdownItem}
                 onClick={() => setShowProfile(false)}
               >
                 <Settings size={14} />
-                Pengaturan
+                Profil Saya
+              </Link>
+              <Link
+                to={`${basePath}/change-password`}
+                className={styles.dropdownItem}
+                onClick={() => setShowProfile(false)}
+              >
+                <Shield size={14} />
+                Ganti Password
               </Link>
               <button className={cn(styles.dropdownItem, styles.logoutItem)} onClick={handleLogout}>
                 <LogOut size={14} />

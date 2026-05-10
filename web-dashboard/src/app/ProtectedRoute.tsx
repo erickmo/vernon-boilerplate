@@ -15,7 +15,7 @@ export function RootRedirect() {
   if (!isAuthenticated) return <Navigate to="/login" replace />
 
   if (!appConfig.isMultiTenant) {
-    return <Navigate to="/dashboard" replace />
+    return <Navigate to="/my-work" replace />
   }
 
   // Multi-tenant routing based on role
@@ -50,8 +50,9 @@ export function RoleRoute({ children, role }: RouteProps & { role: string | stri
 
   if (!isAuthenticated) return <Navigate to="/login" state={{ from: location }} replace />
 
-  const roles = Array.isArray(role) ? role : [role]
-  if (!roles.includes(user?.role ?? '')) return <Navigate to="/403" replace />
+  const required = Array.isArray(role) ? role : [role]
+  const userRoles = user?.roles ?? [user?.role ?? '']
+  if (!required.some((r) => userRoles.includes(r))) return <Navigate to="/403" replace />
 
   return <>{children}</>
 }
