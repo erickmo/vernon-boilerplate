@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { LogOut, Building2 } from 'lucide-react'
+import { LogOut, Building2, GraduationCap, Landmark } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth.store'
 import { authService } from '@/services/auth.service'
 import { appConfig } from '@/config/app.config'
@@ -23,12 +23,12 @@ function InstitutionAvatar({ company }: { company: Company }) {
       </div>
     )
   }
-  const initials = company.name
-    .split(' ')
-    .slice(0, 2)
-    .map((w) => w[0]?.toUpperCase() ?? '')
-    .join('')
-  return <div className={styles.avatar}>{initials}</div>
+  const Icon = company.type === 'koperasi' ? Landmark : GraduationCap
+  return (
+    <div className={`${styles.avatar} ${company.type === 'koperasi' ? styles.avatarKoperasi : styles.avatarSekolah}`}>
+      <Icon size={24} />
+    </div>
+  )
 }
 
 function SkeletonCard() {
@@ -50,25 +50,23 @@ function InstitutionCard({
   group: CompanyGroup
   onSelect: (group: CompanyGroup, company: Company) => void
 }) {
+  const badges = company.type === 'koperasi'
+    ? ['Koperasi']
+    : (company.lembaga ?? []).map((l) => l.jenjang)
+
   return (
     <button
-      className={styles.card}
+      className={`${styles.card} ${company.type === 'koperasi' ? styles.cardKoperasi : ''}`}
       onClick={() => onSelect(group, company)}
       type="button"
     >
       <InstitutionAvatar company={company} />
       <div className={styles.cardBody}>
         <span className={styles.cardName}>{company.name}</span>
-        {company.npsn && (
-          <span className={styles.cardNpsn}>NPSN: {company.npsn}</span>
-        )}
-        {((company.jenis ?? '') !== '' || (company.modules?.length ?? 0) > 0) && (
+        {badges.length > 0 && (
           <div className={styles.badges}>
-            {company.jenis && (
-              <span className={styles.badge}>{company.jenis}</span>
-            )}
-            {company.modules?.map((mod) => (
-              <span key={mod} className={styles.badge}>{mod}</span>
+            {badges.map((b) => (
+              <span key={b} className={styles.badge}>{b}</span>
             ))}
           </div>
         )}
@@ -77,9 +75,46 @@ function InstitutionCard({
   )
 }
 
+function TenantSection({
+  group,
+  showLabel,
+  onSelect,
+}: {
+  group: CompanyGroup
+  showLabel: boolean
+  onSelect: (group: CompanyGroup, company: Company) => void
+}) {
+  return (
+    <div className={styles.tenantSection}>
+      {showLabel && (
+        <div className={styles.tenantHeader}>
+          {getLogoSrc(group.logo) && (
+            <img src={getLogoSrc(group.logo)} alt={group.name} className={styles.tenantLogo} />
+          )}
+          <span className={styles.tenantName}>{group.name}</span>
+        </div>
+      )}
+      <div className={styles.grid}>
+        {group.companies.map((company) => (
+          <InstitutionCard
+            key={company.id}
+            company={company}
+            group={group}
+            onSelect={onSelect}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function ChooseCompanyPage() {
   const navigate = useNavigate()
   const { user, availableGroups, selectGroup, selectCompany, logout } = useAuthStore()
+
+  const isLoading = false
+  const hasAny = availableGroups.some((g) => g.companies.length > 0)
+  const showTenantLabels = availableGroups.length > 1
 
   function handleSelect(group: CompanyGroup, company: Company) {
     selectGroup(group)
@@ -92,12 +127,6 @@ export default function ChooseCompanyPage() {
     logout()
     navigate('/login', { replace: true })
   }
-
-  const allCompanies = availableGroups.flatMap((g) =>
-    g.companies.map((c) => ({ group: g, company: c }))
-  )
-
-  const isLoading = false
 
   return (
     <div className={styles.root}>
@@ -142,14 +171,14 @@ export default function ChooseCompanyPage() {
           </p>
         </div>
 
-        {/* Grid */}
+        {/* Content */}
         {isLoading ? (
           <div className={styles.grid}>
             <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
           </div>
-        ) : allCompanies.length === 0 ? (
+        ) : !hasAny ? (
           <div className={styles.empty}>
             <Building2 size={48} className={styles.emptyIcon} />
             <p className={styles.emptyText}>
@@ -158,12 +187,12 @@ export default function ChooseCompanyPage() {
             </p>
           </div>
         ) : (
-          <div className={styles.grid}>
-            {allCompanies.map(({ group, company }) => (
-              <InstitutionCard
-                key={company.id}
-                company={company}
+          <div className={styles.tenantList}>
+            {availableGroups.map((group) => (
+              <TenantSection
+                key={group.id}
                 group={group}
+                showLabel={showTenantLabels}
                 onSelect={handleSelect}
               />
             ))}

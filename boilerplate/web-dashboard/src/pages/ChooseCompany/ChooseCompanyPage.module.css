@@ -136,6 +136,43 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
+/* ─── Tenant sections ───────────────────────────────────────────────────────── */
+
+.tenantList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  width: 100%;
+}
+
+.tenantSection {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.tenantHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.tenantLogo {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  border-radius: 4px;
+}
+
+.tenantName {
+  font-size: var(--font-xs);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
 /* ─── Institution grid ──────────────────────────────────────────────────────── */
 
 .grid {
@@ -205,6 +242,17 @@
 .card:nth-child(5) { animation-delay: 240ms; }
 .card:nth-child(6) { animation-delay: 300ms; }
 
+/* ─── Koperasi card variant ─────────────────────────────────────────────────── */
+
+.cardKoperasi {
+  border-color: rgba(251, 191, 36, 0.2);
+}
+
+.cardKoperasi:hover {
+  border-color: rgba(251, 191, 36, 0.4);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(251, 191, 36, 0.15);
+}
+
 /* ─── Avatar / Logo ─────────────────────────────────────────────────────────── */
 
 .avatar {
@@ -221,6 +269,15 @@
   color: #ffffff;
   flex-shrink: 0;
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.avatarSekolah {
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.6), rgba(139, 92, 246, 0.6));
+}
+
+.avatarKoperasi {
+  background: linear-gradient(135deg, rgba(217, 119, 6, 0.6), rgba(245, 158, 11, 0.5));
+  border-color: rgba(251, 191, 36, 0.25);
 }
 
 .avatarImg {

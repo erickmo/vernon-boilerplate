@@ -8,13 +8,25 @@ interface FrappeLoginResult {
   home_page: string
 }
 
-interface FrappeInstitution {
+interface FrappeLembaga {
   name: string
   nama: string
-  npsn: string
-  jenis: string
+  jenjang: string
+}
+
+interface FrappeInstitution {
+  name: string
+  display_name: string
+  type: 'sekolah' | 'koperasi'
   logo: string
-  modul_aktif: string[]
+  lembaga: FrappeLembaga[]
+}
+
+interface FrappeTenantGroup {
+  id: string
+  name: string
+  logo: string
+  institutions: FrappeInstitution[]
 }
 
 interface FrappeUserDoc {
@@ -81,23 +93,24 @@ export const authService = {
       permissions: [],
     }
 
-    const institutions = await fetchFrappeJson<FrappeInstitution[]>(
+    const tenantGroups = await fetchFrappeJson<FrappeTenantGroup[]>(
       '/api/method/sekolahpro.pengaturan.api.sekolah.get_user_institutions'
-    ).catch(() => [] as FrappeInstitution[])
+    ).catch(() => [] as FrappeTenantGroup[])
 
-    const companies: Company[] = institutions.map((inst) => ({
-      id: inst.name,
-      code: inst.name,
-      name: inst.nama,
-      logo: inst.logo || undefined,
-      npsn: inst.npsn || undefined,
-      jenis: inst.jenis || undefined,
-      modules: inst.modul_aktif,
+    const companyGroups: CompanyGroup[] = tenantGroups.map((tenant) => ({
+      id: tenant.id,
+      name: tenant.name,
+      logo: tenant.logo || undefined,
+      companies: tenant.institutions.map((inst): Company => ({
+        id: inst.name,
+        code: inst.name,
+        name: inst.display_name,
+        logo: inst.logo || undefined,
+        type: inst.type,
+        lembaga: inst.lembaga,
+        groupId: tenant.id,
+      })),
     }))
-
-    const companyGroups: CompanyGroup[] = companies.length > 0
-      ? [{ id: 'default', name: 'Institusi', companies }]
-      : []
 
     return { token: '', refreshToken: '', user, companyGroups }
   },

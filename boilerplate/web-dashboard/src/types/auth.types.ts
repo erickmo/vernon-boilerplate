@@ -23,20 +23,28 @@ export interface UserProfile {
 // ─── Multi-tenant types ───────────────────────────────────────────────────────
 // Always defined — just unused (null) in single-tenant mode.
 
+export type InstitutionType = 'sekolah' | 'koperasi'
+
+export interface Lembaga {
+  name: string
+  nama: string
+  jenjang: string
+}
+
 export interface Company {
   id: string
   code: string
   name: string
   logo?: string
-  npsn?: string
-  jenis?: string
-  modules?: string[]
+  type?: InstitutionType
+  lembaga?: Lembaga[]
   groupId?: string
 }
 
 export interface CompanyGroup {
   id: string
   name: string
+  logo?: string
   companies: Company[]
 }
 
