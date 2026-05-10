@@ -70,7 +70,6 @@ function getCsrfToken(): string {
 function resolveFrappeRole(userId: string, userDoc: FrappeUserDoc): string {
   const roles = (userDoc.roles ?? []).map((r) => r.role.toLowerCase())
   if (userId === 'Administrator' || roles.includes('system manager')) return 'superuser'
-  if (roles.includes('teller') || roles.includes('supervisor')) return 'employee'
   return 'user'
 }
 

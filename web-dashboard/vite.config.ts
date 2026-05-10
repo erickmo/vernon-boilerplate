@@ -15,9 +15,8 @@ export default defineConfig({
     strictPort: false,
     proxy: {
       '/api': {
-        target: 'http://localhost:8080',
-        changeOrigin: false,
-        headers: { host: 'site2.localhost:8080' },
+        target: 'http://site2.localhost:8080',
+        changeOrigin: true,
         cookieDomainRewrite: 'localhost',
       },
     },

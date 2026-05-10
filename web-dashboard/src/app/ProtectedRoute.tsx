@@ -20,7 +20,6 @@ export function RootRedirect() {
 
   // Multi-tenant routing based on role
   if (user?.role === 'superuser') return <Navigate to="/su/dashboard" replace />
-  if (user?.role === 'tenant_owner') return <Navigate to="/choose-company" replace />
   if (selectedCompany) return <Navigate to={`/c/${selectedCompany.code}/dashboard`} replace />
   return <Navigate to="/choose-company" replace />
 }

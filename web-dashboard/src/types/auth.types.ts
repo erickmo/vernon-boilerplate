@@ -1,14 +1,13 @@
 // ─── User roles ───────────────────────────────────────────────────────────────
-// Single-tenant: 'admin' | 'user' | 'viewer'
-// Multi-tenant:  add 'superuser' | 'tenant_owner' | 'employee'
+// Mapped from Frappe roles at login (see auth.service.ts resolveFrappeRole).
+//
+// Frappe role → app role:
+//   Administrator user OR "System Manager" role → 'superuser'
+//   (anything else)                            → 'user'
 
 export type UserRole =
-  | 'superuser'    // multi-tenant: platform-level admin
-  | 'tenant_owner' // multi-tenant: manages company groups
-  | 'employee'     // multi-tenant: regular company user
-  | 'admin'        // single-tenant: admin
-  | 'user'         // single-tenant: regular user
-  | 'viewer'       // single-tenant: read-only user
+  | 'superuser' // Frappe: Administrator / System Manager — accesses /su/* dashboard
+  | 'user'      // Frappe: any other role
   | string
 
 export interface UserProfile {
