@@ -13,7 +13,11 @@ interface LoginFormValues {
   pwd: string
 }
 
-const DOT_COUNT = 18
+const FEATURES = [
+  'Manajemen Akademik & Kurikulum',
+  'Absensi Digital Real-time',
+  'Laporan & Analitik Lengkap',
+]
 
 export default function LoginPage() {
   const navigate = useNavigate()
@@ -29,7 +33,7 @@ export default function LoginPage() {
   const [showForgotModal, setShowForgotModal] = useState(false)
 
   const { values, errors, field, handleSubmit } = useForm<LoginFormValues>({
-    initialValues: { usr: '', pwd: '' },
+    initialValues: { usr: 'administrator', pwd: '123123123' },
     validate: (v) => ({
       usr: !v.usr ? 'Username atau email wajib diisi' : undefined,
       pwd: !v.pwd ? 'Kata sandi wajib diisi' : undefined,
@@ -65,36 +69,45 @@ export default function LoginPage() {
 
   return (
     <div className={styles.root}>
-      {/* ── Left Panel ── */}
-      <div className={styles.leftPanel}>
-        <div className={styles.decoRing} />
+      <div className={styles.shell}>
+        {/* ── Left Panel ── */}
+        <div className={styles.leftPanel}>
+          <div className={styles.leftGlow} />
 
-        <div className={styles.logoWrap}>
-          {appConfig.appLogo ? (
-            <img src={appConfig.appLogo} alt={appConfig.appName} className={styles.logoImg} />
-          ) : (
-            <>
-              <div className={styles.logoIcon}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
-                </svg>
-              </div>
-              <span className={styles.logoName}>{appConfig.appName}</span>
-            </>
-          )}
-        </div>
-
-        <div className={styles.taglineBlock}>
-          <div className={styles.dotsPattern}>
-            {Array.from({ length: DOT_COUNT }).map((_, i) => (
-              <div key={i} className={styles.dot} />
-            ))}
+          <div className={styles.logoWrap}>
+            {appConfig.appLogo ? (
+              <img src={appConfig.appLogo} alt={appConfig.appName} className={styles.logoImg} />
+            ) : (
+              <>
+                <div className={styles.logoIcon}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
+                  </svg>
+                </div>
+                <span className={styles.logoName}>{appConfig.appName}</span>
+              </>
+            )}
           </div>
 
-          <h2 className={styles.taglineTitle}>{appConfig.appTagline}</h2>
-          <p className={styles.taglineSub}>
-            Kelola akademik, absensi, dan administrasi sekolah dalam satu platform terintegrasi.
-          </p>
+          <div className={styles.taglineBlock}>
+            <h2 className={styles.taglineTitle}>
+              Manajemen Sekolah<br />
+              <span className={styles.taglineAccent}>Lebih Mudah,</span><br />
+              Lebih Cerdas.
+            </h2>
+            <p className={styles.taglineSub}>
+              Kelola akademik, absensi, dan administrasi sekolah dalam satu platform terintegrasi.
+            </p>
+
+            <div className={styles.featureList}>
+              {FEATURES.map((f) => (
+                <div key={f} className={styles.featureItem}>
+                  <div className={styles.featureDot} />
+                  <span className={styles.featureText}>{f}</span>
+                </div>
+              ))}
+            </div>
+          </div>
 
           <p className={styles.devContact}>
             Developed by{' '}
@@ -102,98 +115,109 @@ export default function LoginPage() {
             {' '}· mo@intinusa.id
           </p>
         </div>
-      </div>
 
-      {/* ── Right Panel ── */}
-      <div className={styles.rightPanel}>
-        <div className={styles.formWrap}>
-          <h1 className={styles.formTitle}>Masuk ke Sistem</h1>
-          <p className={styles.formSub}>Gunakan akun yang diberikan administrator</p>
+        {/* ── Right Panel ── */}
+        <div className={styles.rightPanel}>
+          <div className={styles.formWrap}>
+            <p className={styles.formEyebrow}>Portal Sekolah</p>
+            <h1 className={styles.formTitle}>Selamat Datang</h1>
+            <p className={styles.formSub}>Masuk menggunakan akun yang diberikan administrator Anda.</p>
 
-          <form onSubmit={onSubmit} className={styles.fieldGroup} noValidate aria-label="Login">
-            {/* Username / Email */}
-            <div className={styles.field}>
-              <label htmlFor="usr" className={styles.label}>Email atau Username</label>
-              <div className={styles.inputWrap}>
-                <User size={16} className={styles.inputIcon} />
-                <input
-                  id="usr"
-                  type="text"
-                  autoComplete="username"
-                  placeholder="nama@sekolah.com / username"
-                  className={styles.input}
-                  aria-invalid={!!errors.usr}
-                  {...field('usr')}
-                  value={String(values.usr)}
-                />
+            <form onSubmit={onSubmit} className={styles.fieldGroup} noValidate aria-label="Login">
+              {/* Username / Email */}
+              <div className={styles.field}>
+                <label htmlFor="usr" className={styles.label}>Email atau Username</label>
+                <div className={styles.inputWrap}>
+                  <User size={15} className={styles.inputIcon} />
+                  <input
+                    id="usr"
+                    type="text"
+                    autoComplete="username"
+                    placeholder="nama@sekolah.com / username"
+                    className={styles.input}
+                    aria-invalid={!!errors.usr}
+                    {...field('usr')}
+                    value={String(values.usr)}
+                  />
+                </div>
+                {errors.usr && <p className={styles.fieldError}>{errors.usr}</p>}
               </div>
-              {errors.usr && <p className={styles.fieldError}>{errors.usr}</p>}
-            </div>
 
-            {/* Password */}
-            <div className={styles.field}>
-              <label htmlFor="pwd" className={styles.label}>Kata Sandi</label>
-              <div className={styles.inputWrap}>
-                <Lock size={16} className={styles.inputIcon} />
-                <input
-                  id="pwd"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  placeholder="Masukkan kata sandi"
-                  className={`${styles.input} ${styles.inputWithEye}`}
-                  aria-invalid={!!errors.pwd}
-                  {...field('pwd')}
-                  value={String(values.pwd)}
-                />
+              {/* Password */}
+              <div className={styles.field}>
+                <label htmlFor="pwd" className={styles.label}>Kata Sandi</label>
+                <div className={styles.inputWrap}>
+                  <Lock size={15} className={styles.inputIcon} />
+                  <input
+                    id="pwd"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    placeholder="Masukkan kata sandi"
+                    className={`${styles.input} ${styles.inputWithEye}`}
+                    aria-invalid={!!errors.pwd}
+                    {...field('pwd')}
+                    value={String(values.pwd)}
+                  />
+                  <button
+                    type="button"
+                    className={styles.eyeBtn}
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                  >
+                    {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+                {errors.pwd && <p className={styles.fieldError}>{errors.pwd}</p>}
+              </div>
+
+              {/* Remember + Forgot */}
+              <div className={styles.rememberRow}>
+                <label className={styles.rememberLeft}>
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    aria-label="Ingat saya"
+                  />
+                  <span className={styles.rememberLabel}>Ingat saya</span>
+                </label>
                 <button
                   type="button"
-                  className={styles.eyeBtn}
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                  className={styles.forgotBtn}
+                  onClick={() => setShowForgotModal(true)}
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  Lupa kata sandi?
                 </button>
               </div>
-              {errors.pwd && <p className={styles.fieldError}>{errors.pwd}</p>}
-            </div>
 
-            {/* Remember + Forgot */}
-            <div className={styles.rememberRow}>
-              <label className={styles.rememberLeft}>
-                <input
-                  type="checkbox"
-                  className={styles.checkbox}
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  aria-label="Ingat saya"
-                />
-                <span className={styles.rememberLabel}>Ingat saya</span>
-              </label>
+              {serverError && (
+                <div className={styles.serverError} role="alert">
+                  {serverError}
+                </div>
+              )}
+
               <button
-                type="button"
-                className={styles.forgotBtn}
-                onClick={() => setShowForgotModal(true)}
+                type="submit"
+                className={styles.submitBtn}
+                disabled={isLoading}
               >
-                Lupa kata sandi?
+                {isLoading ? <span className={styles.spinner} /> : 'Masuk ke Sistem →'}
               </button>
+            </form>
+
+            <div className={styles.divider}>
+              <div className={styles.dividerLine} />
+              <span className={styles.dividerText}>Butuh bantuan?</span>
+              <div className={styles.dividerLine} />
             </div>
 
-            {serverError && (
-              <div className={styles.serverError} role="alert">
-                {serverError}
-              </div>
-            )}
+            <p className={styles.helpNote}>
+              Hubungi <span>administrator sekolah</span> untuk reset kata sandi atau akses akun baru.
+            </p>
 
-            <button
-              type="submit"
-              className={styles.submitBtn}
-              disabled={isLoading}
-            >
-              {isLoading ? <span className={styles.spinner} /> : 'Masuk'}
-            </button>
-          </form>
-
-          <p className={styles.formFooter}>v1.0.0 · © 2025 SekolahPro</p>
+            <p className={styles.formFooter}>v1.0.0 · © 2025 SekolahPro · Intinusa Digital</p>
+          </div>
         </div>
       </div>
 
