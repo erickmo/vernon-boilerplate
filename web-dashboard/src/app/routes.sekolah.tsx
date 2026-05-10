@@ -1,0 +1,164 @@
+import { lazy, Suspense } from 'react'
+import { AppShell } from '@/layouts/AppShell/AppShell'
+import { AuthRoute } from './ProtectedRoute'
+
+function stub(label: string) {
+  return function StubPage() {
+    return <div style={{ padding: 32, color: '#999' }}>{label} — coming soon</div>
+  }
+}
+function S({ children }: { children: React.ReactNode }) {
+  return <Suspense fallback={<div />}>{children}</Suspense>
+}
+
+// Siswa
+const SiswaListPage              = lazy(() => import('@/pages/sekolah/siswa/SiswaListPage'))
+const SiswaDetailPage            = lazy(() => import('@/pages/sekolah/siswa/SiswaDetailPage'))
+const SiswaFormPage              = lazy(() => import('@/pages/sekolah/siswa/SiswaFormPage'))
+const PendaftaranSiswaListPage   = lazy(() => import('@/pages/sekolah/siswa/PendaftaranSiswaListPage'))
+const PendaftaranSiswaFormPage   = lazy(() => Promise.resolve({ default: stub('PendaftaranSiswaFormPage') }))
+const RombelListPage             = lazy(() => import('@/pages/sekolah/siswa/RombelListPage'))
+const RombelFormPage             = lazy(() => Promise.resolve({ default: stub('RombelFormPage') }))
+const MutasiSiswaListPage        = lazy(() => Promise.resolve({ default: stub('MutasiSiswaListPage') }))
+const MutasiSiswaFormPage        = lazy(() => Promise.resolve({ default: stub('MutasiSiswaFormPage') }))
+const KelulusanSiswaListPage     = lazy(() => Promise.resolve({ default: stub('KelulusanSiswaListPage') }))
+const KelulusanSiswaFormPage     = lazy(() => Promise.resolve({ default: stub('KelulusanSiswaFormPage') }))
+
+// Guru
+const GuruListPage               = lazy(() => import('@/pages/sekolah/guru/GuruListPage'))
+const GuruDetailPage             = lazy(() => import('@/pages/sekolah/guru/GuruDetailPage'))
+const GuruFormPage               = lazy(() => import('@/pages/sekolah/guru/GuruFormPage'))
+const PenugasanGuruListPage      = lazy(() => Promise.resolve({ default: stub('PenugasanGuruListPage') }))
+const PenugasanGuruFormPage      = lazy(() => Promise.resolve({ default: stub('PenugasanGuruFormPage') }))
+const BerkasGuruListPage         = lazy(() => Promise.resolve({ default: stub('BerkasGuruListPage') }))
+const BerkasGuruFormPage         = lazy(() => Promise.resolve({ default: stub('BerkasGuruFormPage') }))
+
+// Akademik
+const MataPelajaranListPage      = lazy(() => import('@/pages/sekolah/akademik/MataPelajaranListPage'))
+const MataPelajaranFormPage      = lazy(() => import('@/pages/sekolah/akademik/MataPelajaranFormPage'))
+const JadwalListPage             = lazy(() => import('@/pages/sekolah/akademik/JadwalListPage'))
+const JadwalDetailPage           = lazy(() => import('@/pages/sekolah/akademik/JadwalDetailPage'))
+const JadwalFormPage             = lazy(() => import('@/pages/sekolah/akademik/JadwalFormPage'))
+const AbsensiSiswaListPage       = lazy(() => import('@/pages/sekolah/akademik/AbsensiSiswaListPage'))
+const AbsensiSiswaFormPage       = lazy(() => import('@/pages/sekolah/akademik/AbsensiSiswaFormPage'))
+const AbsensiGuruListPage        = lazy(() => import('@/pages/sekolah/akademik/AbsensiGuruListPage'))
+const AbsensiGuruFormPage        = lazy(() => import('@/pages/sekolah/akademik/AbsensiGuruFormPage'))
+const PenilaianListPage          = lazy(() => import('@/pages/sekolah/akademik/PenilaianListPage'))
+const PenilaianFormPage          = lazy(() => import('@/pages/sekolah/akademik/PenilaianFormPage'))
+const RaportListPage             = lazy(() => import('@/pages/sekolah/akademik/RaportListPage'))
+const RaportDetailPage           = lazy(() => import('@/pages/sekolah/akademik/RaportDetailPage'))
+const LaporanDinasPage           = lazy(() => import('@/pages/sekolah/akademik/LaporanDinasPage'))
+
+// Perpustakaan
+const BukuListPage                  = lazy(() => import('@/pages/sekolah/perpustakaan/BukuListPage'))
+const BukuDetailPage                = lazy(() => import('@/pages/sekolah/perpustakaan/BukuDetailPage'))
+const BukuFormPage                  = lazy(() => import('@/pages/sekolah/perpustakaan/BukuFormPage'))
+const AnggotaPerpustakaanListPage   = lazy(() => import('@/pages/sekolah/perpustakaan/AnggotaPerpustakaanListPage'))
+const AnggotaPerpustakaanFormPage   = lazy(() => import('@/pages/sekolah/perpustakaan/AnggotaPerpustakaanFormPage'))
+const PeminjamanListPage            = lazy(() => import('@/pages/sekolah/perpustakaan/PeminjamanListPage'))
+const PeminjamanDetailPage          = lazy(() => import('@/pages/sekolah/perpustakaan/PeminjamanDetailPage'))
+const PeminjamanFormPage            = lazy(() => import('@/pages/sekolah/perpustakaan/PeminjamanFormPage'))
+const PengembalianListPage          = lazy(() => import('@/pages/sekolah/perpustakaan/PengembalianListPage'))
+const PengembalianFormPage          = lazy(() => import('@/pages/sekolah/perpustakaan/PengembalianFormPage'))
+const DendaListPage                 = lazy(() => import('@/pages/sekolah/perpustakaan/DendaListPage'))
+const ReservasiListPage             = lazy(() => import('@/pages/sekolah/perpustakaan/ReservasiListPage'))
+const ReservasiFormPage             = lazy(() => import('@/pages/sekolah/perpustakaan/ReservasiFormPage'))
+
+// Pengaturan
+const SekolahSettingsPage   = lazy(() => import('@/pages/sekolah/pengaturan/SekolahSettingsPage'))
+const TahunAjaranListPage   = lazy(() => import('@/pages/sekolah/pengaturan/TahunAjaranListPage'))
+const TahunAjaranFormPage   = lazy(() => import('@/pages/sekolah/pengaturan/TahunAjaranFormPage'))
+const SemesterListPage      = lazy(() => import('@/pages/sekolah/pengaturan/SemesterListPage'))
+const SemesterFormPage      = lazy(() => import('@/pages/sekolah/pengaturan/SemesterFormPage'))
+const ModulAktifPage        = lazy(() => import('@/pages/sekolah/pengaturan/ModulAktifPage'))
+
+const DashboardPage = lazy(() => import('@/pages/Dashboard/DashboardPage'))
+
+export const sekolahRoutes = [
+  {
+    path: '/sekolah',
+    element: <AuthRoute><AppShell context="sekolah" /></AuthRoute>,
+    children: [
+      { path: 'dashboard',          element: <S><DashboardPage /></S> },
+      // Siswa
+      { path: 'siswa',              element: <S><SiswaListPage /></S> },
+      { path: 'siswa/new',          element: <S><SiswaFormPage /></S> },
+      { path: 'siswa/:id',          element: <S><SiswaDetailPage /></S> },
+      { path: 'siswa/:id/edit',     element: <S><SiswaFormPage /></S> },
+      { path: 'siswa/pendaftaran',          element: <S><PendaftaranSiswaListPage /></S> },
+      { path: 'siswa/pendaftaran/new',      element: <S><PendaftaranSiswaFormPage /></S> },
+      { path: 'siswa/pendaftaran/:id/edit', element: <S><PendaftaranSiswaFormPage /></S> },
+      { path: 'siswa/rombel',          element: <S><RombelListPage /></S> },
+      { path: 'siswa/rombel/new',      element: <S><RombelFormPage /></S> },
+      { path: 'siswa/rombel/:id/edit', element: <S><RombelFormPage /></S> },
+      { path: 'siswa/mutasi',          element: <S><MutasiSiswaListPage /></S> },
+      { path: 'siswa/mutasi/new',      element: <S><MutasiSiswaFormPage /></S> },
+      { path: 'siswa/mutasi/:id/edit', element: <S><MutasiSiswaFormPage /></S> },
+      { path: 'siswa/kelulusan',          element: <S><KelulusanSiswaListPage /></S> },
+      { path: 'siswa/kelulusan/new',      element: <S><KelulusanSiswaFormPage /></S> },
+      { path: 'siswa/kelulusan/:id/edit', element: <S><KelulusanSiswaFormPage /></S> },
+      // Guru
+      { path: 'guru',              element: <S><GuruListPage /></S> },
+      { path: 'guru/new',          element: <S><GuruFormPage /></S> },
+      { path: 'guru/:id',          element: <S><GuruDetailPage /></S> },
+      { path: 'guru/:id/edit',     element: <S><GuruFormPage /></S> },
+      { path: 'guru/penugasan',          element: <S><PenugasanGuruListPage /></S> },
+      { path: 'guru/penugasan/new',      element: <S><PenugasanGuruFormPage /></S> },
+      { path: 'guru/penugasan/:id/edit', element: <S><PenugasanGuruFormPage /></S> },
+      { path: 'guru/berkas',          element: <S><BerkasGuruListPage /></S> },
+      { path: 'guru/berkas/new',      element: <S><BerkasGuruFormPage /></S> },
+      { path: 'guru/berkas/:id/edit', element: <S><BerkasGuruFormPage /></S> },
+      // Akademik
+      { path: 'akademik',                         element: <S><MataPelajaranListPage /></S> },
+      { path: 'akademik/mata-pelajaran',          element: <S><MataPelajaranListPage /></S> },
+      { path: 'akademik/mata-pelajaran/new',      element: <S><MataPelajaranFormPage /></S> },
+      { path: 'akademik/mata-pelajaran/:id/edit', element: <S><MataPelajaranFormPage /></S> },
+      { path: 'akademik/jadwal',          element: <S><JadwalListPage /></S> },
+      { path: 'akademik/jadwal/new',      element: <S><JadwalFormPage /></S> },
+      { path: 'akademik/jadwal/:id',      element: <S><JadwalDetailPage /></S> },
+      { path: 'akademik/jadwal/:id/edit', element: <S><JadwalFormPage /></S> },
+      { path: 'akademik/absensi-siswa',          element: <S><AbsensiSiswaListPage /></S> },
+      { path: 'akademik/absensi-siswa/new',      element: <S><AbsensiSiswaFormPage /></S> },
+      { path: 'akademik/absensi-siswa/:id/edit', element: <S><AbsensiSiswaFormPage /></S> },
+      { path: 'akademik/absensi-guru',          element: <S><AbsensiGuruListPage /></S> },
+      { path: 'akademik/absensi-guru/new',      element: <S><AbsensiGuruFormPage /></S> },
+      { path: 'akademik/absensi-guru/:id/edit', element: <S><AbsensiGuruFormPage /></S> },
+      { path: 'akademik/penilaian',          element: <S><PenilaianListPage /></S> },
+      { path: 'akademik/penilaian/new',      element: <S><PenilaianFormPage /></S> },
+      { path: 'akademik/penilaian/:id/edit', element: <S><PenilaianFormPage /></S> },
+      { path: 'akademik/raport',     element: <S><RaportListPage /></S> },
+      { path: 'akademik/raport/:id', element: <S><RaportDetailPage /></S> },
+      { path: 'akademik/laporan-dinas', element: <S><LaporanDinasPage /></S> },
+      // Perpustakaan
+      { path: 'perpustakaan',               element: <S><BukuListPage /></S> },
+      { path: 'perpustakaan/buku',          element: <S><BukuListPage /></S> },
+      { path: 'perpustakaan/buku/new',      element: <S><BukuFormPage /></S> },
+      { path: 'perpustakaan/buku/:id',      element: <S><BukuDetailPage /></S> },
+      { path: 'perpustakaan/buku/:id/edit', element: <S><BukuFormPage /></S> },
+      { path: 'perpustakaan/anggota',          element: <S><AnggotaPerpustakaanListPage /></S> },
+      { path: 'perpustakaan/anggota/new',      element: <S><AnggotaPerpustakaanFormPage /></S> },
+      { path: 'perpustakaan/anggota/:id/edit', element: <S><AnggotaPerpustakaanFormPage /></S> },
+      { path: 'perpustakaan/peminjaman',          element: <S><PeminjamanListPage /></S> },
+      { path: 'perpustakaan/peminjaman/new',      element: <S><PeminjamanFormPage /></S> },
+      { path: 'perpustakaan/peminjaman/:id',      element: <S><PeminjamanDetailPage /></S> },
+      { path: 'perpustakaan/peminjaman/:id/edit', element: <S><PeminjamanFormPage /></S> },
+      { path: 'perpustakaan/pengembalian',          element: <S><PengembalianListPage /></S> },
+      { path: 'perpustakaan/pengembalian/new',      element: <S><PengembalianFormPage /></S> },
+      { path: 'perpustakaan/pengembalian/:id/edit', element: <S><PengembalianFormPage /></S> },
+      { path: 'perpustakaan/denda', element: <S><DendaListPage /></S> },
+      { path: 'perpustakaan/reservasi',          element: <S><ReservasiListPage /></S> },
+      { path: 'perpustakaan/reservasi/new',      element: <S><ReservasiFormPage /></S> },
+      { path: 'perpustakaan/reservasi/:id/edit', element: <S><ReservasiFormPage /></S> },
+      // Pengaturan
+      { path: 'pengaturan',                       element: <S><SekolahSettingsPage /></S> },
+      { path: 'pengaturan/sekolah',               element: <S><SekolahSettingsPage /></S> },
+      { path: 'pengaturan/tahun-ajaran',          element: <S><TahunAjaranListPage /></S> },
+      { path: 'pengaturan/tahun-ajaran/new',      element: <S><TahunAjaranFormPage /></S> },
+      { path: 'pengaturan/tahun-ajaran/:id/edit', element: <S><TahunAjaranFormPage /></S> },
+      { path: 'pengaturan/semester',              element: <S><SemesterListPage /></S> },
+      { path: 'pengaturan/semester/new',          element: <S><SemesterFormPage /></S> },
+      { path: 'pengaturan/semester/:id/edit',     element: <S><SemesterFormPage /></S> },
+      { path: 'pengaturan/modul-aktif',           element: <S><ModulAktifPage /></S> },
+    ],
+  },
+]

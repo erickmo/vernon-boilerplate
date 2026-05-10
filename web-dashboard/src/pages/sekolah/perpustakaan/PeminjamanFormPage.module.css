@@ -1,0 +1,71 @@
+/* PeminjamanFormPage.module.css */
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem 2rem;
+  padding: 1.5rem;
+}
+
+.fullWidth { grid-column: 1 / -1; }
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.label { font-size: 0.8125rem; font-weight: 600; color: var(--color-text-secondary); }
+.required { color: var(--color-danger); margin-left: 0.125rem; }
+
+.input,
+.select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input:focus, .select:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-alpha, rgba(59,130,246,0.12));
+}
+
+.eksemplarPicker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eksemplarList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.eksemplarItem {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.625rem;
+  background: var(--color-primary-alpha, rgba(59,130,246,0.1));
+  border: 1px solid var(--color-primary);
+  border-radius: 100px;
+  font-size: 0.8125rem;
+  color: var(--color-primary);
+}
+
+.eksemplarItem button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: var(--color-danger);
+  padding: 0;
+}
