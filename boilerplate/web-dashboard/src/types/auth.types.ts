@@ -28,6 +28,9 @@ export interface Company {
   code: string
   name: string
   logo?: string
+  npsn?: string
+  jenis?: string
+  modules?: string[]
   groupId?: string
 }
 

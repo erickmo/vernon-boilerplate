@@ -1,4 +1,4 @@
-import type { LoginRequest, LoginResponse, UserProfile } from '@/types/auth.types'
+import type { Company, CompanyGroup, LoginRequest, LoginResponse, UserProfile } from '@/types/auth.types'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
 
@@ -6,6 +6,15 @@ interface FrappeLoginResult {
   full_name: string
   message: string
   home_page: string
+}
+
+interface FrappeInstitution {
+  name: string
+  nama: string
+  npsn: string
+  jenis: string
+  logo: string
+  modul_aktif: string[]
 }
 
 interface FrappeUserDoc {
@@ -72,7 +81,25 @@ export const authService = {
       permissions: [],
     }
 
-    return { token: '', refreshToken: '', user }
+    const institutions = await fetchFrappeJson<FrappeInstitution[]>(
+      '/api/method/sekolahpro.pengaturan.api.sekolah.get_user_institutions'
+    ).catch(() => [] as FrappeInstitution[])
+
+    const companies: Company[] = institutions.map((inst) => ({
+      id: inst.name,
+      code: inst.name,
+      name: inst.nama,
+      logo: inst.logo || undefined,
+      npsn: inst.npsn || undefined,
+      jenis: inst.jenis || undefined,
+      modules: inst.modul_aktif,
+    }))
+
+    const companyGroups: CompanyGroup[] = companies.length > 0
+      ? [{ id: 'default', name: 'Institusi', companies }]
+      : []
+
+    return { token: '', refreshToken: '', user, companyGroups }
   },
 
   logout: async (): Promise<void> => {
