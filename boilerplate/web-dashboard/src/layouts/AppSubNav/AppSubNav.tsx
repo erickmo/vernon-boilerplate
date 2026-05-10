@@ -13,6 +13,9 @@ export function AppSubNav({ context }: AppSubNavProps) {
 
   const nav1Key = pathname.split('/')[2] ?? ''
 
+  // Guard: explicit context check so mismatch is robust, not accidental
+  if (!pathname.startsWith(`/${context}/`)) return null
+
   const contextConfig = SUBNAV_CONFIG[context as keyof typeof SUBNAV_CONFIG]
   if (!contextConfig) return null
 
@@ -20,11 +23,8 @@ export function AppSubNav({ context }: AppSubNavProps) {
   if (!items || items.length === 0) return null
 
   function isActive(itemPath: string): boolean {
-    if (pathname === itemPath) return true
     const nav1Segment = `/${context}/${nav1Key}`
-    if (itemPath === nav1Segment) {
-      return pathname === itemPath
-    }
+    if (itemPath === nav1Segment) return pathname === itemPath
     return pathname.startsWith(itemPath)
   }
 
