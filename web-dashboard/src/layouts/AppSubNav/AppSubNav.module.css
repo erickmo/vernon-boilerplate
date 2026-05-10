@@ -1,0 +1,62 @@
+.subnav {
+  position: sticky;
+  top: var(--navbar-height);
+  z-index: calc(var(--z-navbar) - 1);
+  height: 38px;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  overflow-x: auto;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+
+.subnav::-webkit-scrollbar {
+  display: none;
+}
+
+.subnav_sekolah {
+  background: #0d5fa8;
+  border-bottom-color: rgba(15, 108, 189, 0.25);
+}
+
+.subnav_koperasi {
+  background: #186e41;
+  border-bottom-color: rgba(26, 127, 75, 0.25);
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  height: 100%;
+  white-space: nowrap;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 var(--space-4);
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  transition: color 120ms, border-color 120ms;
+  position: relative;
+  top: 1px;
+}
+
+.item:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.itemActive {
+  color: #ffffff;
+  border-bottom-color: rgba(255, 255, 255, 0.85);
+}

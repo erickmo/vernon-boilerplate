@@ -11,22 +11,28 @@ import {
   GroupRoute,
   CompanyRoute,
 } from './ProtectedRoute'
+import { sekolahRoutes } from './routes.sekolah'
+import { koperasiRoutes } from './routes.koperasi'
 
 // ─── Lazy-loaded pages ────────────────────────────────────────────────────────
 
-const LoginPage          = lazy(() => import('@/pages/Login/LoginPage'))
-const DashboardPage      = lazy(() => import('@/pages/Dashboard/DashboardPage'))
-const AuditLogPage       = lazy(() => import('@/pages/AuditLog/AuditLogPage'))
-const ProfilePage        = lazy(() => import('@/pages/Profile/ProfilePage'))
-const ChangePasswordPage = lazy(() => import('@/pages/ChangePassword/ChangePasswordPage'))
-const ExamplesListPage   = lazy(() => import('@/pages/Examples/ExamplesListPage'))
+const LoginPage              = lazy(() => import('@/pages/Login/LoginPage'))
+const DashboardPage          = lazy(() => import('@/pages/Dashboard/DashboardPage'))
+const AdminDashboardPage     = lazy(() => import('@/pages/Admin/AdminDashboardPage'))
+const TenantListPage         = lazy(() => import('@/pages/Admin/TenantListPage'))
+const TenantDetailPage       = lazy(() => import('@/pages/Admin/TenantDetailPage'))
+const AuditLogPage           = lazy(() => import('@/pages/AuditLog/AuditLogPage'))
+const ProfilePage            = lazy(() => import('@/pages/Profile/ProfilePage'))
+const ChangePasswordPage     = lazy(() => import('@/pages/ChangePassword/ChangePasswordPage'))
+const ExamplesListPage       = lazy(() => import('@/pages/Examples/ExamplesListPage'))
 const ExamplesVisualListPage = lazy(() => import('@/pages/Examples/ExamplesVisualListPage'))
-const ExampleDetailPage  = lazy(() => import('@/pages/Examples/ExampleDetailPage'))
-const ExampleFormPage    = lazy(() => import('@/pages/Examples/ExampleFormPage'))
-const WidgetGalleryPage  = lazy(() => import('@/pages/Examples/WidgetGalleryPage'))
-const ChooseCompanyPage  = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
-const NotFoundPage       = lazy(() => import('@/pages/errors/NotFoundPage'))
-const ForbiddenPage      = lazy(() => import('@/pages/errors/ForbiddenPage'))
+const ExampleDetailPage      = lazy(() => import('@/pages/Examples/ExampleDetailPage'))
+const ExampleFormPage        = lazy(() => import('@/pages/Examples/ExampleFormPage'))
+const WidgetGalleryPage      = lazy(() => import('@/pages/Examples/WidgetGalleryPage'))
+const ChooseCompanyPage      = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
+const ChooseDashboardPage    = lazy(() => import('@/pages/ChooseDashboard/ChooseDashboardPage'))
+const NotFoundPage           = lazy(() => import('@/pages/errors/NotFoundPage'))
+const ForbiddenPage          = lazy(() => import('@/pages/errors/ForbiddenPage'))
 
 function S({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<div />}>{children}</Suspense>
@@ -73,16 +79,9 @@ const multiTenantRoutes = [
     path: '/su',
     element: <SuperuserRoute><AppShell context="superuser" /></SuperuserRoute>,
     children: [
-      { path: 'dashboard', element: <S><DashboardPage /></S> },
-      { path: 'audit-log', element: <S><AuditLogPage /></S> },
-      { path: 'profile', element: <S><ProfilePage /></S> },
-      { path: 'change-password', element: <S><ChangePasswordPage /></S> },
-      { path: 'examples', element: <S><ExamplesListPage /></S> },
-      { path: 'examples/visual-list', element: <S><ExamplesVisualListPage /></S> },
-      { path: 'examples/widgets', element: <S><WidgetGalleryPage /></S> },
-      { path: 'examples/new', element: <S><ExampleFormPage /></S> },
-      { path: 'examples/:id', element: <S><ExampleDetailPage /></S> },
-      // { path: 'tenants',   element: <S><TenantsListPage /></S> },
+      { path: 'dashboard', element: <S><AdminDashboardPage /></S> },
+      { path: 'tenants', element: <S><TenantListPage /></S> },
+      { path: 'tenants/:orgId', element: <S><TenantDetailPage /></S> },
       // { path: 'companies', element: <S><CompaniesListPage /></S> },
     ],
   },
@@ -136,6 +135,15 @@ export const router = createBrowserRouter([
 
   // Active route set based on tenant mode
   ...(appConfig.isMultiTenant ? multiTenantRoutes : singleTenantRoutes),
+
+  // Choose dashboard (which app to use: sekolah or koperasi)
+  { path: '/choose-dashboard', element: <AuthRoute><S><ChooseDashboardPage /></S></AuthRoute> },
+
+  // Sekolah routes
+  ...sekolahRoutes,
+
+  // Koperasi routes
+  ...koperasiRoutes,
 
   // Error pages
   { path: '/403', element: <S><ForbiddenPage /></S> },

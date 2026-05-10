@@ -1,0 +1,130 @@
+/* src/pages/koperasi/anggota/tabs/NasabahTab.module.css */
+
+.fieldGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem 2rem;
+  padding: 1.5rem;
+}
+
+.fieldItemFull {
+  grid-column: 1 / -1;
+}
+
+.fieldLabel {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted, #6b7280);
+  margin-bottom: 0.25rem;
+}
+
+.fieldValue {
+  display: block;
+  font-size: 0.9375rem;
+  color: var(--color-text, #111827);
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.badgeActive {
+  background: var(--color-success-light, #d1fae5);
+  color: var(--color-success, #065f46);
+}
+
+.badgeInactive {
+  background: var(--color-neutral-light, #f3f4f6);
+  color: var(--color-text-muted, #6b7280);
+}
+
+.foto {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--color-border, #e5e7eb);
+}
+
+/* ─── Relasi tab (rekening, pembiayaan, kartu) ─── */
+
+.tabContent {
+  padding: 1.5rem;
+}
+
+.relTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.relTable th,
+.relTable td {
+  text-align: left;
+  padding: 0.625rem 0.875rem;
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+  font-size: 0.875rem;
+}
+
+.relTable th {
+  font-weight: 600;
+  color: var(--color-text-muted, #6b7280);
+  background: var(--color-surface-secondary, #f9fafb);
+}
+
+.relTable tr:hover td {
+  background: var(--color-surface-hover, #f3f4f6);
+  cursor: pointer;
+}
+
+.relLink {
+  color: var(--color-primary, #2563eb);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.relLink:hover {
+  text-decoration: underline;
+}
+
+.emptyMsg {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-muted, #6b7280);
+  font-size: 0.875rem;
+}
+
+.loadingMsg {
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-text-muted, #6b7280);
+  font-size: 0.875rem;
+}
+
+.errorMsg {
+  padding: 1rem 1.5rem;
+  background: var(--color-danger-light, #fee2e2);
+  color: var(--color-danger, #b91c1c);
+  border-radius: 6px;
+  margin: 1.5rem;
+  font-size: 0.875rem;
+}
+
+.saldo {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+/* ─── fieldItem used in NasabahInfoTab ─── */
+
+.fieldItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}

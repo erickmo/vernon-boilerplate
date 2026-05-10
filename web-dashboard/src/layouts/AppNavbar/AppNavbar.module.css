@@ -28,6 +28,20 @@
   box-shadow: 0 2px 20px rgba(187, 38, 73, 0.35);
 }
 
+/* Sekolah context — education blue */
+.navbarSekolah {
+  background: #0F6CBD;
+  border-bottom-color: rgba(15, 108, 189, 0.4);
+  box-shadow: 0 2px 20px rgba(15, 108, 189, 0.35);
+}
+
+/* Koperasi context — syariah green */
+.navbarKoperasi {
+  background: #1A7F4B;
+  border-bottom-color: rgba(26, 127, 75, 0.4);
+  box-shadow: 0 2px 20px rgba(26, 127, 75, 0.35);
+}
+
 /* Gradient glow */
 .navbar::before {
   content: '';

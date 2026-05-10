@@ -17,4 +17,14 @@ export const appConfig = {
    * App display name — used in Navbar logo and page title.
    */
   appName: import.meta.env.VITE_APP_NAME ?? 'Dashboard',
+
+  /**
+   * App logo URL — displayed on login page and navbar.
+   */
+  appLogo: import.meta.env.VITE_APP_LOGO ?? null,
+
+  /**
+   * App tagline — displayed on login page below the logo.
+   */
+  appTagline: import.meta.env.VITE_APP_TAGLINE ?? 'Sistem Manajemen Sekolah Terpadu',
 } as const
