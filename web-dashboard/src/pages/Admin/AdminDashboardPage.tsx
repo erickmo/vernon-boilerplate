@@ -3,6 +3,8 @@ import { GraduationCap, Landmark, Plus, X, RefreshCw, Building2 } from 'lucide-r
 import { authService } from '@/services/auth.service'
 import type { CreateInstitutionPayload, OrganisasiOption } from '@/services/auth.service'
 import type { CompanyGroup, Company, InstitutionType } from '@/types/auth.types'
+import { PageHeader } from '@/layouts/PageHeader/PageHeader'
+import { PageWrapper } from '@/widgets/PageWrapper/PageWrapper'
 import styles from './AdminDashboardPage.module.css'
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -277,13 +279,17 @@ function CreateModal({ onClose, onCreated }: { onClose: () => void; onCreated: (
 export default function AdminDashboardPage() {
   const [groups, setGroups] = useState<CompanyGroup[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState<Error | null>(null)
   const [showCreate, setShowCreate] = useState(false)
 
   const load = useCallback(async () => {
     setLoading(true)
+    setLoadError(null)
     try {
       const result = await authService.fetchInstitutions()
       setGroups(result)
+    } catch (err) {
+      setLoadError(err instanceof Error ? err : new Error('Gagal memuat data'))
     } finally {
       setLoading(false)
     }
@@ -298,52 +304,48 @@ export default function AdminDashboardPage() {
 
   return (
     <div className={styles.page}>
-      <div className={styles.pageHeader}>
-        <div>
-          <h1 className={styles.pageTitle}>Manajemen Institusi</h1>
-          <p className={styles.pageSubtitle}>Kelola organisasi, sekolah, dan koperasi</p>
-        </div>
-        <div className={styles.headerActions}>
-          <button
-            type="button"
-            className={styles.refreshBtn}
-            onClick={() => { void load() }}
-            disabled={loading}
-            aria-label="Refresh"
-          >
-            <RefreshCw size={15} className={loading ? styles.spinning : undefined} />
-          </button>
-          <button
-            type="button"
-            className={styles.createBtn}
-            onClick={() => setShowCreate(true)}
-          >
-            <Plus size={16} />
-            Tambah Institusi
-          </button>
-        </div>
-      </div>
+      <PageHeader
+        title="Manajemen Institusi"
+        subtitle="Kelola organisasi, sekolah, dan koperasi"
+        actions={
+          <>
+            <button
+              type="button"
+              className={styles.refreshBtn}
+              onClick={() => { void load() }}
+              disabled={loading}
+              aria-label="Refresh"
+            >
+              <RefreshCw size={15} className={loading ? styles.spinning : undefined} />
+            </button>
+            <button
+              type="button"
+              className={styles.createBtn}
+              onClick={() => setShowCreate(true)}
+            >
+              <Plus size={16} />
+              Tambah Institusi
+            </button>
+          </>
+        }
+      />
 
-      {!loading && <StatsBar groups={groups} />}
+      <PageWrapper isLoading={loading} error={loadError} onRetry={load}>
+        {!loading && <StatsBar groups={groups} />}
 
-      <div className={styles.content}>
-        {loading ? (
-          <div className={styles.loadingList}>
-            {Array.from({ length: 3 }).map((_, i) => (
-              <div key={i} className={styles.skeletonRow} />
-            ))}
-          </div>
-        ) : groups.length === 0 ? (
-          <div className={styles.emptyState}>
-            <Building2 size={40} className={styles.emptyIcon} />
-            <p>Belum ada institusi. Mulai dengan menambahkan yang pertama.</p>
-          </div>
-        ) : (
-          <div className={styles.groupList}>
-            {groups.map((g) => <TenantGroup key={g.id} group={g} />)}
-          </div>
-        )}
-      </div>
+        <div className={styles.content}>
+          {groups.length === 0 ? (
+            <div className={styles.emptyState}>
+              <Building2 size={40} className={styles.emptyIcon} />
+              <p>Belum ada institusi. Mulai dengan menambahkan yang pertama.</p>
+            </div>
+          ) : (
+            <div className={styles.groupList}>
+              {groups.map((g) => <TenantGroup key={g.id} group={g} />)}
+            </div>
+          )}
+        </div>
+      </PageWrapper>
 
       {showCreate && (
         <CreateModal

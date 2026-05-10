@@ -1,12 +1,10 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Building2 } from 'lucide-react'
+import { Building2, Edit, Users, Package, Layers } from 'lucide-react'
+import { DetailPageTemplate } from '@/widgets/DetailPageTemplate/DetailPageTemplate'
 import { tenantService } from '@/services/tenant.service'
 import type { TenantDetail, TenantInstitution, OrgUser, UpdateTenantPayload } from '@/types/tenant.types'
 import styles from './TenantDetailPage.module.css'
-
-const TABS = ['Info', 'Institusi', 'Users', 'Modul'] as const
-type Tab = typeof TABS[number]
 
 const JENIS_OPTIONS = ['Yayasan', 'Perusahaan', 'Pemerintah', 'Lainnya']
 const ALL_MODULES = ['Akademik', 'Koperasi', 'Perpustakaan', 'Infrastruktur']
@@ -333,13 +331,16 @@ export default function TenantDetailPage() {
   const navigate = useNavigate()
   const [detail, setDetail] = useState<TenantDetail | null>(null)
   const [loading, setLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<Tab>('Info')
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   const load = useCallback(async () => {
     if (!orgId) return
     setLoading(true)
+    setLoadError(null)
     try {
       setDetail(await tenantService.getTenantDetail(decodeURIComponent(orgId)))
+    } catch (err) {
+      setLoadError(err instanceof Error ? err.message : 'Gagal memuat data')
     } finally {
       setLoading(false)
     }
@@ -348,42 +349,28 @@ export default function TenantDetailPage() {
   useEffect(() => { void load() }, [load])
 
   if (loading) return <div className={styles.loading}>Memuat...</div>
-  if (!detail) return <div className={styles.loading}>Tenant tidak ditemukan.</div>
+  if (loadError || !detail) return <div className={styles.loading}>{loadError ?? 'Tenant tidak ditemukan.'}</div>
+
+  const statusBadge = (
+    <span className={`${styles.statusBadge} ${detail.info.status === 'Aktif' ? styles.badgeAktif : styles.badgeNon}`}>
+      {detail.info.status}
+    </span>
+  )
 
   return (
-    <div className={styles.page}>
-      <div className={styles.breadcrumb}>
-        <button type="button" className={styles.backBtn} onClick={() => navigate('/su/tenants')}>
-          <ArrowLeft size={16} /> Tenants
-        </button>
-        <span className={styles.breadcrumbSep}>/</span>
-        <span className={styles.breadcrumbCurrent}>{detail.info.nama}</span>
-      </div>
-      <div className={styles.pageHeader}>
-        <div className={styles.pageHeaderLeft}>
-          <div className={styles.headerAvatar}><Building2 size={20} /></div>
-          <div>
-            <h1 className={styles.pageName}>{detail.info.nama}</h1>
-            <p className={styles.pageMeta}>{detail.info.jenis_organisasi} · {detail.info.email || '—'}</p>
-          </div>
-        </div>
-        <span className={`${styles.statusBadge} ${detail.info.status === 'Aktif' ? styles.badgeAktif : styles.badgeNon}`}>
-          {detail.info.status}
-        </span>
-      </div>
-      <div className={styles.tabs}>
-        {TABS.map((tab) => (
-          <button key={tab} type="button" className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`} onClick={() => setActiveTab(tab)}>
-            {tab}
-          </button>
-        ))}
-      </div>
-      <div className={styles.tabContent}>
-        {activeTab === 'Info' && <InfoTab detail={detail} onRefresh={load} />}
-        {activeTab === 'Institusi' && <InstitusiTab detail={detail} onRefresh={load} />}
-        {activeTab === 'Users' && <UsersTab detail={detail} onRefresh={load} />}
-        {activeTab === 'Modul' && <ModulTab detail={detail} onRefresh={load} />}
-      </div>
-    </div>
+    <DetailPageTemplate
+      title={detail.info.nama}
+      code={detail.info.name}
+      icon={<Building2 size={24} />}
+      onBack={() => navigate('/su/tenants')}
+      backLabel="Tenants"
+      badges={statusBadge}
+      tabs={[
+        { id: 'info', label: 'Info', icon: <Edit size={14} />, content: <InfoTab detail={detail} onRefresh={load} /> },
+        { id: 'institusi', label: 'Institusi', icon: <Layers size={14} />, content: <InstitusiTab detail={detail} onRefresh={load} /> },
+        { id: 'users', label: 'Users', icon: <Users size={14} />, content: <UsersTab detail={detail} onRefresh={load} /> },
+        { id: 'modul', label: 'Modul', icon: <Package size={14} />, content: <ModulTab detail={detail} onRefresh={load} /> },
+      ]}
+    />
   )
 }

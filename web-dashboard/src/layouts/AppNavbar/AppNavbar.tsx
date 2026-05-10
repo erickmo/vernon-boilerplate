@@ -27,8 +27,6 @@ const NAV_ITEMS_DEFAULT = [
 const NAV_ITEMS_SUPERUSER = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
   { key: 'tenants', label: 'Tenants', icon: Globe, path: 'tenants' },
-  { key: 'companies', label: 'Perusahaan', icon: Building2, path: 'companies' },
-  { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
 ]
 
 const NAV_ITEMS_HQ = [

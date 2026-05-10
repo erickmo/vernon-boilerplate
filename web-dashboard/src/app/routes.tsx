@@ -20,6 +20,7 @@ const DashboardPage         = lazy(() => import('@/pages/Dashboard/DashboardPage
 const AdminDashboardPage    = lazy(() => import('@/pages/Admin/AdminDashboardPage'))
 const TenantListPage        = lazy(() => import('@/pages/Admin/TenantListPage'))
 const TenantDetailPage      = lazy(() => import('@/pages/Admin/TenantDetailPage'))
+const TenantFormPage        = lazy(() => import('@/pages/Admin/TenantFormPage'))
 const ChooseCompanyPage     = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
 const ChooseDashboardPage   = lazy(() => import('@/pages/ChooseDashboard/ChooseDashboardPage'))
 const NotFoundPage          = lazy(() => import('@/pages/errors/NotFoundPage'))
@@ -64,6 +65,7 @@ const multiTenantRoutes = [
     children: [
       { path: 'dashboard', element: <S><AdminDashboardPage /></S> },
       { path: 'tenants', element: <S><TenantListPage /></S> },
+      { path: 'tenants/new', element: <S><TenantFormPage /></S> },
       { path: 'tenants/:orgId', element: <S><TenantDetailPage /></S> },
       // { path: 'companies', element: <S><CompaniesListPage /></S> },
     ],
