@@ -2,7 +2,7 @@ import { Outlet } from 'react-router-dom'
 import { AppNavbar } from '@/layouts/AppNavbar/AppNavbar'
 import styles from './AppShell.module.css'
 
-export type AppContext = 'default' | 'superuser' | 'hq' | 'company'
+export type AppContext = 'default' | 'superuser' | 'hq' | 'company' | 'sekolah' | 'koperasi'
 
 interface AppShellProps {
   /** Multi-tenant context — controls navbar color and nav items. */

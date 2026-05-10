@@ -13,11 +13,12 @@ import {
 
 // ─── Lazy-loaded pages ────────────────────────────────────────────────────────
 
-const LoginPage          = lazy(() => import('@/pages/Login/LoginPage'))
-const DashboardPage      = lazy(() => import('@/pages/Dashboard/DashboardPage'))
-const ChooseCompanyPage  = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
-const NotFoundPage       = lazy(() => import('@/pages/errors/NotFoundPage'))
-const ForbiddenPage      = lazy(() => import('@/pages/errors/ForbiddenPage'))
+const LoginPage            = lazy(() => import('@/pages/Login/LoginPage'))
+const DashboardPage        = lazy(() => import('@/pages/Dashboard/DashboardPage'))
+const AdminDashboardPage   = lazy(() => import('@/pages/Admin/AdminDashboardPage'))
+const ChooseCompanyPage    = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
+const NotFoundPage         = lazy(() => import('@/pages/errors/NotFoundPage'))
+const ForbiddenPage        = lazy(() => import('@/pages/errors/ForbiddenPage'))
 
 function S({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<div />}>{children}</Suspense>
@@ -56,7 +57,7 @@ const multiTenantRoutes = [
     path: '/su',
     element: <SuperuserRoute><AppShell context="superuser" /></SuperuserRoute>,
     children: [
-      { path: 'dashboard', element: <S><DashboardPage /></S> },
+      { path: 'dashboard', element: <S><AdminDashboardPage /></S> },
       // { path: 'tenants',   element: <S><TenantsListPage /></S> },
       // { path: 'companies', element: <S><CompaniesListPage /></S> },
     ],

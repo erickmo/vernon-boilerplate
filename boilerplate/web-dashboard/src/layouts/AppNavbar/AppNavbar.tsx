@@ -5,6 +5,8 @@ import {
   ChevronDown, LogOut,
   CheckCircle, AlertCircle, AlertTriangle, Info,
   Building2, Shield, Globe,
+  GraduationCap, BookOpen, Library,
+  Wallet, CreditCard, Heart, Receipt, BarChart3, BadgeCheck,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth.store'
 import { useNotificationStore } from '@/stores/notification.store'
@@ -41,11 +43,33 @@ const NAV_ITEMS_COMPANY = [
   { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
 ]
 
+const NAV_ITEMS_SEKOLAH = [
+  { key: 'dashboard',      label: 'Dashboard',      icon: LayoutDashboard, path: 'dashboard' },
+  { key: 'siswa',          label: 'Siswa',           icon: GraduationCap,   path: 'siswa' },
+  { key: 'akademik',       label: 'Akademik',        icon: BookOpen,        path: 'akademik' },
+  { key: 'perpustakaan',   label: 'Perpustakaan',    icon: Library,         path: 'perpustakaan' },
+  { key: 'pengaturan',     label: 'Pengaturan',      icon: Settings,        path: 'pengaturan' },
+]
+
+const NAV_ITEMS_KOPERASI = [
+  { key: 'dashboard',      label: 'Dashboard',       icon: LayoutDashboard, path: 'dashboard' },
+  { key: 'anggota',        label: 'Anggota',         icon: Users,           path: 'anggota' },
+  { key: 'simpanan',       label: 'Simpanan',        icon: Wallet,          path: 'simpanan' },
+  { key: 'pembiayaan',     label: 'Pembiayaan',      icon: CreditCard,      path: 'pembiayaan' },
+  { key: 'kartu',          label: 'Kartu',           icon: BadgeCheck,      path: 'kartu' },
+  { key: 'zis',            label: 'ZIS & Wakaf',     icon: Heart,           path: 'zis' },
+  { key: 'kas-teller',     label: 'Kas Teller',      icon: Receipt,         path: 'kas-teller' },
+  { key: 'laporan',        label: 'Laporan',         icon: BarChart3,       path: 'laporan' },
+  { key: 'pengaturan',     label: 'Pengaturan',      icon: Settings,        path: 'pengaturan' },
+]
+
 const NAV_ITEMS_BY_CONTEXT = {
   default: NAV_ITEMS_DEFAULT,
   superuser: NAV_ITEMS_SUPERUSER,
   hq: NAV_ITEMS_HQ,
   company: NAV_ITEMS_COMPANY,
+  sekolah: NAV_ITEMS_SEKOLAH,
+  koperasi: NAV_ITEMS_KOPERASI,
 } as const
 
 const BASE_PATH_BY_CONTEXT = {
@@ -53,6 +77,8 @@ const BASE_PATH_BY_CONTEXT = {
   superuser: '/su',
   hq: '/g',
   company: '', // resolved dynamically from selectedCompany.code
+  sekolah: '/sekolah',
+  koperasi: '/koperasi',
 } as const
 
 // ─── Notification icons ───────────────────────────────────────────────────────
@@ -119,11 +145,15 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
       styles.navbar,
       context === 'superuser' && styles.navbarSuperuser,
       context === 'hq' && styles.navbarHq,
+      context === 'sekolah' && styles.navbarSekolah,
+      context === 'koperasi' && styles.navbarKoperasi,
     )}>
       {/* Logo */}
       <Link to={basePath ? `${basePath}/dashboard` : '/dashboard'} className={styles.logo}>
         {context === 'superuser' && <Shield size={16} className={styles.logoContextIcon} />}
         {context === 'hq' && <Globe size={16} className={styles.logoContextIcon} />}
+        {context === 'sekolah' && <GraduationCap size={16} className={styles.logoContextIcon} />}
+        {context === 'koperasi' && <Wallet size={16} className={styles.logoContextIcon} />}
         {(context === 'default' || context === 'company') && (
           <span className={styles.logoIcon}>{appConfig.appName[0]}</span>
         )}

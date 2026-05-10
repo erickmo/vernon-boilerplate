@@ -67,6 +67,13 @@ function getCsrfToken(): string {
     ?.split('=')[1]) ?? 'fetch'
 }
 
+function resolveFrappeRole(userId: string, userDoc: FrappeUserDoc): string {
+  const roles = (userDoc.roles ?? []).map((r) => r.role.toLowerCase())
+  if (userId === 'Administrator' || roles.includes('system manager')) return 'superuser'
+  if (roles.includes('teller') || roles.includes('supervisor')) return 'employee'
+  return 'user'
+}
+
 function mapTenantGroups(tenantGroups: FrappeTenantGroup[]): CompanyGroup[] {
   return tenantGroups.map((tenant) => ({
     id: tenant.id,
@@ -134,14 +141,14 @@ export const authService = {
       `/api/resource/User/${encodeURIComponent(loggedUser)}`
     )
 
-    const topRole = userDoc.roles?.[0]?.role?.toLowerCase() ?? 'user'
+    const role = resolveFrappeRole(loggedUser, userDoc)
 
     const user: UserProfile = {
       id: userDoc.name,
       name: userDoc.full_name || loginResult.full_name,
       email: userDoc.email,
       avatar: userDoc.user_image ?? undefined,
-      role: topRole,
+      role,
       permissions: [],
     }
 
@@ -197,13 +204,12 @@ export const authService = {
     const userDoc = await fetchFrappeJson<FrappeUserDoc>(
       `/api/resource/User/${encodeURIComponent(loggedUser)}`
     )
-    const topRole = userDoc.roles?.[0]?.role?.toLowerCase() ?? 'user'
     return {
       id: userDoc.name,
       name: userDoc.full_name,
       email: userDoc.email,
       avatar: userDoc.user_image ?? undefined,
-      role: topRole,
+      role: resolveFrappeRole(loggedUser, userDoc),
       permissions: [],
     }
   },
