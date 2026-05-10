@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { LogOut, GraduationCap, Landmark } from 'lucide-react'
+import { LogOut, GraduationCap, Landmark, LayoutDashboard } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth.store'
 import { authService } from '@/services/auth.service'
 import { appConfig } from '@/config/app.config'
@@ -11,7 +11,7 @@ interface DashboardOption {
   description: string
   path: string
   Icon: React.ComponentType<{ size?: number }>
-  colorClass: string
+  colorClass: 'cardSekolah' | 'cardKoperasi'
 }
 
 const DASHBOARD_OPTIONS: DashboardOption[] = [
@@ -79,8 +79,14 @@ export default function ChooseDashboardPage() {
       <div className={styles.center}>
         <div className={styles.header}>
           <div className={styles.logoWrap}>
-            <div className={styles.logoIcon} />
-            <span className={styles.logoName}>{appConfig.appName}</span>
+            {appConfig.appLogo ? (
+              <img src={appConfig.appLogo} alt={appConfig.appName} style={{ height: 32 }} />
+            ) : (
+              <>
+                <div className={styles.logoIcon}><LayoutDashboard size={18} /></div>
+                <span className={styles.logoName}>{appConfig.appName}</span>
+              </>
+            )}
           </div>
           <h1 className={styles.heading}>Pilih Dashboard</h1>
           <p className={styles.subheading}>
