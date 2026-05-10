@@ -20,6 +20,7 @@ export default defineConfig({
     include: [
       'src/__ui_tests__/**/*.test.{ts,tsx}',
       'src/layouts/**/*.test.{ts,tsx}',
+      'src/app/**/*.test.{ts,tsx}',
     ],
     css: { modules: { classNameStrategy: 'non-scoped' } },
   },
