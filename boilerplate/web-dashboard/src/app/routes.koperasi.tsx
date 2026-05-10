@@ -12,12 +12,12 @@ function S({ children }: { children: React.ReactNode }) {
 }
 
 // Anggota
-const NasabahListPage              = lazy(() => Promise.resolve({ default: stub('NasabahListPage') }))
-const NasabahDetailPage            = lazy(() => Promise.resolve({ default: stub('NasabahDetailPage') }))
-const NasabahFormPage              = lazy(() => Promise.resolve({ default: stub('NasabahFormPage') }))
-const AnggotaKoperasiListPage      = lazy(() => Promise.resolve({ default: stub('AnggotaKoperasiListPage') }))
-const AnggotaKoperasiFormPage      = lazy(() => Promise.resolve({ default: stub('AnggotaKoperasiFormPage') }))
-const SimpananPokokListPage        = lazy(() => Promise.resolve({ default: stub('SimpananPokokListPage') }))
+const NasabahListPage              = lazy(() => import('@/pages/koperasi/anggota/NasabahListPage'))
+const NasabahDetailPage            = lazy(() => import('@/pages/koperasi/anggota/NasabahDetailPage'))
+const NasabahFormPage              = lazy(() => import('@/pages/koperasi/anggota/NasabahFormPage'))
+const AnggotaKoperasiListPage      = lazy(() => import('@/pages/koperasi/anggota/AnggotaKoperasiListPage'))
+const AnggotaKoperasiFormPage      = lazy(() => import('@/pages/koperasi/anggota/AnggotaKoperasiFormPage'))
+const SimpananPokokListPage        = lazy(() => import('@/pages/koperasi/anggota/SimpananPokokListPage'))
 
 // Simpanan
 const ProdukSimpananListPage       = lazy(() => Promise.resolve({ default: stub('ProdukSimpananListPage') }))
