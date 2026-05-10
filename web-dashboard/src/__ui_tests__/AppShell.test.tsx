@@ -1,42 +1,66 @@
 import { Route, Routes } from 'react-router-dom'
-import { screen, within } from '@testing-library/react'
-import { describe, expect, it } from 'vitest'
+import { screen } from '@testing-library/react'
+import { describe, expect, it, vi } from 'vitest'
 import { render } from '@/__ui_tests__/test-utils'
 import { AppShell } from '@/layouts/AppShell/AppShell'
 
+// Mock auth + notification stores for AppNavbar
+vi.mock('@/stores/auth.store', () => ({
+  useAuthStore: () => ({ user: { name: 'Test' }, selectedCompany: null, selectedGroup: null, logout: vi.fn() }),
+}))
+vi.mock('@/stores/notification.store', () => ({
+  useNotificationStore: () => ({ items: [], unreadCount: 0, markAllRead: vi.fn(), markRead: vi.fn() }),
+}))
+vi.mock('@/config/app.config', () => ({
+  appConfig: { appName: 'Test', isMultiTenant: false, appLogo: null },
+}))
+
 describe('AppShell', () => {
-  it('renders secondary navigation on authenticated app pages', () => {
+  it('renders AppNavbar', () => {
     render(
       <Routes>
-        <Route element={<AppShell />}>
-          <Route path="/dashboard" element={<div>Dashboard body</div>} />
+        <Route element={<AppShell context="sekolah" />}>
+          <Route path="/sekolah/dashboard" element={<div>Dashboard</div>} />
         </Route>
       </Routes>,
-      { initialEntries: ['/dashboard'] },
+      { initialEntries: ['/sekolah/dashboard'] },
     )
-
-    const nav2 = screen.getByRole('navigation', { name: /secondary navigation/i })
-    expect(nav2).toBeInTheDocument()
-    expect(within(nav2).getByRole('link', { name: /overview/i })).toHaveAttribute('href', '/dashboard')
-    expect(within(nav2).getByRole('link', { name: /examples/i })).toHaveAttribute('href', '/examples')
-    expect(within(nav2).getByRole('link', { name: /audit log/i })).toHaveAttribute('href', '/audit-log')
-    expect(within(nav2).getByRole('link', { name: /profile/i })).toHaveAttribute('href', '/profile')
-    expect(within(nav2).getByRole('link', { name: /security/i })).toHaveAttribute('href', '/change-password')
-    expect(screen.getByText('Dashboard body')).toBeInTheDocument()
+    expect(document.querySelector('nav')).toBeInTheDocument()
   })
 
-  it('keeps examples active for nested example routes', () => {
+  it('renders AppSubNav when nav1 has subnav config', () => {
     render(
       <Routes>
-        <Route element={<AppShell />}>
-          <Route path="/examples/:id" element={<div>Example detail body</div>} />
+        <Route element={<AppShell context="sekolah" />}>
+          <Route path="/sekolah/siswa" element={<div>Siswa</div>} />
         </Route>
       </Routes>,
-      { initialEntries: ['/examples/ex-001'] },
+      { initialEntries: ['/sekolah/siswa'] },
     )
+    expect(screen.getByRole('navigation', { name: 'Sub-navigasi' })).toBeInTheDocument()
+  })
 
-    const nav2 = screen.getByRole('navigation', { name: /secondary navigation/i })
-    expect(within(nav2).getByRole('link', { name: /examples/i })).toHaveAttribute('aria-current', 'page')
-    expect(screen.getByText('Example detail body')).toBeInTheDocument()
+  it('does NOT render AppSubNav on dashboard route', () => {
+    render(
+      <Routes>
+        <Route element={<AppShell context="sekolah" />}>
+          <Route path="/sekolah/dashboard" element={<div>Dashboard</div>} />
+        </Route>
+      </Routes>,
+      { initialEntries: ['/sekolah/dashboard'] },
+    )
+    expect(screen.queryByRole('navigation', { name: 'Sub-navigasi' })).not.toBeInTheDocument()
+  })
+
+  it('renders page content via Outlet', () => {
+    render(
+      <Routes>
+        <Route element={<AppShell context="sekolah" />}>
+          <Route path="/sekolah/dashboard" element={<div>Page content</div>} />
+        </Route>
+      </Routes>,
+      { initialEntries: ['/sekolah/dashboard'] },
+    )
+    expect(screen.getByText('Page content')).toBeInTheDocument()
   })
 })
