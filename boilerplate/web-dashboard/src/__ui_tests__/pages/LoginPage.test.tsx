@@ -2,6 +2,7 @@ import { render, screen, fireEvent, waitFor } from '../test-utils'
 import { http, HttpResponse } from 'msw'
 import { server } from '../mocks/server'
 import LoginPage from '@/pages/Login/LoginPage'
+import { appConfig } from '@/config/app.config'
 
 describe('LoginPage — rendering', () => {
   it('renders usr field as type text (bukan email)', () => {
@@ -27,8 +28,7 @@ describe('LoginPage — rendering', () => {
 
   it('shows app name from config', () => {
     render(<LoginPage />)
-    // appConfig.appName default is 'Dashboard'
-    expect(screen.getByText('Dashboard')).toBeInTheDocument()
+    expect(screen.getByText(appConfig.appName)).toBeInTheDocument()
   })
 })
 

@@ -46,8 +46,8 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
-  token: string
-  refreshToken: string
+  token: string | null
+  refreshToken: string | null
   user: UserProfile
   // Multi-tenant only — omit or pass empty array in single-tenant
   companyGroups?: CompanyGroup[]
