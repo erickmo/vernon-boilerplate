@@ -387,3 +387,247 @@
   line-height: 1.6;
   max-width: 280px;
 }
+
+/* ─── Admin create button ────────────────────────────────────────────────────── */
+
+.createBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  margin-top: var(--space-4);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px dashed rgba(255, 255, 255, 0.25);
+  border-radius: var(--radius-full);
+  background: transparent;
+  transition: color 150ms, border-color 150ms, background 150ms;
+}
+
+.createBtn:hover {
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ─── Modal overlay ──────────────────────────────────────────────────────────── */
+
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: var(--space-6);
+}
+
+.modal {
+  background: rgba(30, 27, 75, 0.92);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+  padding: var(--space-6);
+  width: 100%;
+  max-width: 420px;
+  animation: fadeUp 0.25s ease both;
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+
+.modalTitle {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.modalCloseBtn {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms, color 150ms;
+}
+
+.modalCloseBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+/* ─── Type toggle ────────────────────────────────────────────────────────────── */
+
+.typeToggle {
+  display: flex;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: var(--radius-lg);
+  padding: 4px;
+}
+
+.typeBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  transition: background 150ms, color 150ms;
+}
+
+.typeBtnActive {
+  background: rgba(99, 102, 241, 0.5);
+  color: #ffffff;
+}
+
+.typeBtnActiveKop {
+  background: rgba(217, 119, 6, 0.5);
+  color: #ffffff;
+}
+
+/* ─── Form fields ────────────────────────────────────────────────────────────── */
+
+.modalForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.formLabel {
+  font-size: var(--font-xs);
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.formLabelHint {
+  font-size: 10px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.formInput {
+  width: 100%;
+  height: var(--input-height);
+  padding: 0 var(--space-3);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  color: #ffffff;
+  font-size: var(--font-base);
+  transition: border-color 150ms, background 150ms;
+}
+
+.formInput::placeholder { color: rgba(255, 255, 255, 0.25); }
+
+.formInput:focus {
+  outline: none;
+  border-color: rgba(99, 102, 241, 0.6);
+  background: rgba(255, 255, 255, 0.11);
+}
+
+.formSelect {
+  flex: 1;
+  height: var(--input-height);
+  padding: 0 var(--space-3);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--radius-md);
+  color: #ffffff;
+  font-size: var(--font-base);
+}
+
+.formSelect option {
+  background: #1e1b4b;
+  color: #ffffff;
+}
+
+.orgRow {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.orgNewBtn {
+  white-space: nowrap;
+  padding: 0 var(--space-3);
+  height: var(--input-height);
+  border-radius: var(--radius-md);
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.06);
+  transition: background 150ms, color 150ms;
+}
+
+.orgNewBtn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.formError {
+  font-size: var(--font-xs);
+  color: #f87171;
+  padding: var(--space-2) var(--space-3);
+  background: rgba(248, 113, 113, 0.1);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(248, 113, 113, 0.2);
+}
+
+.submitBtn {
+  height: 42px;
+  border-radius: var(--radius-md);
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: #ffffff;
+  font-size: var(--font-base);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 150ms;
+}
+
+.submitBtn:disabled { opacity: 0.6; cursor: not-allowed; }
+.submitBtn:not(:disabled):hover { opacity: 0.9; }
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

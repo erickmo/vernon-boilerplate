@@ -1,4 +1,4 @@
-import type { Company, CompanyGroup, LoginRequest, LoginResponse, UserProfile } from '@/types/auth.types'
+import type { Company, CompanyGroup, InstitutionType, LoginRequest, LoginResponse, UserProfile } from '@/types/auth.types'
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080'
 
@@ -44,6 +44,58 @@ async function fetchFrappeJson<T>(path: string): Promise<T> {
   return (json['message'] ?? json) as T
 }
 
+async function postFrappeJson<T>(path: string, body: unknown): Promise<T> {
+  const res = await fetch(`${BASE_URL}${path}`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json', 'X-Frappe-CSRF-Token': getCsrfToken() },
+    body: JSON.stringify(body),
+  })
+  if (!res.ok) {
+    const json = await res.json().catch(() => ({})) as Record<string, unknown>
+    const msg = (json['exception'] as string) ?? `${res.status} ${path}`
+    throw new Error(msg)
+  }
+  const json = await res.json() as Record<string, unknown>
+  return (json['message'] ?? json['data'] ?? json) as T
+}
+
+function getCsrfToken(): string {
+  return (document.cookie
+    .split('; ')
+    .find((c) => c.startsWith('csrf_token='))
+    ?.split('=')[1]) ?? 'fetch'
+}
+
+function mapTenantGroups(tenantGroups: FrappeTenantGroup[]): CompanyGroup[] {
+  return tenantGroups.map((tenant) => ({
+    id: tenant.id,
+    name: tenant.name,
+    logo: tenant.logo || undefined,
+    companies: tenant.institutions.map((inst): Company => ({
+      id: inst.name,
+      code: inst.name,
+      name: inst.display_name,
+      logo: inst.logo || undefined,
+      type: inst.type,
+      lembaga: inst.lembaga,
+      groupId: tenant.id,
+    })),
+  }))
+}
+
+export interface CreateInstitutionPayload {
+  type: InstitutionType
+  nama: string
+  kode: string
+  organisasi: string
+}
+
+export interface OrganisasiOption {
+  name: string
+  nama: string
+}
+
 export const authService = {
   login: async (body: LoginRequest): Promise<LoginResponse> => {
     const params = new URLSearchParams({
@@ -77,9 +129,9 @@ export const authService = {
     // Get logged-in username
     const loggedUser = await fetchFrappeJson<string>('/api/method/frappe.auth.get_logged_user')
 
-    // Get user profile doc
+    // Get user profile doc (no fields filter so child tables like roles are included)
     const userDoc = await fetchFrappeJson<FrappeUserDoc>(
-      `/api/resource/User/${encodeURIComponent(loggedUser)}?fields=["name","full_name","email","user_image","roles"]`
+      `/api/resource/User/${encodeURIComponent(loggedUser)}`
     )
 
     const topRole = userDoc.roles?.[0]?.role?.toLowerCase() ?? 'user'
@@ -97,20 +149,7 @@ export const authService = {
       '/api/method/sekolahpro.pengaturan.api.sekolah.get_user_institutions'
     ).catch(() => [] as FrappeTenantGroup[])
 
-    const companyGroups: CompanyGroup[] = tenantGroups.map((tenant) => ({
-      id: tenant.id,
-      name: tenant.name,
-      logo: tenant.logo || undefined,
-      companies: tenant.institutions.map((inst): Company => ({
-        id: inst.name,
-        code: inst.name,
-        name: inst.display_name,
-        logo: inst.logo || undefined,
-        type: inst.type,
-        lembaga: inst.lembaga,
-        groupId: tenant.id,
-      })),
-    }))
+    const companyGroups = mapTenantGroups(tenantGroups)
 
     return { token: '', refreshToken: '', user, companyGroups }
   },
@@ -122,10 +161,41 @@ export const authService = {
     })
   },
 
+  fetchInstitutions: async (): Promise<CompanyGroup[]> => {
+    const tenantGroups = await fetchFrappeJson<FrappeTenantGroup[]>(
+      '/api/method/sekolahpro.pengaturan.api.sekolah.get_user_institutions'
+    ).catch(() => [] as FrappeTenantGroup[])
+    return mapTenantGroups(tenantGroups)
+  },
+
+  fetchOrganisasi: async (): Promise<OrganisasiOption[]> => {
+    const res = await fetchFrappeJson<{ name: string; nama: string }[]>(
+      '/api/resource/Organisasi?fields=["name","nama"]&limit=100&order_by=nama+asc'
+    ).catch(() => [] as { name: string; nama: string }[])
+    return res.map((o) => ({ name: o.name, nama: o.nama }))
+  },
+
+  createOrganisasi: async (nama: string): Promise<OrganisasiOption> => {
+    const res = await postFrappeJson<{ name: string; nama: string }>(
+      '/api/resource/Organisasi',
+      { nama, status: 'Aktif' }
+    )
+    return { name: res.name, nama: res.nama ?? nama }
+  },
+
+  createInstitution: async (payload: CreateInstitutionPayload): Promise<void> => {
+    const doctype = payload.type === 'koperasi' ? 'Koperasi' : 'Sekolah'
+    const body =
+      payload.type === 'koperasi'
+        ? { kode: payload.kode, nama: payload.nama, organisasi: payload.organisasi, status: 'Aktif' }
+        : { nama: payload.nama, organisasi: payload.organisasi, status: 'Aktif', jenis: 'Reguler' }
+    await postFrappeJson(`/api/resource/${doctype}`, body)
+  },
+
   me: async (): Promise<UserProfile> => {
     const loggedUser = await fetchFrappeJson<string>('/api/method/frappe.auth.get_logged_user')
     const userDoc = await fetchFrappeJson<FrappeUserDoc>(
-      `/api/resource/User/${encodeURIComponent(loggedUser)}?fields=["name","full_name","email","user_image","roles"]`
+      `/api/resource/User/${encodeURIComponent(loggedUser)}`
     )
     const topRole = userDoc.roles?.[0]?.role?.toLowerCase() ?? 'user'
     return {
