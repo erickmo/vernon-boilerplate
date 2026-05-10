@@ -12,12 +12,12 @@ function S({ children }: { children: React.ReactNode }) {
 }
 
 // Siswa
-const SiswaListPage              = lazy(() => Promise.resolve({ default: stub('SiswaListPage') }))
-const SiswaDetailPage            = lazy(() => Promise.resolve({ default: stub('SiswaDetailPage') }))
-const SiswaFormPage              = lazy(() => Promise.resolve({ default: stub('SiswaFormPage') }))
-const PendaftaranSiswaListPage   = lazy(() => Promise.resolve({ default: stub('PendaftaranSiswaListPage') }))
+const SiswaListPage              = lazy(() => import('@/pages/sekolah/siswa/SiswaListPage'))
+const SiswaDetailPage            = lazy(() => import('@/pages/sekolah/siswa/SiswaDetailPage'))
+const SiswaFormPage              = lazy(() => import('@/pages/sekolah/siswa/SiswaFormPage'))
+const PendaftaranSiswaListPage   = lazy(() => import('@/pages/sekolah/siswa/PendaftaranSiswaListPage'))
 const PendaftaranSiswaFormPage   = lazy(() => Promise.resolve({ default: stub('PendaftaranSiswaFormPage') }))
-const RombelListPage             = lazy(() => Promise.resolve({ default: stub('RombelListPage') }))
+const RombelListPage             = lazy(() => import('@/pages/sekolah/siswa/RombelListPage'))
 const RombelFormPage             = lazy(() => Promise.resolve({ default: stub('RombelFormPage') }))
 const MutasiSiswaListPage        = lazy(() => Promise.resolve({ default: stub('MutasiSiswaListPage') }))
 const MutasiSiswaFormPage        = lazy(() => Promise.resolve({ default: stub('MutasiSiswaFormPage') }))
