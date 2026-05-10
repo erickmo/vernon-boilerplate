@@ -1,0 +1,22 @@
+.loading { padding: 32px; text-align: center; color: var(--color-text-tertiary); }
+.infoGrid { display: flex; flex-direction: column; gap: 0; padding: 8px 0; }
+.infoRow { display: grid; grid-template-columns: 180px 1fr; gap: 12px; padding: 12px 24px; border-bottom: 1px solid var(--color-border-light); }
+.infoLabel { font-size: 13px; color: var(--color-text-secondary); }
+.infoValue { font-size: 14px; color: var(--color-text-primary); font-weight: 500; }
+.workflowTab { padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+.statusRow { display: flex; align-items: center; gap: 0; }
+.step { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; font-size: 12px; color: var(--color-text-tertiary); }
+.stepDone { color: var(--color-success); }
+.stepDot { width: 12px; height: 12px; border-radius: 50%; background: var(--color-border); }
+.stepDone .stepDot { background: var(--color-success); }
+.currentStatus { font-size: 14px; }
+.actions { display: flex; gap: 12px; }
+.btnApprove { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--color-success); color: #fff; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
+.btnApprove:disabled { opacity: 0.5; cursor: not-allowed; }
+.btnReject { display: flex; align-items: center; gap: 6px; padding: 8px 16px; background: var(--color-danger); color: #fff; border: none; border-radius: 6px; font-size: 14px; cursor: pointer; }
+.btnReject:disabled { opacity: 0.5; cursor: not-allowed; }
+.btnSecondary { padding: 8px 16px; border: 1px solid var(--color-border); border-radius: 6px; font-size: 14px; background: var(--color-surface); cursor: pointer; }
+.rejectForm { display: flex; flex-direction: column; gap: 10px; }
+.rejectLabel { font-size: 13px; font-weight: 500; }
+.rejectTextarea { padding: 8px 12px; border: 1px solid var(--color-border); border-radius: 6px; font-size: 14px; resize: vertical; }
+.rejectActions { display: flex; gap: 10px; }
