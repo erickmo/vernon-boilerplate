@@ -4,7 +4,7 @@ import {
   LayoutDashboard, Users, Settings, Bell,
   ChevronDown, LogOut,
   CheckCircle, AlertCircle, AlertTriangle, Info,
-  Building2, Shield, Globe, FileText,
+  Building2, Shield, Globe,
   GraduationCap, BookOpen, Library,
   Wallet, CreditCard, Heart, Receipt, BarChart3, BadgeCheck,
 } from 'lucide-react'
@@ -20,14 +20,12 @@ import styles from './AppNavbar.module.css'
 
 const NAV_ITEMS_DEFAULT = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'examples', label: 'Examples', icon: FileText, path: 'examples' },
   { key: 'users', label: 'Pengguna', icon: Users, path: 'users' },
   { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
 ]
 
 const NAV_ITEMS_SUPERUSER = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'examples', label: 'Examples', icon: FileText, path: 'examples' },
   { key: 'tenants', label: 'Tenants', icon: Globe, path: 'tenants' },
   { key: 'companies', label: 'Perusahaan', icon: Building2, path: 'companies' },
   { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
@@ -35,14 +33,12 @@ const NAV_ITEMS_SUPERUSER = [
 
 const NAV_ITEMS_HQ = [
   { key: 'dashboard', label: 'HQ Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'examples', label: 'Examples', icon: FileText, path: 'examples' },
   { key: 'users', label: 'Pengguna', icon: Users, path: 'users' },
   { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
 ]
 
 const NAV_ITEMS_COMPANY = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'examples', label: 'Examples', icon: FileText, path: 'examples' },
   { key: 'users', label: 'Pengguna', icon: Users, path: 'users' },
   { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
 ]
@@ -129,7 +125,7 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
   const isActive = (path: string) => {
     const full = `${basePath}/${path}`
     if (path === 'dashboard') return location.pathname === full || location.pathname === basePath
-    return location.pathname === full || location.pathname.startsWith(`${full}/`)
+    return location.pathname.startsWith(full)
   }
 
   const handleLogout = () => {

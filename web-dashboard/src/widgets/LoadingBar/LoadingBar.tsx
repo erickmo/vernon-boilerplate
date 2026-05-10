@@ -26,6 +26,39 @@ export function useLoadingBar() {
 
 // ─── Internal: ProgressBar ───────────────────────────────────────────────────
 
+interface ProgressBarProps {
+  color: string
+  height: number
+  onExitComplete: () => void
+}
+
+type Phase = 'running' | 'completing'
+
+function ProgressBar({ color, height }: ProgressBarProps) {
+  const [phase, setPhase] = useState<Phase>('running')
+
+  useEffect(() => {
+    // Give the running animation time to show, then complete
+    const timer = setTimeout(() => setPhase('completing'), 2400)
+    return () => clearTimeout(timer)
+  }, [])
+
+  return (
+    <div
+      className={styles.track}
+      style={{ height, zIndex: BAR_Z_INDEX }}
+    >
+      <div
+        className={[
+          styles.bar,
+          phase === 'running' ? styles.barRunning : styles.barCompleting,
+        ].join(' ')}
+        style={{ background: color }}
+      />
+    </div>
+  )
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function LoadingBar({

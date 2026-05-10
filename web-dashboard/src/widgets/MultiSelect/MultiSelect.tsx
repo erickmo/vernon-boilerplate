@@ -1,5 +1,4 @@
 import { useState, useRef, useCallback } from 'react'
-import type { MouseEvent as ReactMouseEvent } from 'react'
 import { createPortal } from 'react-dom'
 import { ChevronDown, X, Check, Search } from 'lucide-react'
 import { useClickOutside } from '@/hooks/useClickOutside'
@@ -70,12 +69,12 @@ export function MultiSelect({
     }
   }
 
-  const remove = (optValue: string, e: ReactMouseEvent) => {
+  const remove = (optValue: string, e: React.MouseEvent) => {
     e.stopPropagation()
     onChange(value.filter((v) => v !== optValue))
   }
 
-  const clear = (e: ReactMouseEvent) => {
+  const clear = (e: React.MouseEvent) => {
     e.stopPropagation()
     onChange([])
   }

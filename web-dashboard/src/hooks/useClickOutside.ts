@@ -1,12 +1,11 @@
-import { useEffect } from 'react'
-import type { RefObject } from 'react'
+import { useEffect, RefObject } from 'react'
 
 /**
  * Fires `handler` when a click occurs outside all provided refs.
  * Accepts a single ref or an array of refs (useful for trigger + panel patterns).
  */
 export function useClickOutside<T extends HTMLElement>(
-  refs: RefObject<T | null> | RefObject<T | null>[],
+  refs: RefObject<T> | RefObject<T>[],
   handler: (event: MouseEvent | TouchEvent) => void,
   enabled = true,
 ): void {

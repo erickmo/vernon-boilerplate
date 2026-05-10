@@ -20,12 +20,10 @@ export function Toggle({ checked, onChange, label, disabled, id }: ToggleProps) 
       <input
         type="checkbox"
         id={id}
-        role="switch"
         className={styles.toggleInput}
         checked={checked}
         disabled={disabled}
         onChange={(e) => onChange(e.target.checked)}
-        aria-checked={checked}
       />
       <span className={styles.toggleTrack}>
         <span className={styles.toggleThumb} />

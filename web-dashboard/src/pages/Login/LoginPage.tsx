@@ -1,66 +1,61 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import {
-  ArrowRight,
-  CheckCircle2,
-  Eye,
-  EyeOff,
-  HeartHandshake,
-  Lock,
-  Mail,
-  Sparkles,
-} from 'lucide-react'
+import { useNavigate, useLocation } from 'react-router-dom'
+import { Eye, EyeOff, Lock, User } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth.store'
 import { authService } from '@/services/auth.service'
 import { useForm } from '@/hooks/useForm'
-import { AppApiError } from '@/types/api.types'
 import { appConfig } from '@/config/app.config'
-import type { LoginResponse } from '@/types/auth.types'
+import { AppApiError } from '@/types/api.types'
 import styles from './LoginPage.module.css'
 
-interface LoginFormValues extends Record<string, unknown> {
-  email: string
-  password: string
+interface LoginFormValues {
+  usr: string
+  pwd: string
 }
 
-const canBypassLogin =
-  import.meta.env.DEV || import.meta.env.MODE === 'test' || import.meta.env.VITE_ENABLE_LOGIN_BYPASS === 'true'
-
-const demoLoginResponse: LoginResponse = {
-  token: 'demo-token',
-  refreshToken: 'demo-refresh-token',
-  user: {
-    id: 'demo-user',
-    name: 'Demo User',
-    email: 'demo@vernon.local',
-    role: 'admin',
-    permissions: ['*'],
-  },
-  companyGroups: [],
-}
+const FEATURES = [
+  'Manajemen Akademik & Kurikulum',
+  'Absensi Digital Real-time',
+  'Laporan & Analitik Lengkap',
+]
 
 export default function LoginPage() {
   const navigate = useNavigate()
+  const location = useLocation()
   const login = useAuthStore((s) => s.login)
+
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [serverError, setServerError] = useState('')
+  const [rememberMe, setRememberMe] = useState(() => {
+    try { return localStorage.getItem('rememberMe') === 'true' } catch { return false }
+  })
+  const [showForgotModal, setShowForgotModal] = useState(false)
 
   const { values, errors, field, handleSubmit } = useForm<LoginFormValues>({
-    initialValues: { email: '', password: '' },
+    initialValues: { usr: 'administrator', pwd: '123123123' },
     validate: (v) => ({
-      email: !v.email ? 'Email wajib diisi' : undefined,
-      password: !v.password ? 'Kata sandi wajib diisi' : undefined,
+      usr: !v.usr ? 'Username atau email wajib diisi' : undefined,
+      pwd: !v.pwd ? 'Kata sandi wajib diisi' : undefined,
     }),
   })
+
+  const getRedirectPath = (): string => {
+    const params = new URLSearchParams(location.search)
+    const nextParam = params.get('next')
+    if (nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')) return nextParam
+    const fromState = (location.state as { from?: { pathname: string } } | null)?.from?.pathname
+    return fromState ?? '/'
+  }
 
   const onSubmit = handleSubmit(async (v) => {
     setIsLoading(true)
     setServerError('')
     try {
-      const response = await authService.login(v)
+      try { localStorage.setItem('rememberMe', String(rememberMe)) } catch { /* sandboxed */ }
+      const response = await authService.login({ usr: v.usr, pwd: v.pwd, remember: rememberMe })
       login(response)
-      navigate('/dashboard', { replace: true })
+      navigate(getRedirectPath(), { replace: true })
     } catch (err) {
       if (err instanceof AppApiError) {
         setServerError(err.message)
@@ -72,142 +67,190 @@ export default function LoginPage() {
     }
   })
 
-  const handleDemoLogin = () => {
-    login(demoLoginResponse)
-    navigate('/dashboard', { replace: true })
-  }
-
   return (
     <div className={styles.root}>
-      <main className={styles.shell}>
-        <section className={styles.storyPanel} aria-label="Workspace yang peduli">
+      <div className={styles.shell}>
+        {/* ── Left Panel ── */}
+        <div className={styles.leftPanel}>
+          <div className={styles.leftGlow} />
+
           <div className={styles.logoWrap}>
-            <span className={styles.logoIcon}>{appConfig.appName[0]}</span>
-            <span className={styles.logoText}>{appConfig.appName}</span>
+            {appConfig.appLogo ? (
+              <img src={appConfig.appLogo} alt={appConfig.appName} className={styles.logoImg} />
+            ) : (
+              <>
+                <div className={styles.logoIcon}>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3L1 9l11 6 9-4.91V17h2V9L12 3zM5 13.18v4L12 21l7-3.82v-4L12 17l-7-3.82z" />
+                  </svg>
+                </div>
+                <span className={styles.logoName}>{appConfig.appName}</span>
+              </>
+            )}
           </div>
 
-          <div className={styles.storyContent}>
-            <p className={styles.eyebrow}>Workspace yang peduli</p>
-            <h1 className={styles.storyTitle}>Masuk dan bantu tim bergerak lebih tenang.</h1>
-            <p className={styles.storyText}>
-              Mulai hari kerja dengan konteks yang jelas, prioritas yang ramah, dan alur kerja yang
-              membuat semua orang merasa terbantu.
+          <div className={styles.taglineBlock}>
+            <h2 className={styles.taglineTitle}>
+              Manajemen Sekolah<br />
+              <span className={styles.taglineAccent}>Lebih Mudah,</span><br />
+              Lebih Cerdas.
+            </h2>
+            <p className={styles.taglineSub}>
+              Kelola akademik, absensi, dan administrasi sekolah dalam satu platform terintegrasi.
             </p>
-          </div>
 
-          <div className={styles.playGrid} aria-hidden="true">
-            <span className={styles.tilePrimary}><HeartHandshake size={22} /></span>
-            <span className={styles.tileAccent}><Sparkles size={20} /></span>
-            <span className={styles.tileSecondary}>84</span>
-            <span className={styles.tileCheck}><CheckCircle2 size={22} /></span>
-          </div>
-
-          <div className={styles.valueList}>
-            <div className={styles.valueItem}>
-              <HeartHandshake size={16} aria-hidden="true" />
-              <div>
-                <strong>Team care</strong>
-                <span>Bantu rekan kerja melihat langkah berikutnya.</span>
-              </div>
-            </div>
-            <div className={styles.valueItem}>
-              <CheckCircle2 size={16} aria-hidden="true" />
-              <div>
-                <strong>Alur kerja lebih tenang</strong>
-                <span>Prioritas tampil jelas tanpa terasa menekan.</span>
-              </div>
+            <div className={styles.featureList}>
+              {FEATURES.map((f) => (
+                <div key={f} className={styles.featureItem}>
+                  <div className={styles.featureDot} />
+                  <span className={styles.featureText}>{f}</span>
+                </div>
+              ))}
             </div>
           </div>
-        </section>
 
-        <section className={styles.card} aria-label="Form masuk">
-          <div className={styles.formHeader}>
-            <span className={styles.formBadge}>
-              <Sparkles size={14} aria-hidden="true" />
-              Welcome back
-            </span>
-            <h2 className={styles.title}>Masuk ke workspace</h2>
-            <p className={styles.subtitle}>Gunakan akun kerja Anda untuk melanjutkan.</p>
-          </div>
+          <p className={styles.devContact}>
+            Developed by{' '}
+            <a href="mailto:mo@intinusa.id">Intinusa Digital</a>
+            {' '}· mo@intinusa.id
+          </p>
+        </div>
 
-          <form onSubmit={onSubmit} className={styles.form} noValidate>
-            <div className={styles.field}>
-              <label htmlFor="email" className={styles.label}>Email</label>
-              <div className={styles.inputWrap}>
-                <Mail size={16} className={styles.inputIcon} />
-                <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="nama@perusahaan.com"
-                  className={styles.input}
-                  aria-invalid={!!errors.email}
-                  {...field('email')}
-                  value={String(values.email)}
-                />
+        {/* ── Right Panel ── */}
+        <div className={styles.rightPanel}>
+          <div className={styles.formWrap}>
+            <p className={styles.formEyebrow}>Portal Sekolah</p>
+            <h1 className={styles.formTitle}>Selamat Datang</h1>
+            <p className={styles.formSub}>Masuk menggunakan akun yang diberikan administrator Anda.</p>
+
+            <form onSubmit={onSubmit} className={styles.fieldGroup} noValidate aria-label="Login">
+              {/* Username / Email */}
+              <div className={styles.field}>
+                <label htmlFor="usr" className={styles.label}>Email atau Username</label>
+                <div className={styles.inputWrap}>
+                  <User size={15} className={styles.inputIcon} />
+                  <input
+                    id="usr"
+                    type="text"
+                    autoComplete="username"
+                    placeholder="nama@sekolah.com / username"
+                    className={styles.input}
+                    aria-invalid={!!errors.usr}
+                    {...field('usr')}
+                    value={String(values.usr)}
+                  />
+                </div>
+                {errors.usr && <p className={styles.fieldError}>{errors.usr}</p>}
               </div>
-              {errors.email && <p className={styles.error}>{errors.email}</p>}
-            </div>
 
-            <div className={styles.field}>
-              <label htmlFor="password" className={styles.label}>Kata Sandi</label>
-              <div className={styles.inputWrap}>
-                <Lock size={16} className={styles.inputIcon} />
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  placeholder="Masukkan kata sandi"
-                  className={styles.input}
-                  aria-invalid={!!errors.password}
-                  {...field('password')}
-                  value={String(values.password)}
-                />
+              {/* Password */}
+              <div className={styles.field}>
+                <label htmlFor="pwd" className={styles.label}>Kata Sandi</label>
+                <div className={styles.inputWrap}>
+                  <Lock size={15} className={styles.inputIcon} />
+                  <input
+                    id="pwd"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    placeholder="Masukkan kata sandi"
+                    className={`${styles.input} ${styles.inputWithEye}`}
+                    aria-invalid={!!errors.pwd}
+                    {...field('pwd')}
+                    value={String(values.pwd)}
+                  />
+                  <button
+                    type="button"
+                    className={styles.eyeBtn}
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                  >
+                    {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+                {errors.pwd && <p className={styles.fieldError}>{errors.pwd}</p>}
+              </div>
+
+              {/* Remember + Forgot */}
+              <div className={styles.rememberRow}>
+                <label className={styles.rememberLeft}>
+                  <input
+                    type="checkbox"
+                    className={styles.checkbox}
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    aria-label="Ingat saya"
+                  />
+                  <span className={styles.rememberLabel}>Ingat saya</span>
+                </label>
                 <button
                   type="button"
-                  className={styles.eyeBtn}
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi'}
+                  className={styles.forgotBtn}
+                  onClick={() => setShowForgotModal(true)}
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  Lupa kata sandi?
                 </button>
               </div>
-              {errors.password && <p className={styles.error}>{errors.password}</p>}
+
+              {serverError && (
+                <div className={styles.serverError} role="alert">
+                  {serverError}
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className={styles.submitBtn}
+                disabled={isLoading}
+              >
+                {isLoading ? <span className={styles.spinner} /> : 'Masuk ke Sistem →'}
+              </button>
+            </form>
+
+            <div className={styles.divider}>
+              <div className={styles.dividerLine} />
+              <span className={styles.dividerText}>Butuh bantuan?</span>
+              <div className={styles.dividerLine} />
             </div>
 
-            {serverError && (
-              <div className={styles.serverError} role="alert">
-                {serverError}
-              </div>
-            )}
+            <p className={styles.helpNote}>
+              Hubungi <span>administrator sekolah</span> untuk reset kata sandi atau akses akun baru.
+            </p>
 
+            <p className={styles.formFooter}>v1.0.0 · © 2025 SekolahPro · Intinusa Digital</p>
+          </div>
+        </div>
+      </div>
+
+      {/* ── Forgot Password Modal ── */}
+      {showForgotModal && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setShowForgotModal(false)}
+          onKeyDown={(e) => e.key === 'Escape' && setShowForgotModal(false)}
+          role="presentation"
+        >
+          <div
+            className={styles.modal}
+            onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="forgot-title"
+          >
+            <h2 id="forgot-title" className={styles.modalTitle}>Lupa Kata Sandi?</h2>
+            <p className={styles.modalBody}>
+              Hubungi administrator sekolah Anda untuk mereset kata sandi akun Anda.
+            </p>
             <button
-              type="submit"
-              className={styles.submitBtn}
-              disabled={isLoading}
+              type="button"
+              className={styles.modalClose}
+              onClick={() => setShowForgotModal(false)}
+              autoFocus
             >
-              {isLoading ? (
-                <span className={styles.spinner} />
-              ) : (
-                <>
-                  Masuk ke workspace
-                  <ArrowRight size={16} aria-hidden="true" />
-                </>
-              )}
+              Tutup
             </button>
-
-            {canBypassLogin && (
-              <button
-                type="button"
-                className={styles.demoBtn}
-                onClick={handleDemoLogin}
-              >
-                Masuk demo
-              </button>
-            )}
-          </form>
-        </section>
-      </main>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

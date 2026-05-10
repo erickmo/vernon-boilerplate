@@ -20,55 +20,54 @@ const AnggotaKoperasiFormPage      = lazy(() => import('@/pages/koperasi/anggota
 const SimpananPokokListPage        = lazy(() => import('@/pages/koperasi/anggota/SimpananPokokListPage'))
 
 // Simpanan
-const ProdukSimpananListPage       = lazy(() => import('@/pages/koperasi/simpanan/ProdukSimpananListPage').then(m => ({ default: m.ProdukSimpananListPage })))
-const ProdukSimpananFormPage       = lazy(() => import('@/pages/koperasi/simpanan/ProdukSimpananFormPage').then(m => ({ default: m.ProdukSimpananFormPage })))
-const RekeningListPage             = lazy(() => import('@/pages/koperasi/simpanan/RekeningListPage').then(m => ({ default: m.RekeningListPage })))
-const RekeningDetailPage           = lazy(() => import('@/pages/koperasi/simpanan/RekeningDetailPage').then(m => ({ default: m.RekeningDetailPage })))
-const RekeningFormPage             = lazy(() => import('@/pages/koperasi/simpanan/RekeningFormPage').then(m => ({ default: m.RekeningFormPage })))
-const TransaksiSimpananListPage    = lazy(() => import('@/pages/koperasi/simpanan/TransaksiSimpananListPage').then(m => ({ default: m.TransaksiSimpananListPage })))
-const PermohonanListPage           = lazy(() => import('@/pages/koperasi/simpanan/PermohonanListPage').then(m => ({ default: m.PermohonanListPage })))
-const PermohonanDetailPage         = lazy(() => import('@/pages/koperasi/simpanan/PermohonanDetailPage').then(m => ({ default: m.PermohonanDetailPage })))
-const PermohonanFormPage           = lazy(() => import('@/pages/koperasi/simpanan/PermohonanFormPage').then(m => ({ default: m.PermohonanFormPage })))
+const ProdukSimpananListPage       = lazy(() => Promise.resolve({ default: stub('ProdukSimpananListPage') }))
+const ProdukSimpananFormPage       = lazy(() => Promise.resolve({ default: stub('ProdukSimpananFormPage') }))
+const RekeningListPage             = lazy(() => Promise.resolve({ default: stub('RekeningListPage') }))
+const RekeningDetailPage           = lazy(() => Promise.resolve({ default: stub('RekeningDetailPage') }))
+const RekeningFormPage             = lazy(() => Promise.resolve({ default: stub('RekeningFormPage') }))
+const TransaksiSimpananListPage    = lazy(() => Promise.resolve({ default: stub('TransaksiSimpananListPage') }))
+const PermohonanListPage           = lazy(() => Promise.resolve({ default: stub('PermohonanListPage') }))
+const PermohonanDetailPage         = lazy(() => Promise.resolve({ default: stub('PermohonanDetailPage') }))
 
 // Pembiayaan
-const ProdukPembiayaanListPage     = lazy(() => import('@/pages/koperasi/pembiayaan/ProdukPembiayaanListPage').then(m => ({ default: m.ProdukPembiayaanListPage })))
-const ProdukPembiayaanFormPage     = lazy(() => import('@/pages/koperasi/pembiayaan/ProdukPembiayaanFormPage').then(m => ({ default: m.ProdukPembiayaanFormPage })))
-const AkadListPage                 = lazy(() => import('@/pages/koperasi/pembiayaan/AkadListPage').then(m => ({ default: m.AkadListPage })))
-const AkadDetailPage               = lazy(() => import('@/pages/koperasi/pembiayaan/AkadDetailPage').then(m => ({ default: m.AkadDetailPage })))
-const AkadFormPage                 = lazy(() => import('@/pages/koperasi/pembiayaan/AkadFormPage').then(m => ({ default: m.AkadFormPage })))
-const PembayaranAngsuranListPage   = lazy(() => import('@/pages/koperasi/pembiayaan/PembayaranAngsuranListPage').then(m => ({ default: m.PembayaranAngsuranListPage })))
-const PembayaranAngsuranFormPage   = lazy(() => import('@/pages/koperasi/pembiayaan/PembayaranAngsuranFormPage').then(m => ({ default: m.PembayaranAngsuranFormPage })))
-const PembagianSHUListPage         = lazy(() => import('@/pages/koperasi/pembiayaan/PembagianSHUListPage').then(m => ({ default: m.PembagianSHUListPage })))
-const PembagianSHUDetailPage       = lazy(() => import('@/pages/koperasi/pembiayaan/PembagianSHUDetailPage').then(m => ({ default: m.PembagianSHUDetailPage })))
+const ProdukPembiayaanListPage     = lazy(() => Promise.resolve({ default: stub('ProdukPembiayaanListPage') }))
+const ProdukPembiayaanFormPage     = lazy(() => Promise.resolve({ default: stub('ProdukPembiayaanFormPage') }))
+const AkadListPage                 = lazy(() => Promise.resolve({ default: stub('AkadListPage') }))
+const AkadDetailPage               = lazy(() => Promise.resolve({ default: stub('AkadDetailPage') }))
+const AkadFormPage                 = lazy(() => Promise.resolve({ default: stub('AkadFormPage') }))
+const PembayaranAngsuranListPage   = lazy(() => Promise.resolve({ default: stub('PembayaranAngsuranListPage') }))
+const PembayaranAngsuranFormPage   = lazy(() => Promise.resolve({ default: stub('PembayaranAngsuranFormPage') }))
+const PembagianSHUListPage         = lazy(() => Promise.resolve({ default: stub('PembagianSHUListPage') }))
+const PembagianSHUDetailPage       = lazy(() => Promise.resolve({ default: stub('PembagianSHUDetailPage') }))
 
 // Kartu
-const KartuListPage                = lazy(() => import('@/pages/koperasi/kartu/KartuListPage').then(m => ({ default: m.KartuListPage })))
-const KartuDetailPage              = lazy(() => import('@/pages/koperasi/kartu/KartuDetailPage').then(m => ({ default: m.KartuDetailPage })))
-const TerminalListPage             = lazy(() => import('@/pages/koperasi/kartu/TerminalListPage').then(m => ({ default: m.TerminalListPage })))
-const TerminalFormPage             = lazy(() => import('@/pages/koperasi/kartu/TerminalFormPage').then(m => ({ default: m.TerminalFormPage })))
-const MerchantListPage             = lazy(() => import('@/pages/koperasi/kartu/MerchantListPage').then(m => ({ default: m.MerchantListPage })))
-const MerchantFormPage             = lazy(() => import('@/pages/koperasi/kartu/MerchantFormPage').then(m => ({ default: m.MerchantFormPage })))
+const KartuListPage                = lazy(() => Promise.resolve({ default: stub('KartuListPage') }))
+const KartuDetailPage              = lazy(() => Promise.resolve({ default: stub('KartuDetailPage') }))
+const TerminalListPage             = lazy(() => Promise.resolve({ default: stub('TerminalListPage') }))
+const TerminalFormPage             = lazy(() => Promise.resolve({ default: stub('TerminalFormPage') }))
+const MerchantListPage             = lazy(() => Promise.resolve({ default: stub('MerchantListPage') }))
+const MerchantFormPage             = lazy(() => Promise.resolve({ default: stub('MerchantFormPage') }))
 
 // ZIS
-const PenerimaanZISListPage        = lazy(() => import('@/pages/koperasi/zis/PenerimaanZISListPage').then(m => ({ default: m.PenerimaanZISListPage })))
-const PenerimaanZISDetailPage      = lazy(() => import('@/pages/koperasi/zis/PenerimaanZISDetailPage').then(m => ({ default: m.PenerimaanZISDetailPage })))
-const PenerimaanZISFormPage        = lazy(() => import('@/pages/koperasi/zis/PenerimaanZISFormPage').then(m => ({ default: m.PenerimaanZISFormPage })))
-const ProgramPenyaluranListPage    = lazy(() => import('@/pages/koperasi/zis/ProgramPenyaluranListPage').then(m => ({ default: m.ProgramPenyaluranListPage })))
-const ProgramPenyaluranDetailPage  = lazy(() => import('@/pages/koperasi/zis/ProgramPenyaluranDetailPage').then(m => ({ default: m.ProgramPenyaluranDetailPage })))
-const ProgramPenyaluranFormPage    = lazy(() => import('@/pages/koperasi/zis/ProgramPenyaluranFormPage').then(m => ({ default: m.ProgramPenyaluranFormPage })))
-const PenyaluranZISListPage        = lazy(() => import('@/pages/koperasi/zis/PenyaluranZISListPage').then(m => ({ default: m.PenyaluranZISListPage })))
-const PenyaluranZISFormPage        = lazy(() => import('@/pages/koperasi/zis/PenyaluranZISFormPage').then(m => ({ default: m.PenyaluranZISFormPage })))
-const AsetWakafListPage            = lazy(() => import('@/pages/koperasi/zis/AsetWakafListPage').then(m => ({ default: m.AsetWakafListPage })))
-const AsetWakafFormPage            = lazy(() => import('@/pages/koperasi/zis/AsetWakafFormPage').then(m => ({ default: m.AsetWakafFormPage })))
+const PenerimaanZISListPage        = lazy(() => Promise.resolve({ default: stub('PenerimaanZISListPage') }))
+const PenerimaanZISDetailPage      = lazy(() => Promise.resolve({ default: stub('PenerimaanZISDetailPage') }))
+const PenerimaanZISFormPage        = lazy(() => Promise.resolve({ default: stub('PenerimaanZISFormPage') }))
+const ProgramPenyaluranListPage    = lazy(() => Promise.resolve({ default: stub('ProgramPenyaluranListPage') }))
+const ProgramPenyaluranDetailPage  = lazy(() => Promise.resolve({ default: stub('ProgramPenyaluranDetailPage') }))
+const ProgramPenyaluranFormPage    = lazy(() => Promise.resolve({ default: stub('ProgramPenyaluranFormPage') }))
+const PenyaluranZISListPage        = lazy(() => Promise.resolve({ default: stub('PenyaluranZISListPage') }))
+const PenyaluranZISFormPage        = lazy(() => Promise.resolve({ default: stub('PenyaluranZISFormPage') }))
+const AsetWakafListPage            = lazy(() => Promise.resolve({ default: stub('AsetWakafListPage') }))
+const AsetWakafFormPage            = lazy(() => Promise.resolve({ default: stub('AsetWakafFormPage') }))
 
 // Kas Teller
-const SesiKasTellerListPage        = lazy(() => import('@/pages/koperasi/kas-teller/SesiKasTellerListPage').then(m => ({ default: m.SesiKasTellerListPage })))
-const SesiKasTellerDetailPage      = lazy(() => import('@/pages/koperasi/kas-teller/SesiKasTellerDetailPage').then(m => ({ default: m.SesiKasTellerDetailPage })))
-const SesiKasTellerFormPage        = lazy(() => import('@/pages/koperasi/kas-teller/SesiKasTellerFormPage').then(m => ({ default: m.SesiKasTellerFormPage })))
+const SesiKasTellerListPage        = lazy(() => Promise.resolve({ default: stub('SesiKasTellerListPage') }))
+const SesiKasTellerDetailPage      = lazy(() => Promise.resolve({ default: stub('SesiKasTellerDetailPage') }))
+const SesiKasTellerFormPage        = lazy(() => Promise.resolve({ default: stub('SesiKasTellerFormPage') }))
 
 // Laporan & Pengaturan
-const LaporanKoperasiPage          = lazy(() => import('@/pages/koperasi/laporan/LaporanKoperasiPage').then(m => ({ default: m.LaporanKoperasiPage })))
-const PengaturanKoperasiPage       = lazy(() => import('@/pages/koperasi/pengaturan/PengaturanKoperasiPage').then(m => ({ default: m.PengaturanKoperasiPage })))
+const LaporanKoperasiPage          = lazy(() => Promise.resolve({ default: stub('LaporanKoperasiPage') }))
+const PengaturanKoperasiPage       = lazy(() => Promise.resolve({ default: stub('PengaturanKoperasiPage') }))
 
 const DashboardPage = lazy(() => import('@/pages/Dashboard/DashboardPage'))
 
@@ -99,7 +98,6 @@ export const koperasiRoutes = [
       { path: 'simpanan/rekening/:id/edit',       element: <S><RekeningFormPage /></S> },
       { path: 'simpanan/transaksi',               element: <S><TransaksiSimpananListPage /></S> },
       { path: 'simpanan/permohonan',              element: <S><PermohonanListPage /></S> },
-      { path: 'simpanan/permohonan/new',          element: <S><PermohonanFormPage /></S> },
       { path: 'simpanan/permohonan/:id',          element: <S><PermohonanDetailPage /></S> },
       // Pembiayaan
       { path: 'pembiayaan',                       element: <S><ProdukPembiayaanListPage /></S> },

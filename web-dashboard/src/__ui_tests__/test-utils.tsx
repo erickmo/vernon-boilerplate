@@ -6,7 +6,7 @@ import type { ReactNode } from 'react'
 function createTestQueryClient() {
   return new QueryClient({
     defaultOptions: {
-      queries: { retry: false, staleTime: 0, refetchOnWindowFocus: true },
+      queries: { retry: false, staleTime: 0 },
       mutations: { retry: false },
     },
   })
@@ -21,10 +21,7 @@ function AllProviders({ children, initialEntries = ['/'] }: WrapperProps) {
   const queryClient = createTestQueryClient()
   return (
     <QueryClientProvider client={queryClient}>
-      <MemoryRouter
-        initialEntries={initialEntries}
-        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-      >
+      <MemoryRouter initialEntries={initialEntries}>
         {children}
       </MemoryRouter>
     </QueryClientProvider>

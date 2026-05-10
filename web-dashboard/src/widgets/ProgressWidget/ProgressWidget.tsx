@@ -7,7 +7,6 @@ export interface ProgressStep {
   /** Harus cocok dengan nilai currentStatus */
   id: string
   label: string
-  status?: 'complete' | 'pending' | 'current'
 }
 
 export interface TerminalStatus {

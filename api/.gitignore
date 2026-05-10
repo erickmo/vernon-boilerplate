@@ -1,6 +1,0 @@
-.env
-.env.dev
-bin/
-tmp/
-*.log
-.DS_Store

@@ -2,9 +2,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
-  width: 100%;
-  min-width: 0;
-  padding: 0;
+  padding: var(--space-4) var(--space-6);
 }
 
 /* ─── Header card (breadcrumbs + identity + actions) ─────────────────────────── */
@@ -23,7 +21,6 @@
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  min-width: 0;
 }
 
 .breadcrumbs {
@@ -70,7 +67,6 @@
   align-items: center;
   gap: var(--space-3);
   min-width: 0;
-  flex: 1 1 320px;
 }
 
 .headerRight {
@@ -121,7 +117,6 @@
 .actions {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: var(--space-2);
 }
 
@@ -131,32 +126,15 @@
 }
 
 .overflowBtn {
-  width: var(--input-height);
-  height: var(--input-height);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-secondary);
-  background: var(--color-surface-raised);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  transition:
-    background var(--duration-fast),
-    color var(--duration-fast),
-    border-color var(--duration-fast);
-}
-
-.overflowBtn:hover {
-  color: var(--color-text-primary);
-  background: var(--color-surface-hover);
-  border-color: var(--color-border-strong, var(--color-border));
+  padding: 0 var(--space-2);
+  min-width: 32px;
 }
 
 .dropdown {
   position: absolute;
   top: calc(100% + var(--space-1));
   right: 0;
-  min-width: 190px;
+  min-width: 160px;
   background: var(--color-surface-elevated);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-lg);
@@ -177,7 +155,6 @@
   color: var(--color-text-primary);
   text-align: left;
   transition: background var(--duration-fast);
-  min-height: 36px;
 }
 .dropdownItem:hover:not(:disabled) { background: var(--color-surface-hover); }
 .dropdownItem:disabled { opacity: 0.45; cursor: not-allowed; }
@@ -267,7 +244,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
-  min-width: 0;
 }
 
 .itemCode {
@@ -281,13 +257,11 @@
   font-weight: 700;
   color: var(--color-text-primary);
   line-height: 1.2;
-  overflow-wrap: anywhere;
 }
 
 .badges {
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
   gap: var(--space-2);
   margin-top: var(--space-1);
 }
@@ -301,88 +275,11 @@
   padding: var(--space-4) var(--space-6);
 }
 
-/* ─── Main detail grid ───────────────────────────────────────────────────────── */
-.detailGrid {
-  display: grid;
-  grid-template-columns: minmax(240px, 280px) minmax(0, 1fr);
-  gap: var(--space-4);
-  align-items: start;
-}
-
-.menuCard,
+/* ─── Tabs card ──────────────────────────────────────────────────────────────── */
 .tabsCard {
   background: var(--color-surface-elevated);
   border: 1px solid var(--color-border-subtle);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-}
-
-.menuCard {
-  padding: var(--space-4);
-}
-
-.menuHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  margin-bottom: var(--space-4);
-}
-
-.menuTitle {
-  font-size: var(--font-sm);
-  font-weight: 700;
-  color: var(--color-text-primary);
-}
-
-.menuCount {
-  font-size: var(--font-xs);
-  color: var(--color-text-tertiary);
-}
-
-.menuList {
-  display: grid;
-  gap: var(--space-2);
-}
-
-.menuItem {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  width: 100%;
-  min-height: 44px;
-  padding: var(--space-2) var(--space-3);
-  text-align: left;
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border-subtle);
-  background: var(--color-surface-raised);
-  color: var(--color-text-secondary);
-  transition: background var(--duration-fast), color var(--duration-fast), border-color var(--duration-fast);
-}
-
-.menuItem:hover {
-  background: var(--color-surface-hover);
-  color: var(--color-text-primary);
-}
-
-.menuItemActive {
-  background: var(--color-primary-light, #EDE7F6);
-  border-color: rgba(77, 41, 117, 0.22);
-  color: var(--color-primary);
-}
-
-.menuIcon {
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.menuLabel {
-  font-size: var(--font-sm);
-  font-weight: 600;
-}
-
-.tabsCard {
   overflow: hidden;
 }
 
@@ -392,11 +289,7 @@
   padding: 0 var(--space-5);
   background: var(--color-surface-raised);
   border-bottom: 1px solid var(--color-border-subtle);
-  overflow-x: auto;
-  scrollbar-width: none;
 }
-
-.tabList::-webkit-scrollbar { display: none; }
 
 .tab {
   display: inline-flex;
@@ -423,7 +316,6 @@
   display: flex;
   gap: var(--space-4);
   padding: var(--space-5);
-  min-width: 0;
 }
 
 .tabContent {
@@ -431,95 +323,36 @@
   min-width: 0;
 }
 
-@media (max-width: 1024px) {
-  .detailGrid {
-    grid-template-columns: 1fr;
+/* ─── Sidebar ─────────────────────────────────────────────────────────────────── */
+.sidebar {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.sidebarContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* Hide sidebar at breakpoint and below */
+@media (max-width: 1023px) {
+  .sidebar {
+    display: none;
   }
 }
 
-@media (max-width: 640px) {
-  .header,
-  .progressCard {
-    padding: var(--space-4);
-  }
-
-  .breadcrumbRow {
-    width: 100%;
-  }
-
-  .breadcrumbRow {
-    align-items: flex-start;
+/* Responsive: stack sidebar below content on mobile */
+@media (max-width: 1280px) {
+  .tabContentWrapper {
     flex-direction: column;
   }
 
-  .headerContent {
-    flex-wrap: nowrap;
-    align-items: flex-start;
-  }
-
-  .headerLeft {
-    align-items: flex-start;
-    flex: 1 1 auto;
-    min-width: 0;
-  }
-
-  .headerRight {
-    width: auto;
-    margin-left: auto;
-    padding-top: 0;
-    justify-content: flex-end;
-    align-self: flex-start;
-    flex: 0 0 auto;
-  }
-
-  .actions {
-    justify-content: flex-end;
-    flex-wrap: nowrap;
-  }
-
-  .overflowWrap {
-    margin-left: auto;
-  }
-
-  .dropdown {
-    right: 0;
-    left: auto;
-  }
-
-  .tabList {
-    padding: 0 var(--space-3);
-  }
-
-  .menuCard,
-  .tabContentWrapper {
-    padding: var(--space-4);
-  }
-
-  .fieldGrid,
-  .infoGrid {
-    grid-template-columns: 1fr;
-  }
-
-  .dialog,
-  .helpModal {
-    width: 100%;
-    max-width: 100%;
-    border-radius: var(--radius-md);
-  }
-
-  .dialogActions,
-  .modalActions {
-    flex-direction: column-reverse;
-  }
-
-  .dialogActions > button,
-  .modalActions > button {
-    width: 100%;
-    justify-content: center;
-  }
-
-  .helpModalBody {
-    padding-left: 0;
+  .sidebar {
+    width: 100% !important;
+    display: flex;
   }
 }
 

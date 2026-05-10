@@ -68,8 +68,8 @@ interface DataConnectionCardProps extends DataConnectionItem {
 }
 
 function DataConnectionCard({ icon, title, subtitle, onClick, path, filters, context }: DataConnectionCardProps) {
-  const companyNav = useCompanyPath()
-  const hqNav = useHQPath()
+  const { nav: companyNav } = useCompanyPath()
+  const { nav: hqNav } = useHQPath()
 
   const nav = context === 'hq' ? hqNav : companyNav
 

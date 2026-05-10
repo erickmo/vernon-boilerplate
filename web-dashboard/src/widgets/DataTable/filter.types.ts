@@ -49,8 +49,7 @@ export interface ActiveFilter {
 }
 
 /**
- * Tuple representation of a filter for query-string serialization.
- * Stored under the `filters` key as [["field","operator","value"], ...].
+ * Tuple representation of a filter for query string serialization.
  * Format: [field, operator, value]
  */
 export type FilterTuple = [string, FilterOperator, unknown]

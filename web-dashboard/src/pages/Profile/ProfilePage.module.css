@@ -1,12 +1,11 @@
 .root {
-  width: 100%;
+  padding: var(--space-6);
   min-height: 100%;
 }
 
 .container {
-  width: 100%;
-  max-width: 960px;
-  margin: 0;
+  max-width: 720px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
@@ -137,20 +136,6 @@
 @media (max-width: 540px) {
   .formGrid {
     grid-template-columns: 1fr;
-  }
-
-  .section {
-    padding: var(--space-4);
-  }
-
-  .avatarRow {
-    align-items: flex-start;
-    flex-direction: column;
-  }
-
-  .formActions,
-  .submitBtn {
-    width: 100%;
   }
 }
 

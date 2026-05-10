@@ -1,5 +1,4 @@
 import styles from './FormPageTemplate.module.css'
-import { Toggle } from './Toggle'
 
 interface CheckboxOptionProps {
   checked: boolean
@@ -11,14 +10,17 @@ interface CheckboxOptionProps {
 
 export function CheckboxOption({ checked, onChange, title, description, disabled }: CheckboxOptionProps) {
   return (
-    <div className={`${styles.toggleOption} ${disabled ? styles.toggleOptionDisabled : ''}`}>
-      <Toggle
+    <label className={`${styles.checkboxLabel} ${disabled ? styles.checkboxDisabled : ''}`}>
+      <input
+        type="checkbox"
         checked={checked}
-        onChange={onChange}
-        label={title}
         disabled={disabled}
+        onChange={(e) => onChange(e.target.checked)}
       />
-      {description && <span className={styles.toggleOptionDesc}>{description}</span>}
-    </div>
+      <div>
+        <span className={styles.checkboxTitle}>{title}</span>
+        {description && <span className={styles.checkboxDesc}>{description}</span>}
+      </div>
+    </label>
   )
 }

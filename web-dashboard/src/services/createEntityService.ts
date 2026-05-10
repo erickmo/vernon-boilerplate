@@ -1,18 +1,25 @@
 import { apiClient } from './api.client'
 import type { PaginatedResponse } from '@/types/api.types'
-import type { FilterTuple } from '@/widgets/DataTable/filter.types'
-import { buildQS } from '@/utils/buildQS'
-
-export type SortDirection = 1 | -1
-export type SortTuple = [string, SortDirection]
 
 export interface ListParams {
   limit?: number
   offset?: number
-  sort?: SortTuple[]
-  filters?: FilterTuple[]
+  sort?: string
+  order?: 'asc' | 'desc'
   search?: string
   [key: string]: unknown
+}
+
+function buildQueryString(params?: ListParams): string {
+  if (!params) return ''
+  const q = new URLSearchParams()
+  Object.entries(params).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && v !== '') {
+      q.set(k, String(v))
+    }
+  })
+  const str = q.toString()
+  return str ? `?${str}` : ''
 }
 
 export function createEntityService<T, TApi = T>(
@@ -23,7 +30,7 @@ export function createEntityService<T, TApi = T>(
   return {
     list: async (params?: ListParams): Promise<PaginatedResponse<T>> => {
       const response = await apiClient.get<Record<string, PaginatedResponse<TApi>>>(
-        `${basePath}${buildQS(params)}`,
+        `${basePath}${buildQueryString(params)}`,
       )
       const raw: PaginatedResponse<TApi> = responseWrapper
         ? response[responseWrapper]

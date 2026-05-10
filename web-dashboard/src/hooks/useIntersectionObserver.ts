@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
-import type { RefObject } from 'react'
+import { useEffect, useRef, useState, RefObject } from 'react'
 
 interface UseIntersectionObserverOptions extends IntersectionObserverInit {
   /** Fire only once, then disconnect */
@@ -7,7 +6,7 @@ interface UseIntersectionObserverOptions extends IntersectionObserverInit {
 }
 
 interface UseIntersectionObserverReturn<T extends Element> {
-  ref: RefObject<T | null>
+  ref: RefObject<T>
   isIntersecting: boolean
   entry: IntersectionObserverEntry | null
 }
