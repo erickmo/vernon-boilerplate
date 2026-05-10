@@ -10,15 +10,18 @@ import {
   GroupRoute,
   CompanyRoute,
 } from './ProtectedRoute'
+import { sekolahRoutes } from './routes.sekolah'
+import { koperasiRoutes } from './routes.koperasi'
 
 // ─── Lazy-loaded pages ────────────────────────────────────────────────────────
 
-const LoginPage            = lazy(() => import('@/pages/Login/LoginPage'))
-const DashboardPage        = lazy(() => import('@/pages/Dashboard/DashboardPage'))
-const AdminDashboardPage   = lazy(() => import('@/pages/Admin/AdminDashboardPage'))
-const ChooseCompanyPage    = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
-const NotFoundPage         = lazy(() => import('@/pages/errors/NotFoundPage'))
-const ForbiddenPage        = lazy(() => import('@/pages/errors/ForbiddenPage'))
+const LoginPage             = lazy(() => import('@/pages/Login/LoginPage'))
+const DashboardPage         = lazy(() => import('@/pages/Dashboard/DashboardPage'))
+const AdminDashboardPage    = lazy(() => import('@/pages/Admin/AdminDashboardPage'))
+const ChooseCompanyPage     = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
+const ChooseDashboardPage   = lazy(() => import('@/pages/ChooseDashboard/ChooseDashboardPage'))
+const NotFoundPage          = lazy(() => import('@/pages/errors/NotFoundPage'))
+const ForbiddenPage         = lazy(() => import('@/pages/errors/ForbiddenPage'))
 
 function S({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<div />}>{children}</Suspense>
@@ -96,6 +99,15 @@ export const router = createBrowserRouter([
 
   // Active route set based on tenant mode
   ...(appConfig.isMultiTenant ? multiTenantRoutes : singleTenantRoutes),
+
+  // Choose dashboard (which app to use: sekolah or koperasi)
+  { path: '/choose-dashboard', element: <AuthRoute><S><ChooseDashboardPage /></S></AuthRoute> },
+
+  // Sekolah routes
+  ...sekolahRoutes,
+
+  // Koperasi routes
+  ...koperasiRoutes,
 
   // Error pages
   { path: '/403', element: <S><ForbiddenPage /></S> },
