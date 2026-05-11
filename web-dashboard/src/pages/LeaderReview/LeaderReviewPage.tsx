@@ -1,8 +1,9 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { PageHeader } from '@/layouts/PageHeader/PageHeader'
 import { Skeleton } from '@/widgets/Skeleton/Skeleton'
 import { toast } from '@/widgets/Toast/Toast'
+import { useDeepLinkTaskHighlight } from '@/hooks/useDeepLinkTaskHighlight'
 import { QK } from '@/services/query-keys'
 import {
   leaderReviewService,
@@ -59,9 +60,18 @@ interface QueueListProps {
   isLoading: boolean
   selectedTask: ReviewTask | null
   onSelect: (task: ReviewTask) => void
+  highlightedTask: string | null
+  registerRef: (name: string) => (el: HTMLElement | null) => void
 }
 
-function QueueList({ queue, isLoading, selectedTask, onSelect }: QueueListProps) {
+function QueueList({
+  queue,
+  isLoading,
+  selectedTask,
+  onSelect,
+  highlightedTask,
+  registerRef,
+}: QueueListProps) {
   return (
     <div className={styles.queuePanel}>
       <div className={styles.queueHeader}>Antrian Review ({queue.length})</div>
@@ -86,6 +96,8 @@ function QueueList({ queue, isLoading, selectedTask, onSelect }: QueueListProps)
           return (
             <div
               key={task.name}
+              ref={registerRef(task.name)}
+              data-deeplink-highlight={String(highlightedTask === task.name)}
               className={`${styles.queueItem} ${isActive ? styles.queueItemActive : ''}`}
               onClick={() => onSelect(task)}
               role="button"
@@ -315,6 +327,12 @@ export default function LeaderReviewPage() {
     queryFn: leaderReviewService.getReviewQueue,
   })
 
+  const availableTaskNames = useMemo(() => queue.map((t) => t.name), [queue])
+  const { highlightedTask, registerRef } = useDeepLinkTaskHighlight({
+    availableTaskNames,
+    onMissing: (name) => toast.warning(`Tugas ${name} tidak ada di antrian saat ini`),
+  })
+
   const { data: workload = [] } = useQuery({
     queryKey: [QK.vtTeamWorkload],
     queryFn: leaderReviewService.getTeamWorkload,
@@ -380,6 +398,8 @@ export default function LeaderReviewPage() {
           isLoading={isLoading}
           selectedTask={selectedTask}
           onSelect={setSelectedTask}
+          highlightedTask={highlightedTask}
+          registerRef={registerRef}
         />
         <TaskDetail
           task={selectedTask}
