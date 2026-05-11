@@ -7,12 +7,12 @@ import type { PengembalianBuku } from '@/types/sekolah/perpustakaan.types'
 import type { ColumnDef } from '@/widgets/DataTable/DataTable'
 
 const COLUMNS: ColumnDef<PengembalianBuku>[] = [
-  { key: 'nomor_peminjaman', label: 'Ref Peminjaman', sortable: true },
-  { key: 'anggota_nama', label: 'Anggota', sortable: true },
-  { key: 'tanggal_kembali_aktual', label: 'Tanggal Kembali', sortable: true },
+  { key: 'nomor_peminjaman', header: 'Ref Peminjaman', sortable: true },
+  { key: 'anggota_nama', header: 'Anggota', sortable: true },
+  { key: 'tanggal_kembali_aktual', header: 'Tanggal Kembali', sortable: true },
   {
     key: 'keterlambatan_hari',
-    label: 'Keterlambatan',
+    header: 'Keterlambatan',
     render: (row) => (
       <span style={{ color: row.keterlambatan_hari > 0 ? 'var(--color-danger)' : 'inherit' }}>
         {row.keterlambatan_hari > 0 ? `${row.keterlambatan_hari} hari` : 'Tepat waktu'}
@@ -21,7 +21,7 @@ const COLUMNS: ColumnDef<PengembalianBuku>[] = [
   },
   {
     key: 'denda_total',
-    label: 'Denda',
+    header: 'Denda',
     render: (row) => (
       row.denda_total > 0
         ? <span style={{ color: 'var(--color-danger)' }}>Rp {row.denda_total.toLocaleString('id-ID')}</span>

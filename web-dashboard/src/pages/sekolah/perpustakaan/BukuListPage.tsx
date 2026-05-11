@@ -7,13 +7,13 @@ import type { Buku } from '@/types/sekolah/perpustakaan.types'
 import type { ColumnDef } from '@/widgets/DataTable/DataTable'
 
 const BUKU_COLUMNS: ColumnDef<Buku>[] = [
-  { key: 'judul', label: 'Judul', sortable: true },
-  { key: 'penulis', label: 'Penulis', sortable: true },
-  { key: 'isbn', label: 'ISBN' },
-  { key: 'kategori_nama', label: 'Kategori' },
+  { key: 'judul', header: 'Judul', sortable: true },
+  { key: 'penulis', header: 'Penulis', sortable: true },
+  { key: 'isbn', header: 'ISBN' },
+  { key: 'kategori_nama', header: 'Kategori' },
   {
     key: 'stok_tersedia',
-    label: 'Stok Tersedia',
+    header: 'Stok Tersedia',
     render: (row) => (
       <span style={{ color: row.stok_tersedia === 0 ? 'var(--color-danger)' : 'inherit' }}>
         {row.stok_tersedia} / {row.stok_total}

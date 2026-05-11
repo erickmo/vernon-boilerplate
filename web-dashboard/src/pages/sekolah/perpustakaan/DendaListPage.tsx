@@ -6,23 +6,23 @@ import type { DendaPerpustakaan } from '@/types/sekolah/perpustakaan.types'
 import type { ColumnDef } from '@/widgets/DataTable/DataTable'
 
 const COLUMNS: ColumnDef<DendaPerpustakaan>[] = [
-  { key: 'anggota_nama', label: 'Anggota', sortable: true },
-  { key: 'nomor_peminjaman', label: 'Ref Peminjaman' },
+  { key: 'anggota_nama', header: 'Anggota', sortable: true },
+  { key: 'nomor_peminjaman', header: 'Ref Peminjaman' },
   {
     key: 'jumlah_denda',
-    label: 'Jumlah Denda',
+    header: 'Jumlah Denda',
     render: (row) => `Rp ${row.jumlah_denda.toLocaleString('id-ID')}`,
   },
   {
     key: 'status_lunas',
-    label: 'Status',
+    header: 'Status',
     render: (row) => (
       <span style={{ color: row.status_lunas ? 'var(--color-success)' : 'var(--color-danger)', fontWeight: 600 }}>
         {row.status_lunas ? 'Lunas' : 'Belum Lunas'}
       </span>
     ),
   },
-  { key: 'tanggal_lunas', label: 'Tanggal Lunas', render: (row) => row.tanggal_lunas ?? '—' },
+  { key: 'tanggal_lunas', header: 'Tanggal Lunas', render: (row) => row.tanggal_lunas ?? '—' },
 ]
 
 export default function DendaListPage() {

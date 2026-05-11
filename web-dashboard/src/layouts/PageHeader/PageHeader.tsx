@@ -7,10 +7,11 @@ interface PageHeaderProps {
   subtitle?: string
   breadcrumbs?: Breadcrumb[]
   actions?: React.ReactNode
+  pills?: React.ReactNode
   className?: string
 }
 
-export function PageHeader({ title, subtitle, breadcrumbs, actions, className }: PageHeaderProps) {
+export function PageHeader({ title, subtitle, breadcrumbs, actions, pills, className }: PageHeaderProps) {
   return (
     <div className={cn(styles.root, className)}>
       {breadcrumbs && breadcrumbs.length > 0 && (
@@ -30,6 +31,7 @@ export function PageHeader({ title, subtitle, breadcrumbs, actions, className }:
       <div className={styles.titleRow}>
         <div>
           <h1 className={styles.title}>{title}</h1>
+          {pills}
           {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
         </div>
         {actions && <div className={styles.actions}>{actions}</div>}

@@ -28,9 +28,9 @@ export default function ExampleDetailPage() {
       progress={{
         currentStatus: project.status,
         steps: [
-          { id: 'Draft', label: 'Draft', status: 'complete' },
-          { id: 'Review', label: 'Review', status: project.status === 'Draft' ? 'pending' : 'complete' },
-          { id: 'Active', label: 'Active', status: project.status === 'Active' ? 'complete' : 'pending' },
+          { id: 'Draft', label: 'Draft' },
+          { id: 'Review', label: 'Review' },
+          { id: 'Active', label: 'Active' },
         ],
       }}
       connections={{
@@ -54,66 +54,53 @@ export default function ExampleDetailPage() {
           },
         ],
       }}
-      sections={[
+      tabs={[
         {
-          id: 'overview',
-          label: 'Overview',
+          id: 'summary',
+          label: 'Summary',
           icon: <FileText size={14} />,
-          tabs: [
-            {
-              id: 'summary',
-              label: 'Summary',
-              icon: <FileText size={14} />,
-              content: (
-                <section className={styles.detailPanel}>
-                  <h2>Summary</h2>
-                  <dl>
-                    <div><dt>Owner</dt><dd>{project.owner}</dd></div>
-                    <div><dt>Status</dt><dd>{project.status}</dd></div>
-                    <div><dt>Priority</dt><dd>{project.priority}</dd></div>
-                    <div><dt>Updated</dt><dd>{project.updatedAt}</dd></div>
-                  </dl>
-                </section>
-              ),
-            },
-            {
-              id: 'activity',
-              label: 'Activity',
-              content: (
-                <section className={styles.detailPanel}>
-                  <h2>Activity</h2>
-                  <p>Example activity shows how the submenu tab content inherits the right-hand card surface.</p>
-                </section>
-              ),
-            },
-          ],
+          content: (
+            <section className={styles.detailPanel}>
+              <h2>Summary</h2>
+              <dl>
+                <div><dt>Owner</dt><dd>{project.owner}</dd></div>
+                <div><dt>Status</dt><dd>{project.status}</dd></div>
+                <div><dt>Priority</dt><dd>{project.priority}</dd></div>
+                <div><dt>Updated</dt><dd>{project.updatedAt}</dd></div>
+              </dl>
+            </section>
+          ),
         },
         {
-          id: 'notes',
-          label: 'Notes',
+          id: 'activity',
+          label: 'Activity',
+          content: (
+            <section className={styles.detailPanel}>
+              <h2>Activity</h2>
+              <p>Example activity shows how the submenu tab content inherits the right-hand card surface.</p>
+            </section>
+          ),
+        },
+        {
+          id: 'checklist',
+          label: 'Checklist',
           icon: <Pencil size={14} />,
-          tabs: [
-            {
-              id: 'checklist',
-              label: 'Checklist',
-              content: (
-                <section className={styles.detailPanel}>
-                  <h2>Checklist</h2>
-                  <p>This section can hold a different submenu group under the same detail shell.</p>
-                </section>
-              ),
-            },
-            {
-              id: 'links',
-              label: 'Links',
-              content: (
-                <section className={styles.detailPanel}>
-                  <h2>Links</h2>
-                  <p>Additional submenu tabs live here when the sidebar menu changes.</p>
-                </section>
-              ),
-            },
-          ],
+          content: (
+            <section className={styles.detailPanel}>
+              <h2>Checklist</h2>
+              <p>This section can hold a different submenu group under the same detail shell.</p>
+            </section>
+          ),
+        },
+        {
+          id: 'links',
+          label: 'Links',
+          content: (
+            <section className={styles.detailPanel}>
+              <h2>Links</h2>
+              <p>Additional submenu tabs live here when the sidebar menu changes.</p>
+            </section>
+          ),
         },
       ]}
     />

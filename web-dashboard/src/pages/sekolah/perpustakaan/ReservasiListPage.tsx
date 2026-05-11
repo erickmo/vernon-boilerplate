@@ -14,16 +14,16 @@ const STATUS_COLOR: Record<string, string> = {
 }
 
 const COLUMNS: ColumnDef<ReservasiBuku>[] = [
-  { key: 'judul_buku', label: 'Buku', sortable: true },
-  { key: 'anggota_nama', label: 'Anggota', sortable: true },
+  { key: 'judul_buku', header: 'Buku', sortable: true },
+  { key: 'anggota_nama', header: 'Anggota', sortable: true },
   {
     key: 'status',
-    label: 'Status',
+    header: 'Status',
     render: (row) => (
       <span style={{ color: STATUS_COLOR[row.status] ?? 'inherit', fontWeight: 600 }}>{row.status}</span>
     ),
   },
-  { key: 'tanggal_reservasi', label: 'Tanggal Reservasi', sortable: true },
+  { key: 'tanggal_reservasi', header: 'Tanggal Reservasi', sortable: true },
 ]
 
 export function ReservasiListPage() {

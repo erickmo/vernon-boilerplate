@@ -8,8 +8,8 @@ interface UseFormConfig<T> {
   validate?: ValidateFn<T>
 }
 
-interface FieldProps {
-  value: unknown
+interface FieldProps<V> {
+  value: V
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void
   onBlur: () => void
 }
@@ -20,13 +20,13 @@ interface UseFormReturn<T> {
   touched: Partial<Record<keyof T, boolean>>
   isDirty: boolean
   setFieldValue: (key: keyof T, value: unknown) => void
-  field: (key: keyof T) => FieldProps
+  field: <K extends keyof T>(key: K) => FieldProps<T[K]>
   handleSubmit: (onSubmit: (values: T) => void | Promise<void>) => (e?: React.FormEvent) => Promise<void>
   reset: () => void
   setServerErrors: (errors: Record<string, string>) => void
 }
 
-export function useForm<T extends Record<string, unknown>>({
+export function useForm<T extends object>({
   initialValues,
   validate,
 }: UseFormConfig<T>): UseFormReturn<T> {
@@ -46,7 +46,7 @@ export function useForm<T extends Record<string, unknown>>({
   }, [])
 
   const field = useCallback(
-    (key: keyof T): FieldProps => ({
+    <K extends keyof T>(key: K): FieldProps<T[K]> => ({
       value: values[key],
       onChange: (e) => setFieldValue(key, e.target.value),
       onBlur: () => {

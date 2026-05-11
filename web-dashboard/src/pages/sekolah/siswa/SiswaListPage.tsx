@@ -5,12 +5,12 @@ import type { Siswa } from '@/types/sekolah/siswa.types'
 import type { ColumnDef } from '@/widgets/DataTable/DataTable'
 
 const SISWA_COLUMNS: ColumnDef<Siswa>[] = [
-  { key: 'nis', label: 'NIS', sortable: true },
-  { key: 'nama_lengkap', label: 'Nama Lengkap', sortable: true },
-  { key: 'rombel_aktif', label: 'Rombel Aktif', sortable: true },
+  { key: 'nis', header: 'NIS', sortable: true },
+  { key: 'nama_lengkap', header: 'Nama Lengkap', sortable: true },
+  { key: 'rombel_aktif', header: 'Rombel Aktif', sortable: true },
   {
     key: 'status',
-    label: 'Status',
+    header: 'Status',
     sortable: true,
     render: (row) => (
       <span data-status={row.status}>

@@ -1,4 +1,4 @@
-import { Component, ErrorInfo } from 'react'
+import { Component, type ErrorInfo } from 'react'
 import { AlertTriangle, RefreshCw } from 'lucide-react'
 import styles from './ErrorBoundary.module.css'
 

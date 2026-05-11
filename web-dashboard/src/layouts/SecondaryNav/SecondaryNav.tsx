@@ -14,6 +14,8 @@ const CONTEXT_LABEL: Record<AppContext, string> = {
   superuser: 'Platform',
   hq: 'HQ',
   company: 'Company',
+  sekolah: 'Sekolah',
+  koperasi: 'Koperasi',
 }
 
 function getBasePath(context: AppContext, companyCode?: string) {

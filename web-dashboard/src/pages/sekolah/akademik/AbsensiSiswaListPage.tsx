@@ -6,14 +6,14 @@ import type { ColumnDef, FilterDef } from '@/widgets/DataTable/DataTable'
 import type { AbsensiHarian } from '@/types/sekolah/akademik.types'
 
 const COLUMNS: ColumnDef<AbsensiHarian>[] = [
-  { key: 'tanggal', label: 'Tanggal', sortable: true },
-  { key: 'rombel_nama', label: 'Rombongan Belajar', sortable: true },
-  { key: 'tahun_ajaran', label: 'Tahun Ajaran', sortable: true },
-  { key: 'semester', label: 'Semester', sortable: true },
-  { key: 'jumlah_hadir', label: 'Hadir', sortable: true },
-  { key: 'jumlah_sakit', label: 'Sakit', sortable: true },
-  { key: 'jumlah_izin', label: 'Izin', sortable: true },
-  { key: 'jumlah_alpha', label: 'Alpha', sortable: true },
+  { key: 'tanggal', header: 'Tanggal', sortable: true },
+  { key: 'rombel_nama', header: 'Rombongan Belajar', sortable: true },
+  { key: 'tahun_ajaran', header: 'Tahun Ajaran', sortable: true },
+  { key: 'semester', header: 'Semester', sortable: true },
+  { key: 'jumlah_hadir', header: 'Hadir', sortable: true },
+  { key: 'jumlah_sakit', header: 'Sakit', sortable: true },
+  { key: 'jumlah_izin', header: 'Izin', sortable: true },
+  { key: 'jumlah_alpha', header: 'Alpha', sortable: true },
 ]
 
 const FILTER_DEFS: FilterDef[] = [

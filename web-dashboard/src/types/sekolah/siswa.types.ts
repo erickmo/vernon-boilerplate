@@ -54,7 +54,7 @@ export type SiswaFormValues = {
   nis: string
   tempat_lahir: string
   tanggal_lahir: string
-  jenis_kelamin: string
+  jenis_kelamin: '' | 'Laki-laki' | 'Perempuan'
   agama: string
   alamat: string
   foto: string

@@ -9,7 +9,7 @@ import { useDashboardContext, type DashboardContext } from '@/hooks/useDashboard
 import { useModuleAccess } from '@/hooks/useModuleAccess'
 import styles from './DetailPageTemplate.module.css'
 
-export type { DataConnectionItem, FilterTuple, DetailPageSidebar }
+export type { DataConnectionItem, FilterTuple }
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

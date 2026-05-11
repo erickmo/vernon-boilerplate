@@ -6,13 +6,13 @@ import type { ColumnDef, FilterDef } from '@/widgets/DataTable/DataTable'
 import type { EntriNilai } from '@/types/sekolah/akademik.types'
 
 const COLUMNS: ColumnDef<EntriNilai>[] = [
-  { key: 'mata_pelajaran_nama', label: 'Mata Pelajaran', sortable: true },
-  { key: 'rombel_nama', label: 'Rombongan Belajar', sortable: true },
-  { key: 'komponen', label: 'Komponen', sortable: true },
-  { key: 'semester', label: 'Semester', sortable: true },
-  { key: 'tahun_ajaran', label: 'Tahun Ajaran', sortable: true },
-  { key: 'guru_nama', label: 'Guru', sortable: true },
-  { key: 'jumlah_siswa', label: 'Jumlah Siswa', sortable: true },
+  { key: 'mata_pelajaran_nama', header: 'Mata Pelajaran', sortable: true },
+  { key: 'rombel_nama', header: 'Rombongan Belajar', sortable: true },
+  { key: 'komponen', header: 'Komponen', sortable: true },
+  { key: 'semester', header: 'Semester', sortable: true },
+  { key: 'tahun_ajaran', header: 'Tahun Ajaran', sortable: true },
+  { key: 'guru_nama', header: 'Guru', sortable: true },
+  { key: 'jumlah_siswa', header: 'Jumlah Siswa', sortable: true },
 ]
 
 const FILTER_DEFS: FilterDef[] = [

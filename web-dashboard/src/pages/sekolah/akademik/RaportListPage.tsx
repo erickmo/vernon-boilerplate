@@ -12,15 +12,15 @@ const STATUS_LABEL: Record<string, string> = {
 }
 
 const COLUMNS: ColumnDef<Raport>[] = [
-  { key: 'siswa_nama', label: 'Nama Siswa', sortable: true },
-  { key: 'nis', label: 'NIS', sortable: true },
-  { key: 'rombel_nama', label: 'Rombongan Belajar', sortable: true },
-  { key: 'semester', label: 'Semester', sortable: true },
-  { key: 'tahun_ajaran', label: 'Tahun Ajaran', sortable: true },
-  { key: 'rata_rata', label: 'Rata-rata', sortable: true },
+  { key: 'siswa_nama', header: 'Nama Siswa', sortable: true },
+  { key: 'nis', header: 'NIS', sortable: true },
+  { key: 'rombel_nama', header: 'Rombongan Belajar', sortable: true },
+  { key: 'semester', header: 'Semester', sortable: true },
+  { key: 'tahun_ajaran', header: 'Tahun Ajaran', sortable: true },
+  { key: 'rata_rata', header: 'Rata-rata', sortable: true },
   {
     key: 'status',
-    label: 'Status',
+    header: 'Status',
     sortable: true,
     render: (row) => STATUS_LABEL[row.status] ?? row.status,
   },

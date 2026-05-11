@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef } from 'react'
+import { type RefObject, useEffect, useRef } from 'react'
 
 // Overload 1: window target (element omitted or undefined)
 export function useEventListener<K extends keyof WindowEventMap>(

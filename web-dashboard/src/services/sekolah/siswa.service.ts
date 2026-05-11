@@ -1,11 +1,11 @@
 import { createEntityService } from '@/services/createEntityService'
 import { apiClient } from '@/services/api.client'
 import type { Siswa, WaliSiswa, AnggotaRombel, MutasiSiswa, KelulusanSiswa } from '@/types/sekolah/siswa.types'
-import type { ListParams } from '@/services/createEntityService'
+import type { ListParams, FilterTuple } from '@/services/createEntityService'
 import type { PaginatedResponse } from '@/types/api.types'
 
 const SISWA_LIST_FIELDS = '["name","nis","nama_lengkap","status","rombel_aktif","tahun_ajaran_aktif"]'
-const SISWA_LIST_FILTERS = '[["docstatus","!=","2"]]'
+const SISWA_LIST_FILTERS: FilterTuple[] = [['docstatus', '!=', '2']]
 
 const _base = createEntityService<Siswa>('/api/resource/Siswa')
 

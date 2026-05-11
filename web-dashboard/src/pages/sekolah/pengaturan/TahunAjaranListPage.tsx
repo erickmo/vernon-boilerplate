@@ -7,10 +7,10 @@ import type { TahunAjaran } from '@/types/sekolah/pengaturan.types'
 import type { ColumnDef } from '@/widgets/DataTable/DataTable'
 
 const COLUMNS: ColumnDef<TahunAjaran>[] = [
-  { key: 'periode', label: 'Periode', sortable: true },
+  { key: 'periode', header: 'Periode', sortable: true },
   {
     key: 'status_aktif',
-    label: 'Status',
+    header: 'Status',
     render: (row) => (
       <span style={{
         color: row.status_aktif ? 'var(--color-success)' : 'var(--color-text-secondary)',
