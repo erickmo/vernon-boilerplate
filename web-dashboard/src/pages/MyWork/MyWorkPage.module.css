@@ -1,0 +1,260 @@
+/* ─── Root ─────────────────────────────────────────────────────────────────── */
+
+.root {
+  padding: 24px;
+}
+
+/* ─── Focus Section ──────────────────────────────────────────────────────────── */
+
+.focusSection {
+  margin-bottom: 32px;
+}
+
+.focusCard {
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
+  border-left: 4px solid #6b7280;
+  padding: 20px 24px;
+}
+
+.focusTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 4px;
+  line-height: 1.3;
+}
+
+.focusProject {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0 0 12px;
+}
+
+.focusMeta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.focusAction {
+  background: #16a34a;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.focusAction:hover:not(:disabled) {
+  background: #15803d;
+}
+
+.focusAction:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ─── Section ────────────────────────────────────────────────────────────────── */
+
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sectionTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+  margin: 0;
+}
+
+/* ─── Task Card ──────────────────────────────────────────────────────────────── */
+
+.taskCard {
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 1px 8px rgba(0, 0, 0, 0.03);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  border: 1px solid #f3f4f6;
+  transition: box-shadow 0.15s ease;
+}
+
+.taskCard:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1), 0 2px 12px rgba(0, 0, 0, 0.05);
+}
+
+.taskTitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #111827;
+  flex: 1;
+  margin: 0 0 2px;
+  line-height: 1.4;
+}
+
+.taskProject {
+  font-size: 12px;
+  color: #6b7280;
+  display: block;
+}
+
+.taskMeta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+/* ─── Badges ─────────────────────────────────────────────────────────────────── */
+
+.phaseBadge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.priorityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ─── Action Buttons ─────────────────────────────────────────────────────────── */
+
+.actionBtn {
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  transition: opacity 0.15s ease;
+}
+
+.actionBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.actionBtnPrimary {
+  background: #16a34a;
+  color: #ffffff;
+}
+
+.actionBtnPrimary:hover:not(:disabled) {
+  background: #15803d;
+}
+
+.actionBtnSecondary {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+.actionBtnSecondary:hover:not(:disabled) {
+  background: #1d4ed8;
+}
+
+.actionBtnDisabled {
+  background: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* ─── Blocked Card ───────────────────────────────────────────────────────────── */
+
+.blockedCard {
+  background: #f9fafb;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+  opacity: 0.7;
+  border: 1px solid #e5e7eb;
+}
+
+.blockedBadge {
+  background: #fee2e2;
+  color: #dc2626;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── Empty State ────────────────────────────────────────────────────────────── */
+
+.emptyState {
+  text-align: center;
+  padding: 40px 24px;
+  color: #9ca3af;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.emptyState p {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ─── Skeleton Wrap ──────────────────────────────────────────────────────────── */
+
+.skeletonWrap {
+  margin-bottom: 8px;
+}
+
+/* ─── Collapse Button ────────────────────────────────────────────────────────── */
+
+.collapseBtn {
+  background: none;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #6b7280;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.collapseBtn:hover {
+  background: #f9fafb;
+  color: #374151;
+}

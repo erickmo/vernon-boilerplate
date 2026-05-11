@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { Eye, EyeOff, Lock, User } from 'lucide-react'
-import { useAuthStore } from '@/stores/auth.store'
-import { authService } from '@/services/auth.service'
+import { frappeAuthService } from '@/services/frappe-auth.service'
 import { useForm } from '@/hooks/useForm'
 import { appConfig } from '@/config/app.config'
 import { AppApiError } from '@/types/api.types'
@@ -22,7 +21,6 @@ const FEATURES = [
 export default function LoginPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const login = useAuthStore((s) => s.login)
 
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
@@ -33,7 +31,10 @@ export default function LoginPage() {
   const [showForgotModal, setShowForgotModal] = useState(false)
 
   const { values, errors, field, handleSubmit } = useForm<LoginFormValues>({
-    initialValues: { usr: 'administrator', pwd: '123123123' },
+    initialValues: {
+      usr: import.meta.env.DEV ? 'administrator' : '',
+      pwd: import.meta.env.DEV ? '123123123' : '',
+    },
     validate: (v) => ({
       usr: !v.usr ? 'Username atau email wajib diisi' : undefined,
       pwd: !v.pwd ? 'Kata sandi wajib diisi' : undefined,
@@ -53,8 +54,8 @@ export default function LoginPage() {
     setServerError('')
     try {
       try { localStorage.setItem('rememberMe', String(rememberMe)) } catch { /* sandboxed */ }
-      const response = await authService.login({ usr: v.usr, pwd: v.pwd, remember: rememberMe })
-      login(response)
+      // frappeAuthService sets isAuthenticated=true in the store
+      await frappeAuthService.login(String(v.usr), String(v.pwd))
       navigate(getRedirectPath(), { replace: true })
     } catch (err) {
       if (err instanceof AppApiError) {

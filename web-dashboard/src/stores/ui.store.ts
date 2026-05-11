@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import type { Perspective } from '@/types/perspective.types'
 
 type Theme = 'light' | 'dark' | 'system'
 type Density = 'compact' | 'comfortable' | 'spacious'
@@ -7,14 +8,19 @@ type Density = 'compact' | 'comfortable' | 'spacious'
 interface UiState {
   theme: Theme
   sidebarOpen: boolean
+  drawerOpen: boolean
   density: Density
+  perspective: Perspective
 }
 
 interface UiActions {
   setTheme: (theme: Theme) => void
   toggleSidebar: () => void
   setSidebarOpen: (open: boolean) => void
+  toggleDrawer: () => void
+  setDrawerOpen: (open: boolean) => void
   setDensity: (density: Density) => void
+  setPerspective: (perspective: Perspective) => void
 }
 
 function applyTheme(theme: Theme) {
@@ -32,7 +38,9 @@ export const useUiStore = create<UiState & UiActions>()(
     (set) => ({
       theme: 'light',
       sidebarOpen: true,
+      drawerOpen: false,
       density: 'comfortable',
+      perspective: 'saya',
 
       setTheme: (theme: Theme) => {
         applyTheme(theme)
@@ -41,11 +49,18 @@ export const useUiStore = create<UiState & UiActions>()(
 
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
       setSidebarOpen: (open: boolean) => set({ sidebarOpen: open }),
+      toggleDrawer: () => set((s) => ({ drawerOpen: !s.drawerOpen })),
+      setDrawerOpen: (open: boolean) => set({ drawerOpen: open }),
       setDensity: (density: Density) => set({ density }),
+      setPerspective: (perspective: Perspective) => set({ perspective }),
     }),
     {
       name: 'dashboard-ui',
-      partialize: (state) => ({ theme: state.theme, density: state.density }),
+      partialize: (state) => ({
+        theme: state.theme,
+        density: state.density,
+        perspective: state.perspective,
+      }),
       onRehydrateStorage: () => (state) => {
         if (state) applyTheme(state.theme)
       },

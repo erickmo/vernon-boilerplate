@@ -148,6 +148,7 @@ export const authService = {
       email: userDoc.email,
       avatar: userDoc.user_image ?? undefined,
       role,
+      roles: userDoc.roles?.map((r) => r.role) ?? [],
       permissions: [],
     }
 
@@ -209,6 +210,7 @@ export const authService = {
       email: userDoc.email,
       avatar: userDoc.user_image ?? undefined,
       role: resolveFrappeRole(loggedUser, userDoc),
+      roles: userDoc.roles?.map((r) => r.role) ?? [],
       permissions: [],
     }
   },

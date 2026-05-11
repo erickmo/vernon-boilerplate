@@ -1,44 +1,48 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import {
-  LayoutDashboard, Users, Settings, Bell,
+  Bell,
   ChevronDown, LogOut,
   CheckCircle, AlertCircle, AlertTriangle, Info,
-  Building2, Shield, Globe,
+  Building2, Shield, Globe, Settings, LayoutDashboard, Users,
   GraduationCap, BookOpen, Library,
   Wallet, CreditCard, Heart, Receipt, BarChart3, BadgeCheck, ClipboardCheck,
+  Menu,
 } from 'lucide-react'
+import { AppDrawer } from './AppDrawer'
 import { useAuthStore } from '@/stores/auth.store'
 import { useNotificationStore } from '@/stores/notification.store'
+import { useUiStore } from '@/stores/ui.store'
+import { resolveNotificationTarget } from '@/services/notification.links'
+import type { NotificationItem } from '@/stores/notification.store'
 import { getInitials, formatRelative } from '@/utils/format'
 import { appConfig } from '@/config/app.config'
 import { cn } from '@/utils/cn'
 import type { AppContext } from '@/layouts/AppShell/AppShell'
+import { useNavItems } from '@/hooks/usePerspective'
+import { PerspectiveSwitcher } from './PerspectiveSwitcher'
 import styles from './AppNavbar.module.css'
 
 // ─── Nav item definitions per context ────────────────────────────────────────
 
 const NAV_ITEMS_DEFAULT = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'users', label: 'Pengguna', icon: Users, path: 'users' },
-  { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
 ]
 
 const NAV_ITEMS_SUPERUSER = [
-  { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'tenants', label: 'Tenants', icon: Globe, path: 'tenants' },
+  { key: 'dashboard', label: 'Dashboard',  icon: LayoutDashboard, path: 'dashboard' },
+  { key: 'tenants',   label: 'Tenants',    icon: Globe,           path: 'tenants' },
+  { key: 'companies', label: 'Perusahaan', icon: Building2,       path: 'companies' },
 ]
 
 const NAV_ITEMS_HQ = [
   { key: 'dashboard', label: 'HQ Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'users', label: 'Pengguna', icon: Users, path: 'users' },
-  { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
+  { key: 'users',     label: 'Pengguna',     icon: Users,           path: 'users' },
 ]
 
 const NAV_ITEMS_COMPANY = [
   { key: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, path: 'dashboard' },
-  { key: 'users', label: 'Pengguna', icon: Users, path: 'users' },
-  { key: 'settings', label: 'Pengaturan', icon: Settings, path: 'settings' },
+  { key: 'users',     label: 'Pengguna',  icon: Users,            path: 'users' },
 ]
 
 const NAV_ITEMS_SEKOLAH = [
@@ -101,6 +105,9 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
   const navigate = useNavigate()
   const { user, selectedCompany, selectedGroup, logout } = useAuthStore()
   const { items: notifications, unreadCount, markAllRead, markRead } = useNotificationStore()
+  const setPerspective = useUiStore((s) => s.setPerspective)
+  const currentPerspective = useUiStore((s) => s.perspective)
+  const setDrawerOpen = useUiStore((s) => s.setDrawerOpen)
 
   const [showNotif, setShowNotif] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
@@ -117,20 +124,33 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
     return () => document.removeEventListener('mousedown', handleClick)
   }, [])
 
-  const navItems = NAV_ITEMS_BY_CONTEXT[context]
+  const isVtContext = context === 'default'
+  const vtNavItems = useNavItems()
+  const navItems = isVtContext ? vtNavItems : NAV_ITEMS_BY_CONTEXT[context]
   const basePath = context === 'company'
     ? `/c/${selectedCompany?.code ?? ''}`
     : BASE_PATH_BY_CONTEXT[context]
 
   const isActive = (path: string) => {
-    const full = `${basePath}/${path}`
-    if (path === 'dashboard') return location.pathname === full || location.pathname === basePath
-    return location.pathname.startsWith(full)
+    const full = basePath ? `${basePath}/${path}` : `/${path}`
+    if (path === 'dashboard' && basePath && location.pathname === basePath) return true
+    return location.pathname === full || location.pathname.startsWith(`${full}/`)
   }
 
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  function handleNotificationClick(n: NotificationItem) {
+    markRead(n.id)
+    setShowNotif(false)
+    const target = resolveNotificationTarget(n)
+    if (!target) return
+    if (target.perspective && target.perspective !== currentPerspective) {
+      setPerspective(target.perspective)
+    }
+    navigate(target.link)
   }
 
   // Workspace label for multi-tenant company switcher
@@ -141,6 +161,7 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
       : null
 
   return (
+    <>
     <nav className={cn(
       styles.navbar,
       context === 'superuser' && styles.navbarSuperuser,
@@ -148,6 +169,14 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
       context === 'sekolah' && styles.navbarSekolah,
       context === 'koperasi' && styles.navbarKoperasi,
     )}>
+      <button
+        type="button"
+        className={styles.hamburger}
+        onClick={() => setDrawerOpen(true)}
+        aria-label="Buka menu"
+      >
+        <Menu size={22} />
+      </button>
       {/* Logo */}
       <Link to={basePath ? `${basePath}/dashboard` : '/dashboard'} className={styles.logo}>
         {context === 'superuser' && <Shield size={16} className={styles.logoContextIcon} />}
@@ -159,6 +188,8 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
         )}
         <span className={styles.logoText}>{appConfig.appName}</span>
       </Link>
+
+      {isVtContext && <PerspectiveSwitcher />}
 
       {/* Main nav */}
       <ul className={styles.navList}>
@@ -216,7 +247,7 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
                   <button
                     key={n.id}
                     className={cn(styles.notifItem, !n.isRead && styles.notifUnread)}
-                    onClick={() => { markRead(n.id); setShowNotif(false) }}
+                    onClick={() => handleNotificationClick(n)}
                   >
                     <span className={cn(styles.notifIcon, styles[`notifIcon_${n.type}`])}>
                       {NOTIF_ICONS[n.type]}
@@ -247,17 +278,27 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
                 <div>
                   <p className={styles.profileName}>{user?.name}</p>
                   <p className={styles.profileEmail}>{user?.email}</p>
-                  <span className={styles.roleBadge}>{user?.role}</span>
+                  {(user?.roles ?? [user?.role]).filter(Boolean).map((r) => (
+                    <span key={r} className={styles.roleBadge}>{r}</span>
+                  ))}
                 </div>
               </div>
               <hr className={styles.divider} />
               <Link
-                to={`${basePath}/settings`}
+                to={`${basePath}/profile`}
                 className={styles.dropdownItem}
                 onClick={() => setShowProfile(false)}
               >
                 <Settings size={14} />
-                Pengaturan
+                Profil Saya
+              </Link>
+              <Link
+                to={`${basePath}/change-password`}
+                className={styles.dropdownItem}
+                onClick={() => setShowProfile(false)}
+              >
+                <Shield size={14} />
+                Ganti Password
               </Link>
               <button className={cn(styles.dropdownItem, styles.logoutItem)} onClick={handleLogout}>
                 <LogOut size={14} />
@@ -268,5 +309,7 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
         </div>
       </div>
     </nav>
+    <AppDrawer />
+    </>
   )
 }

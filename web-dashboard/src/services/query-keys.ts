@@ -49,6 +49,27 @@ export const QK = {
   pembayaranAngsuran: 'pembayaran-angsuran',
   pembagianSHU: 'pembagian-shu',
   pembagianSHUDetail: 'pembagian-shu-detail',
+
+  // ── Vernon Tasks — My Work ───────────────────────────────────────────────
+  vtMyDay: 'vt-my-day',
+  vtWhatToDoToday: 'vt-what-to-do-today',
+  vtMyBlockedTasks: 'vt-my-blocked-tasks',
+
+  // ── Vernon Tasks — My Dashboard ──────────────────────────────────────────
+  vtEmployeeStats: 'vt-employee-stats',
+  vtDailyCompletions: 'vt-daily-completions',
+  vtHoursSummary: 'vt-hours-summary',
+
+  // ── Vernon Tasks — Leader Dashboard ─────────────────────────────────────
+  vtLeaderStats: 'vt-leader-stats',
+  vtPhaseDistribution: 'vt-phase-distribution',
+  vtTeamLeaderboard: 'vt-team-leaderboard',
+  vtOverdueTasks: 'vt-overdue-tasks',
+
+  // ── Vernon Tasks — Leader Review ─────────────────────────────────────────
+  vtReviewQueue: 'vt-review-queue',
+  vtTeamWorkload: 'vt-team-workload',
+  vtTeamBlockedTasks: 'vt-team-blocked-tasks',
 } as const
 
 export type QueryKeyValue = (typeof QK)[keyof typeof QK]

@@ -15,16 +15,25 @@ import { koperasiRoutes } from './routes.koperasi'
 
 // ─── Lazy-loaded pages ────────────────────────────────────────────────────────
 
-const LoginPage             = lazy(() => import('@/pages/Login/LoginPage'))
-const DashboardPage         = lazy(() => import('@/pages/Dashboard/DashboardPage'))
-const AdminDashboardPage    = lazy(() => import('@/pages/Admin/AdminDashboardPage'))
-const TenantListPage        = lazy(() => import('@/pages/Admin/TenantListPage'))
-const TenantDetailPage      = lazy(() => import('@/pages/Admin/TenantDetailPage'))
-const TenantFormPage        = lazy(() => import('@/pages/Admin/TenantFormPage'))
-const ChooseCompanyPage     = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
-const ChooseDashboardPage   = lazy(() => import('@/pages/ChooseDashboard/ChooseDashboardPage'))
-const NotFoundPage          = lazy(() => import('@/pages/errors/NotFoundPage'))
-const ForbiddenPage         = lazy(() => import('@/pages/errors/ForbiddenPage'))
+const LoginPage           = lazy(() => import('@/pages/Login/LoginPage'))
+const DashboardPage       = lazy(() => import('@/pages/Dashboard/DashboardPage'))
+const AdminDashboardPage  = lazy(() => import('@/pages/Admin/AdminDashboardPage'))
+const TenantListPage      = lazy(() => import('@/pages/Admin/TenantListPage'))
+const TenantDetailPage    = lazy(() => import('@/pages/Admin/TenantDetailPage'))
+const TenantFormPage      = lazy(() => import('@/pages/Admin/TenantFormPage'))
+const AuditLogPage        = lazy(() => import('@/pages/AuditLog/AuditLogPage'))
+const ProfilePage         = lazy(() => import('@/pages/Profile/ProfilePage'))
+const ChangePasswordPage  = lazy(() => import('@/pages/ChangePassword/ChangePasswordPage'))
+const ChooseCompanyPage   = lazy(() => import('@/pages/ChooseCompany/ChooseCompanyPage'))
+const ChooseDashboardPage = lazy(() => import('@/pages/ChooseDashboard/ChooseDashboardPage'))
+const NotFoundPage        = lazy(() => import('@/pages/errors/NotFoundPage'))
+const ForbiddenPage       = lazy(() => import('@/pages/errors/ForbiddenPage'))
+
+// ─── Vernon Tasks pages ───────────────────────────────────────────────────────
+const MyWorkPage           = lazy(() => import('@/pages/MyWork/MyWorkPage'))
+const MyDashboardPage      = lazy(() => import('@/pages/MyDashboard/MyDashboardPage'))
+const LeaderDashboardPage  = lazy(() => import('@/pages/LeaderDashboard/LeaderDashboardPage'))
+const LeaderReviewPage     = lazy(() => import('@/pages/LeaderReview/LeaderReviewPage'))
 
 function S({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<div />}>{children}</Suspense>
@@ -39,6 +48,14 @@ const singleTenantRoutes = [
     element: <AuthRoute><AppShell /></AuthRoute>,
     children: [
       { path: 'dashboard', element: <S><DashboardPage /></S> },
+      { path: 'audit-log', element: <S><AuditLogPage /></S> },
+      { path: 'profile', element: <S><ProfilePage /></S> },
+      { path: 'change-password', element: <S><ChangePasswordPage /></S> },
+      // ── Vernon Tasks pages ────────────────────────────────────────────────
+      { path: 'my-work',           element: <S><MyWorkPage /></S> },
+      { path: 'my-dashboard',      element: <S><MyDashboardPage /></S> },
+      { path: 'leader-dashboard',  element: <S><LeaderDashboardPage /></S> },
+      { path: 'leader-review',     element: <S><LeaderReviewPage /></S> },
       // Add your pages here:
       // { path: 'users',        element: <S><UsersListPage /></S> },
       // { path: 'users/:id',    element: <S><UserDetailPage /></S> },
@@ -77,6 +94,9 @@ const multiTenantRoutes = [
     element: <GroupRoute><AppShell context="hq" /></GroupRoute>,
     children: [
       { path: 'dashboard', element: <S><DashboardPage /></S> },
+      { path: 'audit-log', element: <S><AuditLogPage /></S> },
+      { path: 'profile', element: <S><ProfilePage /></S> },
+      { path: 'change-password', element: <S><ChangePasswordPage /></S> },
       // { path: 'reports',  element: <S><HQReportsPage /></S> },
     ],
   },
@@ -87,6 +107,9 @@ const multiTenantRoutes = [
     element: <CompanyRoute><AppShell context="company" /></CompanyRoute>,
     children: [
       { path: 'dashboard', element: <S><DashboardPage /></S> },
+      { path: 'audit-log', element: <S><AuditLogPage /></S> },
+      { path: 'profile', element: <S><ProfilePage /></S> },
+      { path: 'change-password', element: <S><ChangePasswordPage /></S> },
       // { path: 'users',     element: <S><UsersListPage /></S> },
       // { path: 'settings',  element: <S><SettingsPage /></S> },
     ],

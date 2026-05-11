@@ -8,6 +8,8 @@ interface AuthState {
   user: UserProfile | null
   token: string | null
   refreshToken: string | null
+  /** Frappe CSRF token — required as X-Frappe-CSRF-Token on all mutating requests */
+  csrfToken: string | null
   isAuthenticated: boolean
 
   // Multi-tenant fields — null/empty in single-tenant mode
@@ -20,6 +22,7 @@ interface AuthActions {
   login: (response: LoginResponse) => void
   logout: () => void
   updateToken: (token: string, refreshToken: string) => void
+  setCsrfToken: (token: string) => void
 
   // Multi-tenant actions
   selectGroup: (group: CompanyGroup) => void
@@ -31,6 +34,7 @@ const initialState: AuthState = {
   user: null,
   token: null,
   refreshToken: null,
+  csrfToken: null,
   isAuthenticated: false,
   selectedCompany: null,
   selectedGroup: null,
@@ -68,6 +72,8 @@ export const useAuthStore = create<AuthState & AuthActions>()(
         set({ token, refreshToken })
       },
 
+      setCsrfToken: (token: string) => set({ csrfToken: token }),
+
       // Multi-tenant actions
       selectGroup: (group: CompanyGroup) => {
         set({
@@ -89,6 +95,7 @@ export const useAuthStore = create<AuthState & AuthActions>()(
       partialize: (state) => ({
         token: state.token,
         refreshToken: state.refreshToken,
+        csrfToken: state.csrfToken,
         isAuthenticated: state.isAuthenticated,
         user: state.user,
         selectedCompany: state.selectedCompany,

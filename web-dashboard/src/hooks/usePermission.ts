@@ -16,10 +16,10 @@ export function usePermission() {
       isSuperAdmin || perms.every((p) => permissions.includes(p)),
 
     hasRole: (role: string | string[]): boolean => {
-      const currentRole = user?.role ?? ''
-      if (currentRole === 'admin') return true
-      const roles = Array.isArray(role) ? role : [role]
-      return roles.includes(currentRole)
+      const userRoles = user?.roles ?? []
+      if (userRoles.includes('admin') || userRoles.includes('VT Manager')) return true
+      const required = Array.isArray(role) ? role : [role]
+      return required.some((r) => userRoles.includes(r))
     },
   }
 }

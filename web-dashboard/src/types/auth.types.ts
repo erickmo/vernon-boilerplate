@@ -6,8 +6,15 @@
 //   (anything else)                            → 'user'
 
 export type UserRole =
-  | 'superuser' // Frappe: Administrator / System Manager — accesses /su/* dashboard
-  | 'user'      // Frappe: any other role
+  | 'superuser'    // Frappe Administrator / System Manager / platform-level admin — accesses /su/* dashboard
+  | 'tenant_owner' // multi-tenant: manages company groups
+  | 'employee'     // multi-tenant: regular company user
+  | 'admin'        // single-tenant: admin
+  | 'user'         // Frappe: any other role / single-tenant: regular user
+  | 'viewer'       // single-tenant: read-only user
+  | 'VT Member'    // Vernon Tasks: regular team member
+  | 'VT Leader'    // Vernon Tasks: project leader with review rights
+  | 'VT Manager'   // Vernon Tasks: full admin access
   | string
 
 export interface UserProfile {
@@ -15,7 +22,11 @@ export interface UserProfile {
   name: string
   email: string
   avatar?: string
+  /** Primary display role — used for multi-tenant system routing (superuser, tenant_owner, etc.) */
   role: UserRole
+  /** All Frappe roles assigned to this user — use this for feature/nav access checks */
+  roles: string[]
+  /** Fine-grained permission strings (e.g. '*' for superadmin) */
   permissions: string[]
 }
 
