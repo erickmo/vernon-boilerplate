@@ -8,5 +8,6 @@
     "src/__ui_tests__/**/*",
     "src/**/*.test.ts",
     "src/**/*.test.tsx"
-  ]
+  ],
+  "exclude": []
 }

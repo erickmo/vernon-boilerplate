@@ -1,4 +1,5 @@
 import { Link2 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { useCompanyPath } from '@/hooks/useCompanyPath'
 import { useHQPath } from '@/hooks/useHQPath'
 import { useDashboardContext, type DashboardContext } from '@/hooks/useDashboardContext'
@@ -68,17 +69,18 @@ interface DataConnectionCardProps extends DataConnectionItem {
 }
 
 function DataConnectionCard({ icon, title, subtitle, onClick, path, filters, context }: DataConnectionCardProps) {
-  const { nav: companyNav } = useCompanyPath()
-  const { nav: hqNav } = useHQPath()
+  const companyPath = useCompanyPath()
+  const hqPath = useHQPath()
+  const navigate = useNavigate()
 
-  const nav = context === 'hq' ? hqNav : companyNav
+  const buildPath = context === 'hq' ? hqPath : companyPath
 
   function handleClick() {
     if (path) {
       // Build URL with structured filters: ?filters=[["field","operator","value"]]
       // Uses Frappe-style operators (=, !=, like, in, >, >=, <, <=)
-      const url = buildFilterQueryString(path, filters ?? [])
-      nav(url)
+      const url = buildFilterQueryString(buildPath(path), filters ?? [])
+      navigate(url)
     } else if (onClick) {
       onClick()
     }

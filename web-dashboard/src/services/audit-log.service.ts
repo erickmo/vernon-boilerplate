@@ -14,6 +14,11 @@ export interface PaginatedResponse<T> {
 // ─── Service ──────────────────────────────────────────────────────────────────
 
 export const auditLogService = {
-  list: (filters: AuditLogFilters) =>
-    apiClient.get<PaginatedResponse<AuditLog>>('/api/audit-logs', { params: filters }),
+  list: (filters: AuditLogFilters) => {
+    const qs = new URLSearchParams(
+      Object.entries(filters).filter(([, v]) => v !== undefined && v !== null) as [string, string][],
+    ).toString()
+    const suffix = qs ? `?${qs}` : ''
+    return apiClient.get<PaginatedResponse<AuditLog>>(`/api/audit-logs${suffix}`)
+  },
 }

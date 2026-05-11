@@ -58,7 +58,7 @@ export const tenantService = {
   createOrgUser: (payload: CreateOrgUserPayload) =>
     callMethod<{ name: string; email: string; full_name: string }>(
       'vernon_saas.api.tenant.create_org_user',
-      payload
+      payload as unknown as Record<string, unknown>
     ),
 
   toggleModule: (institution: string, institution_doctype: 'Sekolah' | 'Koperasi', module_name: string, aktif: boolean) =>

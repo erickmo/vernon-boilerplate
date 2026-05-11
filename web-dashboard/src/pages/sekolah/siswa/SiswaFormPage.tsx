@@ -65,13 +65,14 @@ export default function SiswaFormPage() {
     setIsSubmitting(true)
     setServerError(undefined)
     try {
+      const payload = values as Parameters<typeof siswaService.update>[1]
       if (isEdit && id) {
-        await siswaService.update(id, values)
+        await siswaService.update(id, payload)
         await queryClient.invalidateQueries({ queryKey: ['siswa', id] })
         toast.success('Data siswa berhasil diperbarui.')
         navigate(`/sekolah/siswa/${id}`)
       } else {
-        const created = await siswaService.create(values)
+        const created = await siswaService.create(payload)
         await queryClient.invalidateQueries({ queryKey: ['sekolah-siswa'] })
         toast.success('Siswa baru berhasil ditambahkan.')
         navigate(`/sekolah/siswa/${created.id}`)

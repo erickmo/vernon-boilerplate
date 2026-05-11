@@ -12,7 +12,7 @@ interface InlineFilterProps {
 
 export function InlineFilter({ defs, onApply }: InlineFilterProps) {
   const firstDef = defs[0]
-  const firstOps = firstDef ? getOperatorsForDef(firstDef) : (['eq'] as FilterOperator[])
+  const firstOps = firstDef ? getOperatorsForDef(firstDef) : (['='] as FilterOperator[])
 
   const [key, setKey] = useState(firstDef?.key ?? '')
   const [op, setOp] = useState<FilterOperator>(firstOps[0])

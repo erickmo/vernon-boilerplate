@@ -1,11 +1,11 @@
 import { createEntityService } from '@/services/createEntityService'
 import { apiClient } from '@/services/api.client'
 import type { Guru, PenugasanGuru, BerkasGuru } from '@/types/sekolah/guru.types'
-import type { ListParams } from '@/services/createEntityService'
+import type { ListParams, FilterTuple } from '@/services/createEntityService'
 import type { PaginatedResponse } from '@/types/api.types'
 
 const GURU_LIST_FIELDS = '["name","nip","nama","mata_pelajaran","status"]'
-const GURU_LIST_FILTERS = '[["docstatus","!=","2"]]'
+const GURU_LIST_FILTERS: FilterTuple[] = [['docstatus', '!=', '2']]
 
 const _base = createEntityService<Guru>('/api/resource/Guru')
 

@@ -1,3 +1,4 @@
+import { createElement, type JSX } from 'react'
 import styles from './VisuallyHidden.module.css'
 
 interface VisuallyHiddenProps {
@@ -20,11 +21,11 @@ interface VisuallyHiddenProps {
 export function VisuallyHidden({
   children,
   focusable = false,
-  as: Tag = 'span',
+  as = 'span',
 }: VisuallyHiddenProps) {
-  return (
-    <Tag className={`${styles.hidden} ${focusable ? styles.focusable : ''}`}>
-      {children}
-    </Tag>
+  return createElement(
+    as,
+    { className: `${styles.hidden} ${focusable ? styles.focusable : ''}` },
+    children,
   )
 }

@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { Upload, X } from 'lucide-react'
+import { Upload } from 'lucide-react'
 import { mediaService } from '@/services/media.service'
 import { toast } from '@/widgets/Toast/Toast'
 import styles from './FormPageTemplate.module.css'

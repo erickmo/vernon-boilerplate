@@ -6,7 +6,7 @@ interface UseIntersectionObserverOptions extends IntersectionObserverInit {
 }
 
 interface UseIntersectionObserverReturn<T extends Element> {
-  ref: RefObject<T>
+  ref: RefObject<T | null>
   isIntersecting: boolean
   entry: IntersectionObserverEntry | null
 }
