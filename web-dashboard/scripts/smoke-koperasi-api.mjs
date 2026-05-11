@@ -233,6 +233,26 @@ const cases = [
       return rows.length === 10
     },
   },
+  // ─── Laporan Koperasi ───────────────────────────────────────────────────────
+  {
+    name: 'Method: laporan.preview rekap_zis (30-day window)',
+    path: `/api/method/sekolahpro.koperasi.api.laporan.preview?laporan=rekap_zis&periode_start=2026-04-11&periode_end=2026-05-11`,
+    validate: (b) => {
+      const msg = b?.message
+      if (!msg) return false
+      if (!Array.isArray(msg.columns)) return false
+      if (!Array.isArray(msg.rows)) return false
+      if (typeof msg.truncated !== 'boolean') return false
+      return true
+    },
+    softFail: true,
+  },
+  {
+    name: 'Method: laporan.export rekap_zis xlsx (200 OK)',
+    path: `/api/method/sekolahpro.koperasi.api.laporan.export?laporan=rekap_zis&periode_start=2026-04-11&periode_end=2026-05-11&format=xlsx`,
+    validate: (_b, status) => status === 200,
+    softFail: true,
+  },
 ]
 
 // ─── Runner ───────────────────────────────────────────────────────────────────
