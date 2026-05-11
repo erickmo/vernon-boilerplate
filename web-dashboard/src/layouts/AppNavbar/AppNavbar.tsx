@@ -7,7 +7,9 @@ import {
   Building2, Shield, Globe, Settings, LayoutDashboard, Users,
   GraduationCap, BookOpen, Library,
   Wallet, CreditCard, Heart, Receipt, BarChart3, BadgeCheck,
+  Menu,
 } from 'lucide-react'
+import { AppDrawer } from './AppDrawer'
 import { useAuthStore } from '@/stores/auth.store'
 import { useNotificationStore } from '@/stores/notification.store'
 import { useUiStore } from '@/stores/ui.store'
@@ -103,6 +105,7 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
   const { items: notifications, unreadCount, markAllRead, markRead } = useNotificationStore()
   const setPerspective = useUiStore((s) => s.setPerspective)
   const currentPerspective = useUiStore((s) => s.perspective)
+  const setDrawerOpen = useUiStore((s) => s.setDrawerOpen)
 
   const [showNotif, setShowNotif] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
@@ -155,6 +158,7 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
       : null
 
   return (
+    <>
     <nav className={cn(
       styles.navbar,
       context === 'superuser' && styles.navbarSuperuser,
@@ -162,6 +166,14 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
       context === 'sekolah' && styles.navbarSekolah,
       context === 'koperasi' && styles.navbarKoperasi,
     )}>
+      <button
+        type="button"
+        className={styles.hamburger}
+        onClick={() => setDrawerOpen(true)}
+        aria-label="Buka menu"
+      >
+        <Menu size={22} />
+      </button>
       {/* Logo */}
       <Link to={basePath ? `${basePath}/dashboard` : '/dashboard'} className={styles.logo}>
         {context === 'superuser' && <Shield size={16} className={styles.logoContextIcon} />}
@@ -294,5 +306,7 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
         </div>
       </div>
     </nav>
+    <AppDrawer />
+    </>
   )
 }
