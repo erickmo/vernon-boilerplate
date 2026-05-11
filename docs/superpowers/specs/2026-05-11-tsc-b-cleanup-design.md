@@ -20,7 +20,7 @@ Captured from `npx tsc -b` on commit at HEAD (2026-05-11):
 | TS2322 | 20 | Generic fallback to `unknown` (form values) + `RefObject<T \| null>` vs `RefObject<T>`. |
 | TS2593 | 15 | Vitest globals (`describe`, `it`) not in tsconfig `types`. |
 | TS2304 | 14 | Vitest globals (`expect`, `beforeAll`, `afterEach`, `afterAll`) not in tsconfig `types`. |
-| TS2305 | 9 | Stale `DeleteConfig` imports from `@/widgets/DataTable/DataTable` (now in `ListPageTemplate`). |
+| TS2305 | 9 | Three orphan services (`company-group.service.ts`, `superuser-company-group.service.ts`, `tenant-owner.service.ts`) import types deleted from `entity.types.ts`. Not imported anywhere — safe to delete. |
 | TS2345 | 5 | `GuruFormValues.status: string` vs `Guru.status: "Aktif"\|"Cuti"\|"Nonaktif"`. |
 | TS1484 | 5 | `verbatimModuleSyntax`: `RefObject` etc. imported without `import type`. |
 | TS2344 | 3 | `*FormValues` missing index signature for `useForm<T extends Record<string, unknown>>`. |
@@ -59,13 +59,16 @@ Each bucket is independently revertable. Order is mechanical wins → biggest si
 
 **Verify:** `npx tsc -b` drops by 5.
 
-### Bucket 3 — `DeleteConfig` re-import (TS2305: 9 errors)
+### Bucket 3 — Delete orphan services (TS2305: 9 errors)
 
-**Files affected:** Any importer of `DeleteConfig` from `@/widgets/DataTable/DataTable`.
+**Files affected:**
+- `src/services/company-group.service.ts`
+- `src/services/superuser-company-group.service.ts`
+- `src/services/tenant-owner.service.ts`
 
-**Fix:**
-1. `grep -rn "DeleteConfig" src/` — list importers.
-2. For each bad importer, change source path to `@/widgets/ListPageTemplate/ListPageTemplate`.
+Each imports types (`CompanyGroup`, `ApiCompanyGroup`, `mapApiCompanyGroup`, `TenantOwner`, `ApiTenantOwner`, `mapApiTenantOwner`) that no longer exist in `@/types/entity.types`. `grep -rln` confirms they are not imported anywhere else.
+
+**Fix:** `git rm` all three files.
 
 **Verify:** `npx tsc -b` drops by 9.
 
@@ -83,24 +86,20 @@ Each bucket is independently revertable. Order is mechanical wins → biggest si
 
 ### Bucket 5 — FormValues index signature (TS2344: 3 errors)
 
-**Files affected:** `LoginFormValues`, `ChangePasswordFormValues`, `ProfileFormValues`.
+**Files affected:** `src/hooks/useForm.ts`.
 
-**Decision:** Relax `useForm<T extends Record<string, unknown>>` constraint to `useForm<T extends object>` (or remove the constraint entirely if `T` is only used in places that accept `object`).
+**Fix:** Relax `useForm<T extends Record<string, unknown>>` to `useForm<T extends object>`. `useForm` indexes `T[K]` and reads `Object.keys(values)` — `object` is sufficient.
 
-**Rationale:** Adding `& Record<string, unknown>` to every form-values type pollutes domain types. Loosening the generic constraint costs nothing if `useForm` only does `T[K]` indexing — TypeScript still infers per-key types.
+**Verify:** `npx tsc -b` drops by 3.
 
-**Verify:**
-- `useForm` internals still type-check with relaxed constraint.
-- `npx tsc -b` drops by 3 (TS2344) plus most TS2322 cascading from the same root.
+### Bucket 6 — Genericize `FieldProps.value` + status union (remaining TS2322, TS2345)
 
-### Bucket 6 — Form value `unknown` + status union (remaining TS2322, TS2345)
-
-**Files affected:** `src/pages/sekolah/guru/GuruFormPage.tsx` (and similar form pages).
+**Files affected:** `src/hooks/useForm.ts`, `src/pages/sekolah/guru/GuruFormPage.tsx`, and any form page hitting `unknown` at `<input value=...>`.
 
 **Two sub-fixes:**
 
-1. **Form value type:** After Bucket 5, `value: unknown` errors should resolve because the generic infers correctly. Re-run `tsc -b` after Bucket 5 to confirm.
-2. **Status union mismatch:** Tighten `GuruFormValues.status` from `string` to `"Aktif" | "Cuti" | "Nonaktif"`. Source: domain type `Guru.status`. If a `<select>` provides those literals already, this is safe.
+1. **`FieldProps.value` is hardcoded `unknown`** in `useForm.ts`. Genericize: type `register<K extends keyof T>(name: K): FieldProps<T[K]>`, where `FieldProps<V> = { value: V; onChange: ...; onBlur: ... }`. Consumers (`<input value={field.value} />`) get correctly typed values.
+2. **Status union mismatch:** `GuruFormValues.status: string` vs domain `Guru.status: "Aktif" | "Cuti" | "Nonaktif"`. Tighten `GuruFormValues.status` to the union. Verify select options literal-match.
 
 **Verify:** `npx tsc -b` drops the remaining TS2322 + TS2345.
 
@@ -142,7 +141,7 @@ One commit per bucket. Conventional Commits:
 
 1. `chore(tsc): split tsconfig.test.json for vitest globals`
 2. `chore(tsc): use type-only imports for RefObject`
-3. `chore(tsc): repoint DeleteConfig imports to ListPageTemplate`
+3. `chore(services): delete orphan company-group + tenant-owner services`
 4. `refactor(akademik): rename ColumnDef.label to header`
 5. `refactor(useForm): relax T constraint to object`
 6. `fix(guru): tighten GuruFormValues.status to union`
