@@ -10,6 +10,9 @@ import {
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth.store'
 import { useNotificationStore } from '@/stores/notification.store'
+import { useUiStore } from '@/stores/ui.store'
+import { resolveNotificationTarget } from '@/services/notification.links'
+import type { NotificationItem } from '@/stores/notification.store'
 import { getInitials, formatRelative } from '@/utils/format'
 import { appConfig } from '@/config/app.config'
 import { cn } from '@/utils/cn'
@@ -98,6 +101,8 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
   const navigate = useNavigate()
   const { user, selectedCompany, selectedGroup, logout } = useAuthStore()
   const { items: notifications, unreadCount, markAllRead, markRead } = useNotificationStore()
+  const setPerspective = useUiStore((s) => s.setPerspective)
+  const currentPerspective = useUiStore((s) => s.perspective)
 
   const [showNotif, setShowNotif] = useState(false)
   const [showProfile, setShowProfile] = useState(false)
@@ -129,6 +134,17 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
   const handleLogout = () => {
     logout()
     navigate('/login')
+  }
+
+  function handleNotificationClick(n: NotificationItem) {
+    markRead(n.id)
+    setShowNotif(false)
+    const target = resolveNotificationTarget(n)
+    if (!target) return
+    if (target.perspective && target.perspective !== currentPerspective) {
+      setPerspective(target.perspective)
+    }
+    navigate(target.link)
   }
 
   // Workspace label for multi-tenant company switcher
@@ -216,7 +232,7 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
                   <button
                     key={n.id}
                     className={cn(styles.notifItem, !n.isRead && styles.notifUnread)}
-                    onClick={() => { markRead(n.id); setShowNotif(false) }}
+                    onClick={() => handleNotificationClick(n)}
                   >
                     <span className={cn(styles.notifIcon, styles[`notifIcon_${n.type}`])}>
                       {NOTIF_ICONS[n.type]}

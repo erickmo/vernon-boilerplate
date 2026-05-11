@@ -1,4 +1,14 @@
 import { create } from 'zustand'
+import type { Perspective } from '@/types/perspective.types'
+
+export type NotificationKind =
+  | 'task-assigned'
+  | 'task-review-requested'
+  | 'task-approved'
+  | 'task-rejected'
+  | 'task-deadline-near'
+  | 'system'
+  | (string & {})
 
 export interface NotificationItem {
   id: string
@@ -7,7 +17,16 @@ export interface NotificationItem {
   type: 'info' | 'success' | 'warning' | 'error'
   isRead: boolean
   createdAt: string
+  /** Legacy: free-form href. Prefer `link` for new code. */
   href?: string
+  /** Preferred internal route (router path), e.g. '/leader-review?task=VT-123'. */
+  link?: string
+  /** Hint for which perspective the destination belongs to. */
+  perspective?: Perspective
+  /** Optional task identifier used by the frontend link mapper. */
+  taskName?: string
+  /** Semantic event type — used by the frontend mapper until backend pushes link. */
+  kind?: NotificationKind
 }
 
 interface NotificationState {
