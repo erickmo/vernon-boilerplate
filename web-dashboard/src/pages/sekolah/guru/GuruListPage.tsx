@@ -5,12 +5,12 @@ import type { Guru } from '@/types/sekolah/guru.types'
 import type { ColumnDef } from '@/widgets/DataTable/DataTable'
 
 const GURU_COLUMNS: ColumnDef<Guru>[] = [
-  { key: 'nip', label: 'NIP', sortable: true },
-  { key: 'nama', label: 'Nama', sortable: true },
-  { key: 'mata_pelajaran', label: 'Mata Pelajaran', sortable: true },
+  { key: 'nip', header: 'NIP', sortable: true },
+  { key: 'nama', header: 'Nama', sortable: true },
+  { key: 'mata_pelajaran', header: 'Mata Pelajaran', sortable: true },
   {
     key: 'status',
-    label: 'Status',
+    header: 'Status',
     sortable: true,
     render: (row) => <span data-status={row.status.toLowerCase()}>{row.status}</span>,
   },

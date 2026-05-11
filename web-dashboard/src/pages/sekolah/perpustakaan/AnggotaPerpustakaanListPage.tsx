@@ -7,19 +7,19 @@ import type { AnggotaPerpustakaan } from '@/types/sekolah/perpustakaan.types'
 import type { ColumnDef } from '@/widgets/DataTable/DataTable'
 
 const COLUMNS: ColumnDef<AnggotaPerpustakaan>[] = [
-  { key: 'siswa_nama', label: 'Nama Siswa', sortable: true },
-  { key: 'nis', label: 'NIS' },
+  { key: 'siswa_nama', header: 'Nama Siswa', sortable: true },
+  { key: 'nis', header: 'NIS' },
   {
     key: 'status',
-    label: 'Status',
+    header: 'Status',
     render: (row) => (
       <span style={{ color: row.status === 'Aktif' ? 'var(--color-success)' : 'var(--color-danger)' }}>
         {row.status}
       </span>
     ),
   },
-  { key: 'jumlah_buku_dipinjam', label: 'Buku Dipinjam' },
-  { key: 'tanggal_daftar', label: 'Tanggal Daftar' },
+  { key: 'jumlah_buku_dipinjam', header: 'Buku Dipinjam' },
+  { key: 'tanggal_daftar', header: 'Tanggal Daftar' },
 ]
 
 export function AnggotaPerpustakaanListPage() {

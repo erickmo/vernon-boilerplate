@@ -6,9 +6,9 @@ import type { ColumnDef } from '@/widgets/DataTable/DataTable'
 import type { MataPelajaran } from '@/types/sekolah/akademik.types'
 
 const COLUMNS: ColumnDef<MataPelajaran>[] = [
-  { key: 'nama', label: 'Nama Mata Pelajaran', sortable: true },
-  { key: 'kode', label: 'Kode', sortable: true },
-  { key: 'kurikulum', label: 'Kurikulum', sortable: true },
+  { key: 'nama', header: 'Nama Mata Pelajaran', sortable: true },
+  { key: 'kode', header: 'Kode', sortable: true },
+  { key: 'kurikulum', header: 'Kurikulum', sortable: true },
 ]
 
 export default function MataPelajaranListPage() {

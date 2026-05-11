@@ -13,13 +13,13 @@ const STATUS_COLOR: Record<string, string> = {
 }
 
 const COLUMNS: ColumnDef<PeminjamanBuku>[] = [
-  { key: 'nomor', label: 'No. Peminjaman', sortable: true },
-  { key: 'anggota_nama', label: 'Anggota', sortable: true },
-  { key: 'tanggal_pinjam', label: 'Tanggal Pinjam', sortable: true },
-  { key: 'jatuh_tempo', label: 'Jatuh Tempo' },
+  { key: 'nomor', header: 'No. Peminjaman', sortable: true },
+  { key: 'anggota_nama', header: 'Anggota', sortable: true },
+  { key: 'tanggal_pinjam', header: 'Tanggal Pinjam', sortable: true },
+  { key: 'jatuh_tempo', header: 'Jatuh Tempo' },
   {
     key: 'status',
-    label: 'Status',
+    header: 'Status',
     render: (row) => (
       <span style={{ color: STATUS_COLOR[row.status] ?? 'inherit', fontWeight: 600 }}>{row.status}</span>
     ),
