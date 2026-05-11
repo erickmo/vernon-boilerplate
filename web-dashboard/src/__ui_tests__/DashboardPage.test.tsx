@@ -12,6 +12,7 @@ describe('DashboardPage', () => {
         name: 'Maya Santoso',
         email: 'maya@example.com',
         role: 'admin',
+        roles: [],
         permissions: [],
       },
     })

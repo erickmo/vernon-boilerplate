@@ -5,8 +5,14 @@ import { toast } from '@/widgets/Toast/Toast'
 import { nasabahService } from '@/services/koperasi/nasabah.service'
 import { transaksiSimpananService } from '@/services/koperasi/simpanan.service'
 import { pembayaranAngsuranService } from '@/services/koperasi/pembiayaan.service'
+import { sesiKasTellerService } from '@/services/koperasi/kas-teller.service'
+import { formatCurrency } from '@/utils/format'
+import { BukaSesiModal } from './components/BukaSesiModal'
+import { TutupSesiModal } from './components/TutupSesiModal'
 import type { Nasabah, NasabahSummary, RekeningSlim, AkadSlim } from '@/types/koperasi/anggota.types'
 import styles from './TellerWorkstationPage.module.css'
+
+const SESI_ACTIVE_KEY = ['sesi-kas', 'active'] as const
 
 type ActionTab = 'setor' | 'tarik' | 'angsuran'
 
@@ -41,7 +47,15 @@ export function TellerWorkstationPage() {
   const [selectedNasabah, setSelectedNasabah] = useState<Nasabah | null>(null)
   const [tab, setTab] = useState<ActionTab>('setor')
   const [tape, setTape] = useState<TapeEntry[]>([])
+  const [bukaOpen, setBukaOpen] = useState(false)
+  const [tutupOpen, setTutupOpen] = useState(false)
   const queryClient = useQueryClient()
+
+  const activeSesiQ = useQuery({
+    queryKey: SESI_ACTIVE_KEY,
+    queryFn: () => sesiKasTellerService.getActiveForMe(),
+    refetchOnWindowFocus: true,
+  })
 
   const searchQ = useQuery({
     queryKey: ['teller-search', search],
@@ -61,6 +75,49 @@ export function TellerWorkstationPage() {
 
   function resetAfterSubmit() {
     queryClient.invalidateQueries({ queryKey: ['teller-summary', selectedNasabah?.id] })
+    queryClient.invalidateQueries({ queryKey: SESI_ACTIVE_KEY })
+  }
+
+  if (activeSesiQ.isLoading) {
+    return (
+      <div className={`animate-page-in ${styles.layout}`}>
+        <PageHeader title="Workstation Teller" subtitle="Layani transaksi anggota dalam satu layar" />
+        <div className={styles.loading}>Memuat sesi…</div>
+      </div>
+    )
+  }
+
+  const sesi = activeSesiQ.data
+
+  if (!sesi) {
+    return (
+      <div className={`animate-page-in ${styles.layout}`}>
+        <PageHeader title="Workstation Teller" subtitle="Layani transaksi anggota dalam satu layar" />
+        <div className={styles.sesiEmpty}>
+          <h2>Belum ada sesi kas aktif</h2>
+          <p>Buka sesi untuk mulai melayani transaksi.</p>
+          <button type="button" className={styles.bukaCta} onClick={() => setBukaOpen(true)}>
+            Buka Sesi Kas
+          </button>
+        </div>
+        <BukaSesiModal open={bukaOpen} onClose={() => setBukaOpen(false)} />
+      </div>
+    )
+  }
+
+  if (sesi.status === 'Pending Approval') {
+    return (
+      <div className={`animate-page-in ${styles.layout}`}>
+        <PageHeader title="Workstation Teller" subtitle="Layani transaksi anggota dalam satu layar" />
+        <div className={styles.sesiEmpty}>
+          <h2>Menunggu approval supervisor</h2>
+          <p>
+            Sesi <strong>{sesi.name}</strong> sudah ditutup. Supervisor harus approve sebelum sesi
+            baru bisa dibuka.
+          </p>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -69,6 +126,18 @@ export function TellerWorkstationPage() {
         title="Workstation Teller"
         subtitle="Layani transaksi anggota dalam satu layar"
       />
+
+      <div className={styles.sesiStrip}>
+        <span className={styles.sesiBadge}>Sesi Aktif</span>
+        <span>{sesi.name}</span>
+        <span>{sesi.shift}</span>
+        <span>Modal: {formatCurrency(sesi.modal_kas)}</span>
+        <span>Setoran: {formatCurrency(sesi.total_setoran ?? 0)}</span>
+        <span>Penarikan: {formatCurrency(sesi.total_penarikan ?? 0)}</span>
+        <button type="button" className={styles.tutupBtn} onClick={() => setTutupOpen(true)}>
+          Tutup Sesi
+        </button>
+      </div>
 
       <div className={styles.grid}>
         {/* Left: Member panel */}
@@ -207,6 +276,8 @@ export function TellerWorkstationPage() {
           )}
         </aside>
       </div>
+
+      <TutupSesiModal open={tutupOpen} onClose={() => setTutupOpen(false)} sesi={sesi} />
     </div>
   )
 }

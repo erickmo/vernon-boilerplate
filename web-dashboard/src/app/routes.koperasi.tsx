@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react'
+import { Navigate } from 'react-router-dom'
 import { AppShell } from '@/layouts/AppShell/AppShell'
 import { AuthRoute } from './ProtectedRoute'
 
@@ -59,7 +60,6 @@ const AsetWakafFormPage            = lazy(() => import('@/pages/koperasi/zis/Ase
 // Kas Teller
 const SesiKasTellerListPage        = lazy(() => import('@/pages/koperasi/kas-teller/SesiKasTellerListPage').then(m => ({ default: m.SesiKasTellerListPage })))
 const SesiKasTellerDetailPage      = lazy(() => import('@/pages/koperasi/kas-teller/SesiKasTellerDetailPage').then(m => ({ default: m.SesiKasTellerDetailPage })))
-const SesiKasTellerFormPage        = lazy(() => import('@/pages/koperasi/kas-teller/SesiKasTellerFormPage').then(m => ({ default: m.SesiKasTellerFormPage })))
 
 // Laporan & Pengaturan
 const LaporanKoperasiPage          = lazy(() => import('@/pages/koperasi/laporan/LaporanKoperasiPage').then(m => ({ default: m.LaporanKoperasiPage })))
@@ -144,9 +144,9 @@ export const koperasiRoutes = [
       // Kas Teller
       { path: 'kas-teller',                       element: <S><SesiKasTellerListPage /></S> },
       { path: 'kas-teller/sesi',                  element: <S><SesiKasTellerListPage /></S> },
-      { path: 'kas-teller/sesi/new',              element: <S><SesiKasTellerFormPage /></S> },
+      { path: 'kas-teller/sesi/new',              element: <Navigate to="/koperasi/teller" replace /> },
       { path: 'kas-teller/sesi/:id',              element: <S><SesiKasTellerDetailPage /></S> },
-      { path: 'kas-teller/sesi/:id/edit',         element: <S><SesiKasTellerFormPage /></S> },
+      { path: 'kas-teller/sesi/:id/edit',         element: <Navigate to="/koperasi/teller" replace /> },
       // Laporan
       { path: 'laporan',                          element: <S><LaporanKoperasiPage /></S> },
       { path: 'laporan/export',                   element: <S><LaporanKoperasiPage /></S> },

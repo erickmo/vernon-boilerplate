@@ -212,6 +212,27 @@ const cases = [
     validate: (b, status) => status !== 404,
     softFail: true,
   },
+  // ─── Sesi Kas Teller ────────────────────────────────────────────────────────
+  {
+    name: 'Method: sesi_kas.get_active_for_me',
+    path: '/api/method/sekolahpro.koperasi.api.sesi_kas.get_active_for_me',
+    // message can be null (no aktif sesi) or an object — both valid
+    validate: (b) => b && typeof b === 'object' && 'message' in b,
+  },
+  {
+    name: 'Sesi Kas Teller filter Aktif (paginated)',
+    path: `/api/resource/Sesi Kas Teller?filters=${encodeURIComponent('[["status","=","Aktif"]]')}&limit_page_length=5`,
+    validate: (b) => Array.isArray(b?.data) || isPaginatedShape(b),
+  },
+  {
+    name: 'Denominasi Uang aktif (expect 10 rows)',
+    path: `/api/resource/Denominasi Uang?filters=${encodeURIComponent('[["aktif","=",1]]')}&limit_page_length=20`,
+    validate: (b) => {
+      const rows = Array.isArray(b?.data) ? b.data : Array.isArray(b?.items) ? b.items : null
+      if (!rows) return false
+      return rows.length === 10
+    },
+  },
 ]
 
 // ─── Runner ───────────────────────────────────────────────────────────────────
