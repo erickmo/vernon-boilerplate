@@ -1,4 +1,4 @@
-import { useEffect, RefObject } from 'react'
+import { useEffect, type RefObject } from 'react'
 
 /**
  * Fires `handler` when a click occurs outside all provided refs.
