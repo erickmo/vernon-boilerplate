@@ -146,7 +146,7 @@ export function KoperasiDashboardPage() {
       </div>
 
       <div className={styles.quickActions}>
-        <Link to="/koperasi/kas-teller/sesi/new" className={styles.quickActionBtn}>+ Buka Sesi Kas</Link>
+        <Link to="/koperasi/teller" className={styles.quickActionBtn}>+ Buka Sesi Kas</Link>
         <Link to="/koperasi/simpanan/permohonan/new" className={styles.quickActionBtn}>+ Permohonan Simpanan</Link>
         <Link to="/koperasi/pembiayaan/akad/new" className={styles.quickActionBtn}>+ Akad Pembiayaan</Link>
         <Link to="/koperasi/anggota/nasabah/new" className={styles.quickActionBtn}>+ Nasabah Baru</Link>
