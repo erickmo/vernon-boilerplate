@@ -35,7 +35,7 @@ export type GuruFormValues = {
   nip: string
   nama: string
   mata_pelajaran: string
-  status: string
+  status: 'Aktif' | 'Cuti' | 'Nonaktif'
   alamat: string
   foto: string
 }

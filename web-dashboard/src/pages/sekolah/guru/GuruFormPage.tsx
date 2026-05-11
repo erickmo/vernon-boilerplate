@@ -14,7 +14,7 @@ const INITIAL_VALUES: GuruFormValues = {
   nip: '',
   nama: '',
   mata_pelajaran: '',
-  status: '',
+  status: 'Aktif',
   alamat: '',
   foto: '',
 }
