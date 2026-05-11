@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { ChevronDown, ChevronUp, ClipboardList } from 'lucide-react'
 import { PageHeader } from '@/layouts/PageHeader/PageHeader'
@@ -6,6 +6,7 @@ import { Skeleton } from '@/widgets/Skeleton/Skeleton'
 import { toast } from '@/widgets/Toast/Toast'
 import { tasksService, type VtTask, type BlockedTask } from '@/services/tasks.service'
 import { QK } from '@/services/query-keys'
+import { useDeepLinkTaskHighlight } from '@/hooks/useDeepLinkTaskHighlight'
 import styles from './MyWorkPage.module.css'
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -132,13 +133,20 @@ interface FocusCardProps {
   onStart: (name: string) => void
   onSubmit: (name: string) => void
   isPending: boolean
+  highlighted: boolean
+  rowRef: (el: HTMLElement | null) => void
 }
 
-function FocusCard({ task, onStart, onSubmit, isPending }: FocusCardProps) {
+function FocusCard({ task, onStart, onSubmit, isPending, highlighted, rowRef }: FocusCardProps) {
   const borderColor = PHASE_COLORS[task.pdca_phase]?.text ?? '#6b7280'
 
   return (
-    <div className={styles.focusCard} style={{ borderLeftColor: borderColor }}>
+    <div
+      ref={rowRef}
+      data-deeplink-highlight={String(highlighted)}
+      className={styles.focusCard}
+      style={{ borderLeftColor: borderColor }}
+    >
       <h2 className={styles.focusTitle}>{task.title}</h2>
       <p className={styles.focusProject}>{task.project}</p>
       <div className={styles.focusMeta}>
@@ -177,11 +185,17 @@ interface TaskRowProps {
   onStart: (name: string) => void
   onSubmit: (name: string) => void
   isPending: boolean
+  highlighted: boolean
+  rowRef: (el: HTMLElement | null) => void
 }
 
-function TaskRow({ task, onStart, onSubmit, isPending }: TaskRowProps) {
+function TaskRow({ task, onStart, onSubmit, isPending, highlighted, rowRef }: TaskRowProps) {
   return (
-    <article className={styles.taskCard}>
+    <article
+      ref={rowRef}
+      data-deeplink-highlight={String(highlighted)}
+      className={styles.taskCard}
+    >
       <PhaseBadge phase={task.pdca_phase} />
       <div style={{ flex: 1 }}>
         <p className={styles.taskTitle}>{task.title}</p>
@@ -209,9 +223,19 @@ interface TodaySectionProps {
   onStart: (name: string) => void
   onSubmit: (name: string) => void
   isPending: boolean
+  highlightedTask: string | null
+  registerRef: (name: string) => (el: HTMLElement | null) => void
 }
 
-function TodaySection({ tasks, isLoading, onStart, onSubmit, isPending }: TodaySectionProps) {
+function TodaySection({
+  tasks,
+  isLoading,
+  onStart,
+  onSubmit,
+  isPending,
+  highlightedTask,
+  registerRef,
+}: TodaySectionProps) {
   return (
     <section className={styles.section}>
       <div className={styles.sectionHeader}>
@@ -243,6 +267,8 @@ function TodaySection({ tasks, isLoading, onStart, onSubmit, isPending }: TodayS
             onStart={onStart}
             onSubmit={onSubmit}
             isPending={isPending}
+            highlighted={highlightedTask === task.name}
+            rowRef={registerRef(task.name)}
           />
         ))}
     </section>
@@ -251,7 +277,13 @@ function TodaySection({ tasks, isLoading, onStart, onSubmit, isPending }: TodayS
 
 // ─── BlockedSection ───────────────────────────────────────────────────────────
 
-function BlockedSection({ blocked }: { blocked: BlockedTask[] }) {
+interface BlockedSectionProps {
+  blocked: BlockedTask[]
+  highlightedTask: string | null
+  registerRef: (name: string) => (el: HTMLElement | null) => void
+}
+
+function BlockedSection({ blocked, highlightedTask, registerRef }: BlockedSectionProps) {
   const [open, setOpen] = useState(false)
 
   if (blocked.length === 0) return null
@@ -273,7 +305,12 @@ function BlockedSection({ blocked }: { blocked: BlockedTask[] }) {
 
       {open &&
         blocked.map((task) => (
-          <article key={task.name} className={styles.blockedCard}>
+          <article
+            key={task.name}
+            ref={registerRef(task.name)}
+            data-deeplink-highlight={String(highlightedTask === task.name)}
+            className={styles.blockedCard}
+          >
             <div style={{ flex: 1 }}>
               <p className={styles.taskTitle}>{task.title}</p>
               <span className={styles.taskProject}>
@@ -305,6 +342,20 @@ export default function MyWorkPage() {
   const { data: blocked = [] } = useQuery({
     queryKey: [QK.vtMyBlockedTasks],
     queryFn: tasksService.getMyBlockedTasks,
+  })
+
+  const availableTaskNames = useMemo(
+    () => [
+      ...recommended.map((t) => t.name),
+      ...todayTasks.map((t) => t.name),
+      ...blocked.map((t) => t.name),
+    ],
+    [recommended, todayTasks, blocked],
+  )
+
+  const { highlightedTask, registerRef } = useDeepLinkTaskHighlight({
+    availableTaskNames,
+    onMissing: (name) => toast.warning(`Tugas ${name} tidak ada di daftar saat ini`),
   })
 
   const invalidateTaskLists = () => {
@@ -351,6 +402,8 @@ export default function MyWorkPage() {
             onStart={(name) => startMutation.mutate(name)}
             onSubmit={(name) => submitMutation.mutate(name)}
             isPending={isPending}
+            highlighted={highlightedTask === focusTask.name}
+            rowRef={registerRef(focusTask.name)}
           />
         ) : (
           <FocusEmpty />
@@ -363,9 +416,15 @@ export default function MyWorkPage() {
         onStart={(name) => startMutation.mutate(name)}
         onSubmit={(name) => submitMutation.mutate(name)}
         isPending={isPending}
+        highlightedTask={highlightedTask}
+        registerRef={registerRef}
       />
 
-      <BlockedSection blocked={blocked} />
+      <BlockedSection
+        blocked={blocked}
+        highlightedTask={highlightedTask}
+        registerRef={registerRef}
+      />
     </div>
   )
 }
