@@ -110,6 +110,13 @@
   --z-tooltip: 500;
   --z-toast: 600;
 
+  /* === Responsive breakpoints === */
+  --bp-md: 768px;
+
+  /* === Drawer / sheet z-index === */
+  --z-drawer: 350;
+  --z-sheet: 350;
+
   /* === Transitions === */
   --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
