@@ -6,7 +6,7 @@ import {
   CheckCircle, AlertCircle, AlertTriangle, Info,
   Building2, Shield, Globe, Settings, LayoutDashboard, Users,
   GraduationCap, BookOpen, Library,
-  Wallet, CreditCard, Heart, Receipt, BarChart3, BadgeCheck, ClipboardCheck,
+  Wallet, CreditCard, Heart, Receipt, BarChart3, BadgeCheck, ClipboardCheck, Clock,
   Menu,
 } from 'lucide-react'
 import { AppDrawer } from './AppDrawer'
@@ -62,7 +62,7 @@ const NAV_ITEMS_KOPERASI = [
   { key: 'pembiayaan',     label: 'Pembiayaan',      icon: CreditCard,      path: 'pembiayaan' },
   { key: 'kartu',          label: 'Kartu',           icon: BadgeCheck,      path: 'kartu' },
   { key: 'zis',            label: 'ZIS & Wakaf',     icon: Heart,           path: 'zis' },
-  { key: 'kas-teller',     label: 'Kas Teller',      icon: Receipt,         path: 'kas-teller' },
+  { key: 'sesi-kas',       label: 'Sesi Kas',        icon: Clock,           path: 'kas-teller' },
   { key: 'laporan',        label: 'Laporan',         icon: BarChart3,       path: 'laporan' },
   { key: 'pengaturan',     label: 'Pengaturan',      icon: Settings,        path: 'pengaturan' },
 ]
