@@ -5,12 +5,25 @@ import { render } from '@/__ui_tests__/test-utils'
 import { AppShell } from '@/layouts/AppShell/AppShell'
 
 // Mock auth + notification stores for AppNavbar
-vi.mock('@/stores/auth.store', () => ({
-  useAuthStore: () => ({ user: { name: 'Test' }, selectedCompany: null, selectedGroup: null, logout: vi.fn() }),
-}))
-vi.mock('@/stores/notification.store', () => ({
-  useNotificationStore: () => ({ items: [], unreadCount: 0, markAllRead: vi.fn(), markRead: vi.fn() }),
-}))
+vi.mock('@/stores/auth.store', () => {
+  const state = {
+    user: { name: 'Test', roles: [] as string[] },
+    selectedCompany: null,
+    selectedGroup: null,
+    logout: vi.fn(),
+  }
+  return {
+    useAuthStore: (selector?: (s: typeof state) => unknown) =>
+      typeof selector === 'function' ? selector(state) : state,
+  }
+})
+vi.mock('@/stores/notification.store', () => {
+  const state = { items: [], unreadCount: 0, markAllRead: vi.fn(), markRead: vi.fn() }
+  return {
+    useNotificationStore: (selector?: (s: typeof state) => unknown) =>
+      typeof selector === 'function' ? selector(state) : state,
+  }
+})
 vi.mock('@/config/app.config', () => ({
   appConfig: { appName: 'Test', isMultiTenant: false, appLogo: null },
 }))
