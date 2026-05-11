@@ -1,6 +1,61 @@
 // src/services/koperasi/kas-teller.service.ts
 
 import { createEntityService } from '@/services/createEntityService'
-import type { SesiKasTeller } from '@/types/koperasi/kas-teller.types'
+import { apiClient } from '@/services/api.client'
+import type {
+  SesiKasTeller,
+  DenominasiRow,
+  BukaSesiPayload,
+} from '@/types/koperasi/kas-teller.types'
 
-export const sesiKasTellerService = createEntityService<SesiKasTeller>('/api/resource/Sesi Kas Teller')
+const baseService = createEntityService<SesiKasTeller>('/api/resource/Sesi Kas Teller')
+
+const ENDPOINT_GET_ACTIVE =
+  '/api/method/sekolahpro.koperasi.api.sesi_kas.get_active_for_me'
+const ENDPOINT_RUN_METHOD = '/api/method/run_doc_method'
+const RESOURCE = '/api/resource/Sesi Kas Teller'
+const DOCTYPE = 'Sesi Kas Teller'
+
+interface FrappeMethodResponse<T> { message: T | null }
+interface ResourcePostResponse<T> { data: T }
+
+async function callDocMethod(name: string, method: string, args: Record<string, unknown>) {
+  await apiClient.post<FrappeMethodResponse<unknown>>(ENDPOINT_RUN_METHOD, {
+    dt: DOCTYPE,
+    dn: name,
+    method,
+    args: JSON.stringify(args),
+  })
+}
+
+export const sesiKasTellerService = {
+  ...baseService,
+
+  async getActiveForMe(): Promise<SesiKasTeller | null> {
+    const res = await apiClient.get<FrappeMethodResponse<SesiKasTeller>>(ENDPOINT_GET_ACTIVE)
+    return res.message
+  },
+
+  async bukaSesi(payload: BukaSesiPayload): Promise<SesiKasTeller> {
+    const body = { ...payload, docstatus: 1 }
+    const res = await apiClient.post<ResourcePostResponse<SesiKasTeller>>(RESOURCE, body)
+    return res.data
+  },
+
+  async tutupKas(
+    name: string,
+    denominasi_tutup: DenominasiRow[],
+    catatan_selisih?: string,
+  ): Promise<void> {
+    await callDocMethod(name, 'tutup_kas', {
+      denominasi_tutup,
+      ...(catatan_selisih !== undefined ? { catatan_selisih } : {}),
+    })
+  },
+
+  async approveTutup(name: string, catatan_supervisor?: string): Promise<void> {
+    await callDocMethod(name, 'approve_tutup', {
+      ...(catatan_supervisor !== undefined ? { catatan_supervisor } : {}),
+    })
+  },
+}
