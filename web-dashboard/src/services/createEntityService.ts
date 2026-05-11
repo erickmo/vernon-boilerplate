@@ -1,12 +1,16 @@
 import { apiClient } from './api.client'
 import type { PaginatedResponse } from '@/types/api.types'
 
+export type SortTuple = [field: string, direction: 1 | -1]
+export type FilterTuple = [field: string, operator: string, value: unknown]
+
 export interface ListParams {
   limit?: number
   offset?: number
-  sort?: string
+  sort?: SortTuple[] | string
   order?: 'asc' | 'desc'
   search?: string
+  filters?: FilterTuple[]
   [key: string]: unknown
 }
 
@@ -14,9 +18,13 @@ function buildQueryString(params?: ListParams): string {
   if (!params) return ''
   const q = new URLSearchParams()
   Object.entries(params).forEach(([k, v]) => {
-    if (v !== undefined && v !== null && v !== '') {
-      q.set(k, String(v))
+    if (v === undefined || v === null || v === '') return
+    if (Array.isArray(v)) {
+      // tuple-array contract: JSON-encode for ?sort=[...] / ?filters=[...]
+      q.set(k, JSON.stringify(v))
+      return
     }
+    q.set(k, String(v))
   })
   const str = q.toString()
   return str ? `?${str}` : ''

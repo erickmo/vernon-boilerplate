@@ -103,9 +103,9 @@ export function serializeFilters(filters: ActiveFilter[]): Record<string, unknow
     return [f.key, f.operator, value]
   })
 
-  // Kirim hanya format baru (legacy params dihapus)
+  // Kirim hanya format baru: raw tuple array — buildQueryString akan JSON-encode
   return {
-    filters: JSON.stringify(arr),
+    filters: arr,
   }
 }
 

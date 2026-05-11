@@ -1,0 +1,198 @@
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+}
+
+.statLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.statCard {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--duration-normal), transform var(--duration-normal);
+}
+
+.statLink:hover .statCard {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.statLabel {
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+
+.statValue {
+  font-size: var(--font-3xl);
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-1);
+}
+
+.statHint {
+  font-size: var(--font-xs);
+  color: var(--color-text-tertiary);
+}
+
+.quickActions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-bottom: var(--space-5);
+}
+
+.quickActionBtn {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background var(--duration-fast), border-color var(--duration-fast);
+}
+
+.quickActionBtn:hover {
+  background: var(--color-surface-hover, var(--color-surface));
+  border-color: var(--color-primary);
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.card {
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-sm);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
+}
+
+.cardTitle {
+  font-size: var(--font-lg);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.cardLink {
+  font-size: var(--font-xs);
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.cardLink:hover {
+  text-decoration: underline;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.listItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.listItem:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.itemTitle {
+  font-size: var(--font-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  margin: 0 0 var(--space-1) 0;
+}
+
+.itemMeta {
+  font-size: var(--font-xs);
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+.itemAmount {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  white-space: nowrap;
+}
+
+.badge {
+  font-size: var(--font-xs);
+  font-weight: 500;
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.muted {
+  color: var(--color-text-tertiary);
+  font-size: var(--font-sm);
+  text-align: center;
+  padding: var(--space-6) 0;
+}
+
+.error {
+  color: var(--color-danger);
+  font-size: var(--font-sm);
+  text-align: center;
+  padding: var(--space-6) 0;
+}
+
+.overdueBadge {
+  display: inline-block;
+  margin-left: var(--space-2);
+  padding: 0 var(--space-2);
+  font-size: var(--font-xs);
+  font-weight: 600;
+  background: rgba(239, 68, 68, 0.12);
+  color: rgb(185, 28, 28);
+  border-radius: var(--radius-sm);
+}

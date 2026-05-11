@@ -1,9 +1,10 @@
 // src/pages/koperasi/pembiayaan/ProdukPembiayaanListPage.tsx
 import { useNavigate } from 'react-router-dom'
 import { ListPageTemplate } from '@/widgets/ListPageTemplate/ListPageTemplate'
+import type { DeleteConfig } from '@/widgets/ListPageTemplate/ListPageTemplate'
 import { produkPembiayaanService } from '@/services/koperasi/pembiayaan.service'
 import { QK } from '@/services/query-keys'
-import type { ColumnDef, DeleteConfig } from '@/widgets/DataTable/DataTable'
+import type { ColumnDef } from '@/widgets/DataTable/DataTable'
 import type { ProdukPembiayaan } from '@/types/koperasi/pembiayaan.types'
 
 const COLUMNS: ColumnDef<ProdukPembiayaan>[] = [
