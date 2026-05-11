@@ -55,9 +55,11 @@ That's the only backend change. Everything else uses standard Frappe `/api/resou
 
 ## Frontend Files
 
-### New service
+### Extended service
 
-`src/services/koperasi/sesiKas.service.ts` — one focused service module.
+`src/services/koperasi/kas-teller.service.ts` already exists with a stub `sesiKasTellerService = createEntityService<SesiKasTeller>(...)`. Extend it (keep filename + service export name) — do not create a new file.
+
+**Replace existing types** in `src/types/koperasi/kas-teller.types.ts` (currently stub-mock types that don't match backend). Existing consumers (`SesiKasTellerListPage`, `SesiKasTellerDetailPage`, `SesiKasTellerFormPage`, `KoperasiDashboardPage`) need to be refactored to the new shape. The stub `SesiKasTellerFormPage` is removed (sesi creation moves to BukaSesiModal in TellerWorkstation); its route is repointed to redirect to teller.
 
 ```ts
 export interface SesiKasTeller { /* mirrors backend doctype */ }
