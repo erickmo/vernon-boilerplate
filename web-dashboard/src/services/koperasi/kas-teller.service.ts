@@ -47,15 +47,21 @@ export const sesiKasTellerService = {
     denominasi_tutup: DenominasiRow[],
     catatan_selisih?: string,
   ): Promise<void> {
-    await callDocMethod(name, 'tutup_kas', {
+    // 1. Update doc fields (allow_on_submit=1 on these)
+    await apiClient.put(`${RESOURCE}/${encodeURIComponent(name)}`, {
       denominasi_tutup,
       ...(catatan_selisih !== undefined ? { catatan_selisih } : {}),
     })
+    // 2. Trigger the whitelisted method (no args needed)
+    await callDocMethod(name, 'tutup_kas', {})
   },
 
   async approveTutup(name: string, catatan_supervisor?: string): Promise<void> {
-    await callDocMethod(name, 'approve_tutup', {
-      ...(catatan_supervisor !== undefined ? { catatan_supervisor } : {}),
-    })
+    if (catatan_supervisor !== undefined) {
+      await apiClient.put(`${RESOURCE}/${encodeURIComponent(name)}`, {
+        catatan_supervisor,
+      })
+    }
+    await callDocMethod(name, 'approve_tutup', {})
   },
 }

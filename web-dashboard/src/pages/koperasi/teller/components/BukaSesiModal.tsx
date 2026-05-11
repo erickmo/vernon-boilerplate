@@ -102,7 +102,7 @@ export function BukaSesiModal({ open, onClose }: BukaSesiModalProps) {
     }
     const denominasi_buka = Object.entries(denominasiValue)
       .filter(([, qty]) => qty > 0)
-      .map(([denominasi, jumlah]) => ({ denominasi, jumlah }))
+      .map(([denominasi, jumlah_lembar]) => ({ denominasi, jumlah_lembar }))
 
     mutation.mutate({
       tanggal: new Date().toISOString().slice(0, 10),

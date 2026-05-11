@@ -56,7 +56,7 @@ export function TutupSesiModal({ open, onClose, sesi }: TutupSesiModalProps) {
     mutationFn: () => {
       const denominasi_tutup = Object.entries(denominasiValue)
         .filter(([, qty]) => qty > 0)
-        .map(([denominasi, jumlah]) => ({ denominasi, jumlah }))
+        .map(([denominasi, jumlah_lembar]) => ({ denominasi, jumlah_lembar }))
       return sesiKasTellerService.tutupKas(
         sesi.name,
         denominasi_tutup,

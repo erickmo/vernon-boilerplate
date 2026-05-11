@@ -50,8 +50,8 @@ function InfoSesiTab({ sesi }: { sesi: SesiKasTeller }) {
 }
 
 function DenominasiTable({ items, label }: { items: DenominasiBukaRow[]; label: string }) {
-  const total = items.reduce((sum, i) => sum + (i.subtotal ?? 0), 0)
-  const hasSubtotal = items.some((i) => i.subtotal != null)
+  const total = items.reduce((sum, i) => sum + (i.total ?? 0), 0)
+  const hasSubtotal = items.some((i) => i.total != null)
 
   return (
     <div>
@@ -68,9 +68,9 @@ function DenominasiTable({ items, label }: { items: DenominasiBukaRow[]; label: 
           {items.map((item, idx) => (
             <tr key={item.name ?? `${item.denominasi}-${idx}`} style={{ borderBottom: '1px solid var(--color-slate-100)' }}>
               <td style={{ padding: '10px 12px' }}>{item.denominasi}</td>
-              <td style={{ padding: '10px 12px', textAlign: 'right' }}>{item.jumlah}</td>
+              <td style={{ padding: '10px 12px', textAlign: 'right' }}>{item.jumlah_lembar}</td>
               <td style={{ padding: '10px 12px', textAlign: 'right', fontWeight: 600 }}>
-                {item.subtotal != null ? fmt(item.subtotal) : '—'}
+                {item.total != null ? fmt(item.total) : '—'}
               </td>
             </tr>
           ))}

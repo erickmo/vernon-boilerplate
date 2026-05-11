@@ -14,13 +14,13 @@ export interface DenominasiUang {
 
 export interface DenominasiRow {
   denominasi: string  // FK → Denominasi Uang.name
-  jumlah: number
+  jumlah_lembar: number
 }
 
 export interface DenominasiBukaRow extends DenominasiRow {
   name?: string       // child row name (assigned by Frappe)
   nilai?: number      // resolved for display
-  subtotal?: number   // = nilai * jumlah
+  total?: number      // = nilai * jumlah_lembar (backend field name)
 }
 
 export interface SesiKasTeller {

@@ -14,6 +14,7 @@ import { sesiKasTellerService } from '@/services/koperasi/kas-teller.service'
 
 const mockGet = vi.mocked(apiClient.get)
 const mockPost = vi.mocked(apiClient.post)
+const mockPut = vi.mocked(apiClient.put)
 
 describe('sesiKasTellerService.getActiveForMe', () => {
   beforeEach(() => {
@@ -39,19 +40,26 @@ describe('sesiKasTellerService.getActiveForMe', () => {
 describe('sesiKasTellerService.bukaSesi', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('POSTs to the resource endpoint with submit flag', async () => {
+  it('POSTs to the resource endpoint with submit flag and jumlah_lembar wire field', async () => {
     mockPost.mockResolvedValue({ data: { name: 'SST-001', status: 'Aktif' } })
     const payload = {
       tanggal: '2026-05-11',
       shift: 'Pagi' as const,
       supervisor_buka: 'sup@example.com',
       modal_kas: 100000,
-      denominasi_buka: [{ denominasi: 'Rp 100.000', jumlah: 1 }],
+      denominasi_buka: [{ denominasi: 'Rp 100.000', jumlah_lembar: 1 }],
     }
     await sesiKasTellerService.bukaSesi(payload)
     expect(mockPost).toHaveBeenCalledWith(
       expect.stringContaining('/api/resource/Sesi Kas Teller'),
-      expect.objectContaining({ ...payload, docstatus: 1 }),
+      expect.objectContaining({
+        denominasi_buka: [{ denominasi: 'Rp 100.000', jumlah_lembar: 1 }],
+        docstatus: 1,
+        modal_kas: 100000,
+        shift: 'Pagi',
+        supervisor_buka: 'sup@example.com',
+        tanggal: '2026-05-11',
+      }),
     )
   })
 })
@@ -59,36 +67,49 @@ describe('sesiKasTellerService.bukaSesi', () => {
 describe('sesiKasTellerService.tutupKas', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('calls run_doc_method with tutup_kas args', async () => {
+  it('PUTs doc fields then calls run_doc_method tutup_kas with no args', async () => {
+    mockPut.mockResolvedValue({ data: {} })
     mockPost.mockResolvedValue({ message: {} })
-    await sesiKasTellerService.tutupKas('SST-001', [
-      { denominasi: 'Rp 100.000', jumlah: 5 },
-    ], 'catatan')
+    await sesiKasTellerService.tutupKas(
+      'SST-001',
+      [{ denominasi: 'Rp 100.000', jumlah_lembar: 5 }],
+      'catatan',
+    )
+    expect(mockPut).toHaveBeenCalledWith(
+      '/api/resource/Sesi Kas Teller/SST-001',
+      {
+        denominasi_tutup: [{ denominasi: 'Rp 100.000', jumlah_lembar: 5 }],
+        catatan_selisih: 'catatan',
+      },
+    )
     expect(mockPost).toHaveBeenCalledWith(
       '/api/method/run_doc_method',
       {
         dt: 'Sesi Kas Teller',
         dn: 'SST-001',
         method: 'tutup_kas',
-        args: JSON.stringify({
-          denominasi_tutup: [{ denominasi: 'Rp 100.000', jumlah: 5 }],
-          catatan_selisih: 'catatan',
-        }),
+        args: JSON.stringify({}),
       },
     )
   })
 
-  it('omits catatan_selisih when undefined', async () => {
+  it('omits catatan_selisih from PUT body when undefined', async () => {
+    mockPut.mockResolvedValue({ data: {} })
     mockPost.mockResolvedValue({ message: {} })
     await sesiKasTellerService.tutupKas('SST-001', [
-      { denominasi: 'Rp 100.000', jumlah: 5 },
+      { denominasi: 'Rp 100.000', jumlah_lembar: 5 },
     ])
+    expect(mockPut).toHaveBeenCalledWith(
+      '/api/resource/Sesi Kas Teller/SST-001',
+      {
+        denominasi_tutup: [{ denominasi: 'Rp 100.000', jumlah_lembar: 5 }],
+      },
+    )
     expect(mockPost).toHaveBeenCalledWith(
       '/api/method/run_doc_method',
       expect.objectContaining({
-        args: JSON.stringify({
-          denominasi_tutup: [{ denominasi: 'Rp 100.000', jumlah: 5 }],
-        }),
+        method: 'tutup_kas',
+        args: JSON.stringify({}),
       }),
     )
   })
@@ -97,26 +118,35 @@ describe('sesiKasTellerService.tutupKas', () => {
 describe('sesiKasTellerService.approveTutup', () => {
   beforeEach(() => vi.clearAllMocks())
 
-  it('calls run_doc_method with approve_tutup + catatan_supervisor', async () => {
+  it('PUTs catatan_supervisor then calls run_doc_method approve_tutup', async () => {
+    mockPut.mockResolvedValue({ data: {} })
     mockPost.mockResolvedValue({ message: {} })
     await sesiKasTellerService.approveTutup('SST-001', 'looks good')
+    expect(mockPut).toHaveBeenCalledWith(
+      '/api/resource/Sesi Kas Teller/SST-001',
+      { catatan_supervisor: 'looks good' },
+    )
     expect(mockPost).toHaveBeenCalledWith(
       '/api/method/run_doc_method',
       {
         dt: 'Sesi Kas Teller',
         dn: 'SST-001',
         method: 'approve_tutup',
-        args: JSON.stringify({ catatan_supervisor: 'looks good' }),
+        args: JSON.stringify({}),
       },
     )
   })
 
-  it('omits catatan_supervisor when undefined', async () => {
+  it('skips PUT and only POSTs run_doc_method when catatan_supervisor is undefined', async () => {
     mockPost.mockResolvedValue({ message: {} })
     await sesiKasTellerService.approveTutup('SST-001')
+    expect(mockPut).not.toHaveBeenCalled()
     expect(mockPost).toHaveBeenCalledWith(
       '/api/method/run_doc_method',
-      expect.objectContaining({ args: JSON.stringify({}) }),
+      expect.objectContaining({
+        method: 'approve_tutup',
+        args: JSON.stringify({}),
+      }),
     )
   })
 })
