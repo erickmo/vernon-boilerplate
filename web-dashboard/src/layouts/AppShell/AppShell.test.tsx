@@ -2,14 +2,18 @@ import { render, screen } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { describe, it, expect, vi } from 'vitest'
 
-vi.mock('@/stores/auth.store', () => ({
-  useAuthStore: () => ({
+vi.mock('@/stores/auth.store', () => {
+  const state = {
     user: null,
     selectedCompany: null,
     selectedGroup: null,
     logout: vi.fn(),
-  }),
-}))
+  }
+  return {
+    useAuthStore: (selector?: (s: typeof state) => unknown) =>
+      typeof selector === 'function' ? selector(state) : state,
+  }
+})
 vi.mock('@/stores/notification.store', () => ({
   useNotificationStore: () => ({ items: [], unreadCount: 0, markAllRead: vi.fn(), markRead: vi.fn() }),
 }))
