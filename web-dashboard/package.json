@@ -13,7 +13,9 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:headed": "playwright test --headed",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "smoke:api": "node scripts/smoke-koperasi-api.mjs",
+    "smoke:routes": "playwright test e2e/koperasi-routes.smoke.spec.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.96.2",
