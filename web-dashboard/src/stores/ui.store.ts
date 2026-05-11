@@ -8,6 +8,7 @@ type Density = 'compact' | 'comfortable' | 'spacious'
 interface UiState {
   theme: Theme
   sidebarOpen: boolean
+  drawerOpen: boolean
   density: Density
   perspective: Perspective
 }
@@ -16,6 +17,8 @@ interface UiActions {
   setTheme: (theme: Theme) => void
   toggleSidebar: () => void
   setSidebarOpen: (open: boolean) => void
+  toggleDrawer: () => void
+  setDrawerOpen: (open: boolean) => void
   setDensity: (density: Density) => void
   setPerspective: (perspective: Perspective) => void
 }
@@ -35,6 +38,7 @@ export const useUiStore = create<UiState & UiActions>()(
     (set) => ({
       theme: 'light',
       sidebarOpen: true,
+      drawerOpen: false,
       density: 'comfortable',
       perspective: 'saya',
 
@@ -45,6 +49,8 @@ export const useUiStore = create<UiState & UiActions>()(
 
       toggleSidebar: () => set((s) => ({ sidebarOpen: !s.sidebarOpen })),
       setSidebarOpen: (open: boolean) => set({ sidebarOpen: open }),
+      toggleDrawer: () => set((s) => ({ drawerOpen: !s.drawerOpen })),
+      setDrawerOpen: (open: boolean) => set({ drawerOpen: open }),
       setDensity: (density: Density) => set({ density }),
       setPerspective: (perspective: Perspective) => set({ perspective }),
     }),
