@@ -26,7 +26,7 @@ interface UseFormReturn<T> {
   setServerErrors: (errors: Record<string, string>) => void
 }
 
-export function useForm<T extends Record<string, unknown>>({
+export function useForm<T extends object>({
   initialValues,
   validate,
 }: UseFormConfig<T>): UseFormReturn<T> {
