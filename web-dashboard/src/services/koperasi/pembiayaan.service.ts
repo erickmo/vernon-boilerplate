@@ -23,10 +23,20 @@ export const akadPembiayaanService = {
   /** Payment history for a specific akad */
   listPembayaran: (akadId: string, params?: ListParams): Promise<PaginatedResponse<PembayaranAngsuran>> =>
     apiClient.get(`/api/resource/Pembayaran Angsuran${buildQS({ ...params, akad_id: akadId })}`),
+
+  approve: (id: string): Promise<AkadPembiayaan> =>
+    akadBase.update(id, { status: 'Aktif' } as Partial<AkadPembiayaan>),
+
+  reject: (id: string, _alasan?: string): Promise<AkadPembiayaan> =>
+    akadBase.update(id, { status: 'Ditolak' } as Partial<AkadPembiayaan>),
 }
 
 export const pembayaranAngsuranService = createEntityService<PembayaranAngsuran>(
   '/api/resource/Pembayaran Angsuran',
+)
+
+export const jadwalAngsuranService = createEntityService<JadwalAngsuran>(
+  '/api/resource/Jadwal Angsuran',
 )
 
 const shuBase = createEntityService<PembagianSHU>(

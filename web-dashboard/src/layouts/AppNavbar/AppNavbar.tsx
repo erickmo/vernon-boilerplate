@@ -6,7 +6,7 @@ import {
   CheckCircle, AlertCircle, AlertTriangle, Info,
   Building2, Shield, Globe,
   GraduationCap, BookOpen, Library,
-  Wallet, CreditCard, Heart, Receipt, BarChart3, BadgeCheck,
+  Wallet, CreditCard, Heart, Receipt, BarChart3, BadgeCheck, ClipboardCheck,
 } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth.store'
 import { useNotificationStore } from '@/stores/notification.store'
@@ -51,6 +51,8 @@ const NAV_ITEMS_SEKOLAH = [
 
 const NAV_ITEMS_KOPERASI = [
   { key: 'dashboard',      label: 'Dashboard',       icon: LayoutDashboard, path: 'dashboard' },
+  { key: 'persetujuan',    label: 'Persetujuan',     icon: ClipboardCheck,  path: 'persetujuan' },
+  { key: 'teller',         label: 'Teller',          icon: Receipt,         path: 'teller' },
   { key: 'anggota',        label: 'Anggota',         icon: Users,           path: 'anggota' },
   { key: 'simpanan',       label: 'Simpanan',        icon: Wallet,          path: 'simpanan' },
   { key: 'pembiayaan',     label: 'Pembiayaan',      icon: CreditCard,      path: 'pembiayaan' },
