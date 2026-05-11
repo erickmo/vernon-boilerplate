@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-import { Activity, FileText, LayoutDashboard, ShieldCheck, UserCircle } from 'lucide-react'
+import { Activity, LayoutDashboard, ShieldCheck, UserCircle } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth.store'
 import { cn } from '@/utils/cn'
 import type { AppContext } from '@/layouts/AppShell/AppShell'
@@ -41,7 +41,6 @@ export function SecondaryNav({ context = 'default' }: SecondaryNavProps) {
 
   const items = [
     { label: 'Overview', path: `${basePath}/dashboard`, icon: LayoutDashboard },
-    { label: 'Examples', path: `${basePath}/examples`, icon: FileText },
     { label: 'Audit log', path: `${basePath}/audit-log`, icon: Activity },
     { label: 'Profile', path: `${basePath}/profile`, icon: UserCircle },
     { label: 'Security', path: `${basePath}/change-password`, icon: ShieldCheck },
