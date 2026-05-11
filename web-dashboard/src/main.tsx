@@ -4,6 +4,7 @@ import '@/theme/variables.css'
 import '@/theme/reset.css'
 import '@/theme/typography.css'
 import '@/theme/motion.css'
+import '@/theme/deeplink-highlight.css'
 import { App } from '@/app/App'
 
 createRoot(document.getElementById('root')!).render(
