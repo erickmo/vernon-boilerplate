@@ -29,5 +29,10 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/__ui_tests__/**/*",
+    "src/**/*.test.ts",
+    "src/**/*.test.tsx"
+  ]
 }
