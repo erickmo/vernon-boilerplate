@@ -34,13 +34,24 @@ def export(laporan: str, periode_start: str, periode_end: str, format: str, nasa
 ```python
 {
   "columns": [{"key": "tanggal", "header": "Tanggal", "kind": "date"}, ...],
-  "rows": [{...}, ...],   # capped at 5000
-  "summary": {...},        # laporan-specific keyed stats
-  "truncated": bool,       # true if rows were capped
+  "rows": [
+    {
+      # business fields per laporan...
+      "_source": {"doctype": "Transaksi Simpanan", "name": "TS-2026-0001"},
+    },
+    ...
+  ],
+  "summary": {...},
+  "truncated": bool,
 }
 ```
 
-`export` returns binary XLSX (`Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet`). PDF format returns HTTP 501 with message "PDF export coming soon" — frontend hides the PDF button.
+Each row carries a `_source` object identifying the originating doctype + name. Frontend uses it for drill-down (row click → route to detail page or Frappe desk). XLSX/PDF/CSV exports strip `_source` before writing (it's UI-only).
+
+`export` returns binary in one of three formats:
+- `xlsx` — `application/vnd.openxmlformats-officedocument.spreadsheetml.sheet` (via `openpyxl`)
+- `pdf`  — `application/pdf` (via `frappe.utils.pdf.get_pdf` rendering a Jinja HTML template per laporan)
+- `csv`  — `text/csv; charset=utf-8` (via stdlib `csv.writer`)
 
 ### Internal helpers
 
@@ -64,10 +75,17 @@ Columns: `tanggal`, `rekening`, `nasabah_nama`, `jenis`, `jumlah`, `keterangan`.
 Summary: `total_setoran`, `total_penarikan`, `total_bagi_hasil`, `total_bunga`, `net = setoran − penarikan + bagi_hasil + bunga`, `count_transaksi`.
 
 **2. `_rekap_angsuran(start, end, nasabah?)`:**
-Query `Pembayaran Angsuran` in `[start, end]`. Join `Akad Pembiayaan` for nasabah; join `Jadwal Angsuran` for `tanggal_jatuh_tempo` → derive `kolektibilitas` (`lancar` if `tanggal_bayar <= tanggal_jatuh_tempo`, `macet` otherwise).
+Query `Pembayaran Angsuran` in `[start, end]`. Join `Akad Pembiayaan` for nasabah; join `Jadwal Angsuran` for `tanggal_jatuh_tempo`. Derive `kolektibilitas` from `hari_telat = (tanggal_bayar - tanggal_jatuh_tempo).days` (clamped at 0 for early/on-time):
 
-Columns: `tanggal_bayar`, `nasabah`, `akad_id`, `angsuran_ke`, `jumlah_bayar`, `denda`, `kolektibilitas`.
-Summary: `total_bayar`, `total_denda`, `count_lancar`, `count_macet`, `count_total`.
+| `hari_telat` | `kolektibilitas` |
+|--------------|------------------|
+| 0 – 30       | Lancar           |
+| 31 – 60      | Kurang Lancar    |
+| 61 – 90      | Diragukan        |
+| 91+          | Macet            |
+
+Columns: `tanggal_bayar`, `nasabah`, `akad_id`, `angsuran_ke`, `jumlah_bayar`, `denda`, `hari_telat`, `kolektibilitas`.
+Summary: `total_bayar`, `total_denda`, `count_lancar`, `count_kurang_lancar`, `count_diragukan`, `count_macet`, `count_total`.
 
 **3. `_rekap_zis(start, end, nasabah?)`:**
 Union of `Penerimaan ZIS` (rows tagged `tipe='Penerimaan'`) + `Penyaluran ZIS` (rows tagged `tipe='Penyaluran'`) in `[start, end]`. `nasabah` filter applies only to Penerimaan rows. Sort by tanggal.
@@ -81,24 +99,63 @@ Query `Sesi Kas Teller` with `status = 'Selesai'` AND `tanggal` in `[start, end]
 Columns: `tanggal`, `teller`, `shift`, `modal_kas`, `total_setoran`, `total_penarikan`, `total_denominasi_tutup`, `selisih`, `supervisor_buka`, `supervisor_tutup`.
 Summary: `count_sesi`, `total_selisih`, `total_setoran`, `total_penarikan`.
 
-### XLSX generation
+### Format generators
 
-Shared helper:
+Three shared helpers, one per format. All strip `_source` from rows before serializing:
 
 ```python
 def _make_xlsx(title: str, columns: list[dict], rows: list[dict], summary: dict) -> bytes:
-    """Returns XLSX bytes. Layout:
-      Row 1: title (merged)
-      Row 2: periode + filters (merged)
-      Row 3: blank
-      Row 4: column headers (bold, fill)
-      Row 5+: data rows
-      ...blank row...
-      Summary rows: key | value
-    """
+    """openpyxl. Layout: title row, periode/filter row, blank, header (bold), data, blank, summary."""
+
+def _make_csv(title: str, columns: list[dict], rows: list[dict], summary: dict) -> bytes:
+    """stdlib csv. Layout: header row, data rows, blank line, summary key/value rows.
+       UTF-8 with BOM so Excel opens it cleanly."""
+
+def _make_pdf(title: str, columns: list[dict], rows: list[dict], summary: dict, meta: dict) -> bytes:
+    """frappe.utils.pdf.get_pdf rendered from a Jinja template at
+       sekolahpro/koperasi/api/laporan_pdf.html. Template renders title, meta
+       (periode, filters, generated_at), a striped table, and summary block.
+       Currency right-aligned. Page break every 50 rows."""
 ```
 
-Uses `openpyxl` (bundled with Frappe). Currency columns formatted with `#,##0`. Date columns ISO format.
+XLSX currency columns formatted with `#,##0`. Date columns ISO. CSV uses raw numbers (no thousands separator) to keep parsing clean.
+
+### Jinja PDF template
+
+**New file:** `sekolahpro/koperasi/api/laporan_pdf.html`
+
+Skeleton:
+
+```html
+<style>/* margins, fonts, table */</style>
+<h1>{{ title }}</h1>
+<table class="meta">
+  <tr><th>Periode</th><td>{{ meta.periode }}</td></tr>
+  <tr><th>Filter Nasabah</th><td>{{ meta.nasabah or '—' }}</td></tr>
+  <tr><th>Dibuat</th><td>{{ meta.generated_at }}</td></tr>
+</table>
+<table class="data">
+  <thead>
+    <tr>{% for c in columns %}<th>{{ c.header }}</th>{% endfor %}</tr>
+  </thead>
+  <tbody>
+    {% for row in rows %}
+    <tr>
+      {% for c in columns %}
+      <td class="kind-{{ c.kind }}">{{ render_cell(row, c) }}</td>
+      {% endfor %}
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<table class="summary">
+  {% for k, v in summary.items() %}
+  <tr><th>{{ k }}</th><td>{{ fmt_summary(k, v) }}</td></tr>
+  {% endfor %}
+</table>
+```
+
+`render_cell` and `fmt_summary` are Jinja filters defined in `laporan.py` (currency formatter, date formatter, plain text fallback).
 
 ### Cap + pagination
 
@@ -133,7 +190,7 @@ export interface PreviewParams {
   periode_end: string
   nasabah?: string
 }
-export type ExportFormat = 'xlsx'
+export type ExportFormat = 'xlsx' | 'pdf' | 'csv'
 
 export interface LaporanColumn {
   key: string
@@ -161,14 +218,23 @@ export const laporanService = {
 
 **Modified:** `src/pages/koperasi/laporan/LaporanKoperasiPage.tsx`
 
-- Extract inline `handleExport` logic into `laporanService.export`.
-- Add a "Preview" button beside the existing "Export" buttons. On click, run `useQuery(['laporan', preview, params])` for preview data.
-- Remove "Export PDF" button this sprint (or label it "Coming soon" + disabled). Keep "Export Excel".
+- Extract inline `handleExport` logic into `laporanService.export(params, format)`.
+- Add three export buttons side-by-side: "Excel", "PDF", "CSV". Each downloads the respective format.
+- Add a "Preview" button on the left of the export buttons. On click, run `useQuery(['laporan', preview, params])` for preview data.
 - Below the filter card, render a preview section: summary stats grid + DataTable.
 - Use existing `DataTable` widget with `columns` dynamically derived from API response.
 - Summary stats: one card per `summary` key with `formatCurrency` for `total_*` keys, `formatNumber` for `count_*` keys.
 - Empty state: "Tidak ada data pada periode ini" when `rows.length === 0` after preview runs.
 - Truncated banner: when `preview.truncated`, show amber banner above table.
+- **Drill-down:** each row in the DataTable is clickable. `onRowClick(row)` reads `row._source.{doctype, name}` and routes to the appropriate frontend detail page:
+  - `Transaksi Simpanan` → `/koperasi/simpanan/transaksi/${name}` (or whatever existing route shows transaksi detail; verify)
+  - `Pembayaran Angsuran` → `/koperasi/pembiayaan/angsuran/${name}`
+  - `Penerimaan ZIS` → `/koperasi/zis/penerimaan/${name}`
+  - `Penyaluran ZIS` → `/koperasi/zis/penyaluran/${name}`
+  - `Sesi Kas Teller` → `/koperasi/kas-teller/${name}` (existing SesiKasTellerDetailPage)
+  - Fallback (no frontend detail page wired): open Frappe desk URL `/app/${doctype}/${name}` in a new tab.
+
+  Route mapping lives in a small helper `getDrillDownPath(source: { doctype, name }): string | null` inside `laporan.service.ts` (returns null → fallback to desk). Cursor changes to pointer when row is hoverable.
 
 ### Routing + nav
 
@@ -203,7 +269,9 @@ User picks laporan + periode + nasabah?
 | 500 / backend exception | Toast verbatim |
 | Empty result | Empty state in preview table |
 | `truncated=true` | Amber banner + count |
-| PDF clicked (defer) | Button disabled with "Coming soon" tooltip OR removed entirely |
+| PDF render error (large dataset) | Toast verbatim; suggest narrowing periode |
+| CSV row contains commas/quotes | csv.writer handles RFC 4180 quoting automatically |
+| Drill-down target route not registered | Helper returns null → fallback opens `/app/${doctype}/${name}` (Frappe desk) in new tab |
 
 ## Testing
 
@@ -241,14 +309,12 @@ Append 2 cases to `scripts/smoke-koperasi-api.mjs`:
 
 ## Non-goals
 
-- PDF export (defer; hide button).
 - Neraca + laba-rugi (separate accounting sprint; requires ledger / akun structure).
-- Drill-down from row to source doc.
 - Scheduled / emailed exports.
-- Print-preview styling.
+- Print-preview styling beyond the basic PDF template.
 - Custom column visibility / reorder.
 - Saved filter presets.
-- CSV export (XLSX only — CSV is one-line addition later if requested).
+- Drill-down editing — drill-down is read-only routing only.
 
 ## Success criteria
 
@@ -264,4 +330,6 @@ Append 2 cases to `scripts/smoke-koperasi-api.mjs`:
 - **`openpyxl` not available in Frappe build:** verify with `python -c "import openpyxl"` in the bench container before starting. If missing, add to `requirements.txt`. (Frappe v14+ bundles it; very low risk.)
 - **`Akad Pembiayaan` → nasabah link path:** depends on whether `akad.nasabah` is a direct field or via `rekening_simpanan`. Verify in helper implementation; the spec assumes direct nasabah link.
 - **Date range size:** unbounded SQL on `Transaksi Simpanan` table could be slow for full-year queries. The 5000-row cap protects the API, but the SQL itself isn't paginated. If a tenant has >50k rows, queries may take >5s. Mitigation: add server-side `LIMIT 5001` to detect truncation early.
-- **`kolektibilitas` derivation:** spec says lancar if `tanggal_bayar <= tanggal_jatuh_tempo`. Real-world koperasi may have 30/60/90-day buckets. v1 picks the simplest binary; revise based on user feedback.
+- **`kolektibilitas` buckets:** v1 uses 0-30/31-60/61-90/>90 day thresholds per common Indonesian banking convention (Lancar/Kurang Lancar/Diragukan/Macet). Revise if local cooperative regulation specifies different cutoffs.
+- **PDF rendering time:** `frappe.utils.pdf.get_pdf` invokes wkhtmltopdf which can take several seconds for tables >1000 rows. Set a server-side warning when row count > 2000 and recommend XLSX/CSV instead. Hard timeout falls back to the 30s gateway default.
+- **Drill-down route drift:** the `getDrillDownPath` helper hardcodes 5 path patterns. If those frontend routes get renamed without updating the helper, drill-down silently falls back to Frappe desk. Mitigate with a test that asserts every path string maps to a registered route in `routes.koperasi.tsx`.
