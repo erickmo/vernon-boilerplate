@@ -90,4 +90,8 @@ export const organisasiService = {
     )
     return res.data
   },
+
+  deleteByName: async (name: string): Promise<void> => {
+    await apiClient.delete(`${RESOURCE}/${encodeURIComponent(name)}`)
+  },
 }
