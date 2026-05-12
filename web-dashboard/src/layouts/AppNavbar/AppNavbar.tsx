@@ -5,7 +5,7 @@ import {
   ChevronDown, LogOut,
   CheckCircle, AlertCircle, AlertTriangle, Info,
   Building2, Shield, Globe, Settings, LayoutDashboard, Users,
-  GraduationCap, BookOpen, Library,
+  GraduationCap, BookOpen, Library, School,
   Wallet, CreditCard, Heart, Receipt, BarChart3, BadgeCheck, ClipboardCheck, Clock,
   Menu,
 } from 'lucide-react'
@@ -32,6 +32,7 @@ const NAV_ITEMS_DEFAULT = [
 const NAV_ITEMS_SUPERUSER = [
   { key: 'dashboard', label: 'Dashboard',  icon: LayoutDashboard, path: 'dashboard' },
   { key: 'tenants',   label: 'Tenants',    icon: Globe,           path: 'tenants' },
+  { key: 'institusi', label: 'Institusi',  icon: School,          path: 'institusi' },
   { key: 'companies', label: 'Perusahaan', icon: Building2,       path: 'companies' },
 ]
 

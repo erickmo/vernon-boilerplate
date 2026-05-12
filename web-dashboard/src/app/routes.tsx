@@ -21,6 +21,7 @@ const AdminDashboardPage  = lazy(() => import('@/pages/Admin/AdminDashboardPage'
 const TenantListPage      = lazy(() => import('@/pages/Admin/TenantListPage'))
 const TenantDetailPage    = lazy(() => import('@/pages/Admin/TenantDetailPage'))
 const TenantFormPage      = lazy(() => import('@/pages/Admin/TenantFormPage'))
+const InstitusiPage       = lazy(() => import('@/pages/Admin/InstitusiPage/InstitusiPage'))
 const AuditLogPage        = lazy(() => import('@/pages/AuditLog/AuditLogPage'))
 const ProfilePage         = lazy(() => import('@/pages/Profile/ProfilePage'))
 const ChangePasswordPage  = lazy(() => import('@/pages/ChangePassword/ChangePasswordPage'))
@@ -84,6 +85,7 @@ const multiTenantRoutes = [
       { path: 'tenants', element: <S><TenantListPage /></S> },
       { path: 'tenants/new', element: <S><TenantFormPage /></S> },
       { path: 'tenants/:orgId', element: <S><TenantDetailPage /></S> },
+      { path: 'institusi', element: <S><InstitusiPage /></S> },
       // { path: 'companies', element: <S><CompaniesListPage /></S> },
     ],
   },
