@@ -11,20 +11,20 @@ export interface Sekolah {
   name: string
   nama: string
   organisasi: string
-  status: 'Aktif' | 'Non-Aktif'
+  status: 'Aktif' | 'Nonaktif'
   logo?: string
 }
 
 export interface CreateSekolahPayload {
   nama: string
   organisasi: string
-  status?: 'Aktif' | 'Non-Aktif'
+  status?: 'Aktif' | 'Nonaktif'
   jenis?: string
 }
 
 export interface UpdateSekolahPayload {
   nama?: string
-  status?: 'Aktif' | 'Non-Aktif'
+  status?: 'Aktif' | 'Nonaktif'
 }
 
 export const sekolahService = {
