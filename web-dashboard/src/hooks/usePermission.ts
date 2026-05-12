@@ -1,25 +1,15 @@
 import { useAuthStore } from '@/stores/auth.store'
+import { resolveCapabilities } from '@/config/role-config'
 
 export function usePermission() {
-  const { user } = useAuthStore()
-  const permissions = user?.permissions ?? []
-  const isSuperAdmin = permissions.includes('*')
+  const roles = useAuthStore((s) => s.user?.roles ?? [])
+  const caps = resolveCapabilities(roles)
 
   return {
-    can: (permission: string): boolean =>
-      isSuperAdmin || permissions.includes(permission),
-
-    canAny: (perms: string[]): boolean =>
-      isSuperAdmin || perms.some((p) => permissions.includes(p)),
-
-    canAll: (perms: string[]): boolean =>
-      isSuperAdmin || perms.every((p) => permissions.includes(p)),
-
+    caps,
     hasRole: (role: string | string[]): boolean => {
-      const userRoles = user?.roles ?? []
-      if (userRoles.includes('admin') || userRoles.includes('VT Manager')) return true
       const required = Array.isArray(role) ? role : [role]
-      return required.some((r) => userRoles.includes(r))
+      return required.some((r) => roles.includes(r))
     },
   }
 }

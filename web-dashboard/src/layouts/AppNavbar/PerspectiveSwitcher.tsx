@@ -1,8 +1,8 @@
 import { useNavigate, useLocation } from 'react-router-dom'
-import { User, Users, Shield } from 'lucide-react'
+import { User, Shield } from 'lucide-react'
 import { useAvailablePerspectives } from '@/hooks/usePerspective'
 import { useUiStore } from '@/stores/ui.store'
-import { useSayaBadgeCount, useTimBadgeCount } from '@/hooks/usePerspectiveBadges'
+import { useSayaBadgeCount } from '@/hooks/usePerspectiveBadges'
 import {
   DEFAULT_ROUTE_BY_PERSPECTIVE,
   type Perspective,
@@ -11,12 +11,8 @@ import { routeToPerspective } from './nav.registry'
 import { cn } from '@/utils/cn'
 import styles from './PerspectiveSwitcher.module.css'
 
-const PERSPECTIVE_META: Record<
-  Perspective,
-  { label: string; icon: typeof User }
-> = {
+const PERSPECTIVE_META: Record<Perspective, { label: string; icon: typeof User }> = {
   saya: { label: 'Saya', icon: User },
-  tim: { label: 'Tim', icon: Users },
   admin: { label: 'Admin', icon: Shield },
 }
 
@@ -33,10 +29,8 @@ export function PerspectiveSwitcher() {
   const location = useLocation()
 
   const sayaCount = useSayaBadgeCount()
-  const timCount = useTimBadgeCount()
   const badgeBy: Record<Perspective, number> = {
     saya: sayaCount,
-    tim: timCount,
     admin: 0,
   }
 

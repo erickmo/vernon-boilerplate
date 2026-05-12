@@ -1,8 +1,9 @@
 import { AppApiError } from '@/types/api.types'
 import { useAuthStore } from '@/stores/auth.store'
 import type { UserProfile } from '@/types/auth.types'
+import { resolveCapabilities } from '@/config/role-config'
 
-const BASE_URL = import.meta.env.VITE_FRAPPE_URL ?? ''
+const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? import.meta.env.VITE_FRAPPE_URL ?? ''
 
 interface FrappeLoginResult {
   message: string
@@ -12,14 +13,17 @@ interface FrappeLoginResult {
   csrf_token?: string
 }
 
+interface FrappeUserPayload {
+  name: string
+  full_name: string
+  email: string
+  user_image?: string
+  roles: Array<{ role: string } | string>
+}
+
 interface FrappeUserResult {
-  message: {
-    name: string
-    full_name: string
-    email: string
-    user_image?: string
-    roles: Array<{ role: string } | string>
-  }
+  data?: FrappeUserPayload
+  message?: FrappeUserPayload
 }
 
 /** POST /api/method/login — session cookie set by browser, csrf_token in response body */
@@ -63,28 +67,32 @@ async function fetchCurrentUser(csrfToken: string): Promise<UserProfile> {
   )
 
   if (!rolesRes.ok) {
-    return { id: email, name: email, email, role: 'VT Member', roles: ['VT Member'], permissions: [] }
+    return { id: email, name: email, email, role: 'user', roles: [], permissions: [] }
   }
 
   const rolesJson = await rolesRes.json() as FrappeUserResult
-  const userData = rolesJson.message
+  console.debug('[frappe-auth] raw rolesJson keys:', Object.keys(rolesJson))
+  console.debug('[frappe-auth] rolesJson:', JSON.stringify(rolesJson).slice(0, 500))
+  const userData = rolesJson.data ?? rolesJson.message
+  if (!userData) {
+    console.warn('[frappe-auth] userData undefined — fallback to user')
+    return { id: email, name: email, email, role: 'user', roles: [], permissions: [] }
+  }
   const roles: string[] = Array.isArray(userData.roles)
     ? userData.roles.map((r) => (typeof r === 'string' ? r : r.role))
     : []
+
+  console.debug('[frappe-auth] email:', email, 'roles:', roles)
 
   // Administrator user has empty roles table in Frappe — inject role explicitly
   if (email === 'Administrator' && !roles.includes('Administrator')) {
     roles.push('Administrator')
   }
 
-  const primaryRole = roles.includes('Administrator') || roles.includes('System Manager')
-    ? 'VT Manager'
-    : roles.includes('VT Manager')
-      ? 'VT Manager'
-      : roles.includes('VT Leader')
-        ? 'VT Leader'
-        : 'VT Member'
+  const caps = resolveCapabilities(roles)
+  const primaryRole = caps.isSuperuser ? 'superuser' : 'user'
 
+  console.debug('[frappe-auth] primaryRole:', primaryRole)
   return {
     id: email,
     name: userData.full_name ?? email,
@@ -108,9 +116,12 @@ export const frappeAuthService = {
     // 2. Fetch user profile + roles (best-effort — never block login)
     let user: UserProfile
     try {
+      console.debug('[frappe-auth] fetchCurrentUser start, csrfToken:', csrfToken ? 'present' : 'empty')
       user = await fetchCurrentUser(csrfToken)
-    } catch {
-      user = { id: usr, name: loginResult.full_name ?? usr, email: usr, role: 'VT Member', roles: ['VT Member'], permissions: [] }
+      console.debug('[frappe-auth] fetchCurrentUser done, role:', user.role)
+    } catch (err) {
+      console.error('[frappe-auth] fetchCurrentUser FAILED:', err)
+      user = { id: usr, name: loginResult.full_name ?? usr, email: usr, role: 'user', roles: [], permissions: [] }
     }
 
     // 3. Commit to auth store

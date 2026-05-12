@@ -279,9 +279,6 @@ export function AppNavbar({ context = 'default' }: AppNavbarProps) {
                 <div>
                   <p className={styles.profileName}>{user?.name}</p>
                   <p className={styles.profileEmail}>{user?.email}</p>
-                  {(user?.roles ?? [user?.role]).filter(Boolean).map((r) => (
-                    <span key={r} className={styles.roleBadge}>{r}</span>
-                  ))}
                 </div>
               </div>
               <hr className={styles.divider} />

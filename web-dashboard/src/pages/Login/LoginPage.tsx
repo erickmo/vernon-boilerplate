@@ -45,8 +45,7 @@ export default function LoginPage() {
     const params = new URLSearchParams(location.search)
     const nextParam = params.get('next')
     if (nextParam && nextParam.startsWith('/') && !nextParam.startsWith('//')) return nextParam
-    const fromState = (location.state as { from?: { pathname: string } } | null)?.from?.pathname
-    return fromState ?? '/'
+    return '/'
   }
 
   const onSubmit = handleSubmit(async (v) => {
