@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { X } from 'lucide-react'
 import { jenjangService } from '@/services/jenjang.service'
-import { TINGKAT_OPTIONS } from './types'
+import { TINGKAT_OPTIONS, type Tingkat } from './types'
 import type { UnitJenjang } from './types'
 import styles from './InstitusiPage.module.css'
 
@@ -15,7 +15,7 @@ interface Props {
 
 export function JenjangModal({ mode, sekolahName, initial, onClose, onSaved }: Props) {
   const [nama, setNama] = useState(initial?.nama ?? '')
-  const [tingkat, setTingkat] = useState(initial?.tingkat ?? TINGKAT_OPTIONS[0])
+  const [tingkat, setTingkat] = useState<Tingkat>(initial?.tingkat as Tingkat ?? TINGKAT_OPTIONS[0])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
@@ -61,7 +61,7 @@ export function JenjangModal({ mode, sekolahName, initial, onClose, onSaved }: P
           </div>
           <div className={styles.formField}>
             <label className={styles.formLabel}>Tingkat</label>
-            <select className={styles.formSelect} value={tingkat} onChange={(e) => setTingkat(e.target.value)}>
+            <select className={styles.formSelect} value={tingkat} onChange={(e) => setTingkat(e.target.value as Tingkat)}>
               {TINGKAT_OPTIONS.map((t) => (
                 <option key={t} value={t}>{t}</option>
               ))}
