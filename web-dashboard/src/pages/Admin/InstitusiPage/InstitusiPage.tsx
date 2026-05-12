@@ -250,7 +250,8 @@ function YayasanNode({
     if (open) {
       void loadSekolah()
     }
-  }, [refreshTrigger, open, loadSekolah])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [refreshTrigger])
 
   function toggle() {
     if (!open && !loaded) {
