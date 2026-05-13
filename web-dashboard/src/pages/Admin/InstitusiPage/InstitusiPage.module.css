@@ -320,7 +320,6 @@
 
 /* ─── Form ─────────────────────────────────────────────────────────────────── */
 .modalForm {
-  padding: var(--space-5);
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
@@ -373,13 +372,17 @@
 }
 
 .cancelBtn {
-  padding: var(--space-2) var(--space-4);
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 var(--space-4);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   background: transparent;
   color: var(--color-text-secondary);
   font-size: var(--font-sm);
   cursor: pointer;
+  transition: background var(--duration-fast);
 }
 
 .cancelBtn:hover {
@@ -387,17 +390,23 @@
 }
 
 .submitBtn {
-  padding: var(--space-2) var(--space-4);
-  border: none;
-  border-radius: var(--radius-md);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  font-size: var(--font-sm);
-  font-weight: 600;
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
+  height: 36px;
+  padding: 0 var(--space-4);
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--duration-fast);
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: var(--color-primary-hover);
 }
 
 .submitBtn:disabled {
@@ -499,4 +508,55 @@
   .modal {
     max-width: 100%;
   }
+}
+
+.formSectionDivider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: var(--space-4) 0 var(--space-2);
+}
+
+.formSectionDivider::before,
+.formSectionDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.formSectionLabel {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.passwordWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.passwordWrapper .formInput {
+  flex: 1;
+  padding-right: 2.5rem;
+}
+
+.passwordToggle {
+  position: absolute;
+  right: var(--space-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-size: var(--text-base);
+  line-height: 1;
+  color: var(--color-text-muted);
+}
+
+.passwordToggle:hover {
+  color: var(--color-text);
 }
