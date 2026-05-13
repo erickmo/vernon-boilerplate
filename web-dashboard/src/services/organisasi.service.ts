@@ -37,7 +37,7 @@ export type UpdateOrganisasiPayload = Partial<CreateOrganisasiPayload> & {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const RESOURCE = '/api/resource/Organisasi'
-const FIELDS = JSON.stringify(['name', 'nama', 'jenis_organisasi', 'email', 'telepon', 'status', 'logo', 'npwp', 'alamat'])
+const FIELDS = JSON.stringify(['name', 'nama', 'jenis_organisasi', 'email', 'telepon', 'status', 'logo', 'npwp', 'alamat', 'owner_user'])
 
 // ─── Response helpers ─────────────────────────────────────────────────────────
 
