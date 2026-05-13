@@ -14,6 +14,7 @@ export interface Organisasi {
   logo?: string
   npwp?: string
   alamat?: string
+  owner_user?: string
 }
 
 export interface CreateOrganisasiPayload {
@@ -23,6 +24,9 @@ export interface CreateOrganisasiPayload {
   telepon?: string
   npwp?: string
   alamat?: string
+  owner_nama?: string
+  owner_email?: string
+  owner_password?: string
 }
 
 export type UpdateOrganisasiPayload = Partial<CreateOrganisasiPayload> & {
