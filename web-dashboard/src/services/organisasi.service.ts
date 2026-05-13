@@ -24,9 +24,16 @@ export interface CreateOrganisasiPayload {
   telepon?: string
   npwp?: string
   alamat?: string
+  owner_user?: string
   owner_nama?: string
   owner_email?: string
   owner_password?: string
+}
+
+export interface FrappeUser {
+  name: string
+  full_name: string
+  email: string
 }
 
 export type UpdateOrganisasiPayload = Partial<CreateOrganisasiPayload> & {
@@ -37,7 +44,7 @@ export type UpdateOrganisasiPayload = Partial<CreateOrganisasiPayload> & {
 // ─── Constants ────────────────────────────────────────────────────────────────
 
 const RESOURCE = '/api/resource/Organisasi'
-const FIELDS = JSON.stringify(['name', 'nama', 'jenis_organisasi', 'email', 'telepon', 'status', 'logo', 'npwp', 'alamat', 'owner_user'])
+const FIELDS = JSON.stringify(['name', 'nama', 'jenis_organisasi', 'email', 'telepon', 'status', 'logo', 'npwp', 'alamat'])
 
 // ─── Response helpers ─────────────────────────────────────────────────────────
 
@@ -98,4 +105,20 @@ export const organisasiService = {
   deleteByName: async (name: string): Promise<void> => {
     await apiClient.delete(`${RESOURCE}/${encodeURIComponent(name)}`)
   },
+}
+
+const USER_FIELDS = JSON.stringify(['name', 'full_name', 'email'])
+const USER_FILTERS = JSON.stringify([['enabled', '=', 1], ['name', 'not in', ['Guest', 'Administrator']]])
+
+interface FrappeUserListResponse { data: FrappeUser[] }
+
+export async function fetchFrappeUsers(): Promise<FrappeUser[]> {
+  const q = new URLSearchParams({
+    fields: USER_FIELDS,
+    filters: USER_FILTERS,
+    limit_page_length: '500',
+    order_by: 'full_name asc',
+  })
+  const res = await apiClient.get<FrappeUserListResponse>(`/api/resource/User?${q}`)
+  return res.data ?? []
 }

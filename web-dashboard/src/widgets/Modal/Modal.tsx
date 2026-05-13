@@ -63,10 +63,10 @@ export function Modal({
 
           <motion.div
             className={styles.panel}
-            style={{ width: SIZE_WIDTH[size] }}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
+            style={{ width: SIZE_WIDTH[size], x: '-50%', y: '-50%' }}
+            initial={{ opacity: 0, scale: 0.95, x: '-50%', y: '-50%' }}
+            animate={{ opacity: 1, scale: 1, x: '-50%', y: '-50%' }}
+            exit={{ opacity: 0, scale: 0.95, x: '-50%', y: '-50%' }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
             role="dialog"
             aria-modal="true"

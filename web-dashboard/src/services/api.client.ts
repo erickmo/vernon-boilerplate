@@ -12,6 +12,10 @@ function getCsrfToken(): string {
     ?.split('=')[1] ?? ''
 }
 
+function stripHtml(html: string): string {
+  return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
 function parseFrappeError(body: Record<string, unknown>): string {
   // Frappe wraps messages as stringified JSON in _server_messages
   const raw = body['_server_messages']
@@ -21,15 +25,16 @@ function parseFrappeError(body: Record<string, unknown>): string {
       const first = msgs[0]
       if (typeof first === 'string') {
         const inner = JSON.parse(first) as { message?: string }
-        return inner.message ?? 'Terjadi kesalahan'
+        const msg = inner.message ?? 'Terjadi kesalahan'
+        return stripHtml(msg)
       }
-      if (typeof first === 'object' && first?.message) return first.message
+      if (typeof first === 'object' && first?.message) return stripHtml(first.message)
     } catch {
       // fall through
     }
   }
-  if (typeof body['message'] === 'string') return body['message']
-  if (typeof body['exc_type'] === 'string') return body['exc_type']
+  if (typeof body['message'] === 'string') return stripHtml(body['message'])
+  if (typeof body['exc_type'] === 'string') return body['exc_type'] as string
   return 'Terjadi kesalahan'
 }
 

@@ -371,52 +371,55 @@
   padding-top: var(--space-2);
 }
 
-.cancelBtn {
-  display: inline-flex;
-  align-items: center;
-  height: 36px;
-  padding: 0 var(--space-4);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: transparent;
-  color: var(--color-text-secondary);
-  font-size: var(--font-sm);
-  cursor: pointer;
-  transition: background var(--duration-fast);
-}
-
-.cancelBtn:hover {
-  background: var(--color-surface-alt);
-}
-
+.cancelBtn,
 .submitBtn {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  height: 36px;
-  padding: 0 var(--space-4);
-  background: var(--color-primary);
-  color: var(--color-on-primary);
-  border: none;
+  height: var(--input-height);
+  padding: 0 var(--space-5);
   border-radius: var(--radius-md);
   font-size: var(--font-sm);
   font-weight: 600;
   cursor: pointer;
-  transition: background var(--duration-fast);
+  transition: all var(--duration-fast);
 }
 
-.submitBtn:hover:not(:disabled) {
-  background: var(--color-primary-hover);
-}
-
+.cancelBtn:disabled,
 .submitBtn:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
+}
+
+.cancelBtn {
+  background: var(--color-surface-elevated);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+}
+
+.cancelBtn:not(:disabled):hover {
+  background: var(--color-surface-alt);
+}
+
+.submitBtn {
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+  border: none;
+}
+
+.submitBtn:not(:disabled):hover {
+  background: var(--color-primary-hover);
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
 }
 
 .submitBtnDanger {
   background: var(--color-danger);
-  color: var(--color-on-primary);
+  color: var(--color-text-on-primary);
+}
+
+.submitBtnDanger:not(:disabled):hover {
+  background: var(--color-danger-dark);
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.3);
 }
 
 /* ─── Spinner ──────────────────────────────────────────────────────────────── */
@@ -559,4 +562,74 @@
 
 .passwordToggle:hover {
   color: var(--color-text);
+}
+
+.ownerModeToggle {
+  display: flex;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.ownerModeBtn {
+  flex: 1;
+  height: var(--input-height-sm);
+  padding: 0 var(--space-3);
+  background: var(--color-surface-elevated);
+  border: none;
+  font-size: var(--font-sm);
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: all var(--duration-fast);
+}
+
+.ownerModeBtn + .ownerModeBtn {
+  border-left: 1px solid var(--color-border);
+}
+
+.ownerModeBtn:hover:not(.ownerModeBtnActive) {
+  background: var(--color-surface-alt);
+}
+
+.ownerModeBtnActive {
+  background: var(--color-primary);
+  color: var(--color-text-on-primary);
+  font-weight: 600;
+}
+
+.userSearchInput {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-sm);
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  margin-bottom: var(--space-1);
+}
+
+.userSearchInput:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-subtle);
+}
+
+.userSelect {
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: var(--font-sm);
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  height: 120px;
+}
+
+.userSelect:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px var(--color-primary-subtle);
 }
