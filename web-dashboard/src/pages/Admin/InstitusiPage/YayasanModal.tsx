@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
+import { Eye, EyeOff } from 'lucide-react'
 import { Modal } from '@/widgets/Modal'
 import { organisasiService } from '@/services/organisasi.service'
 import type { Organisasi } from './types'
 import styles from './InstitusiPage.module.css'
+
+const FORM_ID = 'yayasan-modal-form'
 
 interface Props {
   mode: 'create' | 'edit'
@@ -60,7 +63,6 @@ export function YayasanModal({ mode, initial, onClose, onSaved }: Props) {
   }
 
   const title = mode === 'create' ? 'Tambah Yayasan' : 'Edit Yayasan'
-  const formId = 'yayasan-modal-form'
 
   return (
     <Modal
@@ -71,13 +73,13 @@ export function YayasanModal({ mode, initial, onClose, onSaved }: Props) {
       footer={
         <>
           <button type="button" className={styles.cancelBtn} onClick={onClose}>Batal</button>
-          <button type="submit" form={formId} className={styles.submitBtn} disabled={saving}>
+          <button type="submit" form={FORM_ID} className={styles.submitBtn} disabled={saving}>
             {saving ? <span className={styles.spinner} /> : 'Simpan'}
           </button>
         </>
       }
     >
-      <form id={formId} onSubmit={(e) => { void handleSubmit(e) }} className={styles.modalForm}>
+      <form id={FORM_ID} onSubmit={(e) => { void handleSubmit(e) }} className={styles.modalForm}>
         <div className={styles.formField}>
           <label className={styles.formLabel}>Nama Yayasan / Organisasi</label>
           <input className={styles.formInput} type="text" value={nama} onChange={(e) => setNama(e.target.value)} placeholder="Yayasan Pendidikan Al-Falah" required />
@@ -100,8 +102,9 @@ export function YayasanModal({ mode, initial, onClose, onSaved }: Props) {
               <span className={styles.formSectionLabel}>Akun Pemilik</span>
             </div>
             <div className={styles.formField}>
-              <label className={styles.formLabel}>Nama Pemilik</label>
+              <label htmlFor="owner-nama" className={styles.formLabel}>Nama Pemilik</label>
               <input
+                id="owner-nama"
                 className={styles.formInput}
                 type="text"
                 value={ownerNama}
@@ -110,8 +113,9 @@ export function YayasanModal({ mode, initial, onClose, onSaved }: Props) {
               />
             </div>
             <div className={styles.formField}>
-              <label className={styles.formLabel}>Email Pemilik</label>
+              <label htmlFor="owner-email" className={styles.formLabel}>Email Pemilik</label>
               <input
+                id="owner-email"
                 className={styles.formInput}
                 type="email"
                 value={ownerEmail}
@@ -120,9 +124,10 @@ export function YayasanModal({ mode, initial, onClose, onSaved }: Props) {
               />
             </div>
             <div className={styles.formField}>
-              <label className={styles.formLabel}>Password</label>
+              <label htmlFor="owner-password" className={styles.formLabel}>Password</label>
               <div className={styles.passwordWrapper}>
                 <input
+                  id="owner-password"
                   className={styles.formInput}
                   type={showPassword ? 'text' : 'password'}
                   value={ownerPassword}
@@ -135,7 +140,7 @@ export function YayasanModal({ mode, initial, onClose, onSaved }: Props) {
                   onClick={() => setShowPassword((v) => !v)}
                   aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}
                 >
-                  {showPassword ? '🙈' : '👁'}
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
               </div>
             </div>

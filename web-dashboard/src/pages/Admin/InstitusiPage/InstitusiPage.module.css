@@ -396,7 +396,7 @@
   height: 36px;
   padding: 0 var(--space-4);
   background: var(--color-primary);
-  color: #fff;
+  color: var(--color-on-primary);
   border: none;
   border-radius: var(--radius-md);
   font-size: var(--font-sm);
@@ -416,7 +416,7 @@
 
 .submitBtnDanger {
   background: var(--color-danger);
-  color: #fff;
+  color: var(--color-on-primary);
 }
 
 /* ─── Spinner ──────────────────────────────────────────────────────────────── */
